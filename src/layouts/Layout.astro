@@ -17,6 +17,13 @@ import Header from "../components/Header.astro";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;400;900&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <Header />
@@ -25,15 +32,12 @@ import Header from "../components/Header.astro";
 </html>
 <style is:global>
   :root {
-    --pink: #e865ad
+    --pink: 232, 101, 173;
   }
   html {
-    font-family: system-ui, sans-serif;
     background-color: #f6f6f6;
-  }
-  code {
-    font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-      DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+    font-family: 'Titillium Web', sans-serif;
+    /* 200, 400, 900 */
   }
   * {
     box-sizing: border-box;
