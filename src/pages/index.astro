@@ -23,21 +23,23 @@ import { Content as Festival } from "../content/accueil/festival.md";
   </section>
 
   <section class="festival">
-    <h1 class="title title__festival">Le festival</h1>
-    <div class="color_ligne"></div>
-    <Festival />
+    <div class="content">
+      <h1 class="title title__festival">Le festival</h1>
+      <div class="color_ligne"></div>
+      <Festival />
 
-    <div class="icons">
-      <Icon
-        img={Tetris}
-        title="Rétro-gaming"
-        subtitle="pour les nostalgiques"
-      />
-      <Icon img={Pen_Ruler} title="Jeux indés" subtitle="pour les pionners" />
-      <Icon img={Trophy} title="E-sport" subtitle="pour les try-hardeurs" />
-      <Icon img={Mic} title="Conférences" subtitle="pour les intellectuels" />
-      <Icon img={Dices} title="Jeux de plateau" subtitle="pour les IRL" />
-      <Icon img={Proj} title="Expos" subtitle="pour les curieux" />
+      <div class="icons">
+        <Icon
+          img={Tetris}
+          title="Rétro-gaming"
+          subtitle="pour les nostalgiques"
+        />
+        <Icon img={Pen_Ruler} title="Jeux indés" subtitle="pour les pionners" />
+        <Icon img={Trophy} title="E-sport" subtitle="pour les try-hardeurs" />
+        <Icon img={Mic} title="Conférences" subtitle="pour les intellectuels" />
+        <Icon img={Dices} title="Jeux de plateau" subtitle="pour les IRL" />
+        <Icon img={Proj} title="Expos" subtitle="pour les curieux" />
+      </div>
     </div>
   </section>
 </Layout>
@@ -46,6 +48,15 @@ import { Content as Festival } from "../content/accueil/festival.md";
   section {
     padding: 30px 45px;
     color: rgb(var(--black-text));
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .content {
+    max-width: 900px;
   }
 
   .titre {
