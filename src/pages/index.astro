@@ -9,11 +9,14 @@ import Pen_Ruler from "../assets/pen_ruler.svg";
 import Mic from "../assets/mic.svg";
 import Dices from "../assets/dices.svg";
 
+import PLSociety from "../assets/plsociety.png";
+import LuxLudi from "../assets/luxludi.png";
+import LeDLC from "../assets/ledlc.png";
+
 import { Content as Festival } from "../content/accueil/festival.md";
-import {Content as Association} from "../content/accueil/association.md";
-
+import { Content as Association } from "../content/accueil/association.md";
+import Club from "../components/Club.astro";
 ---
-
 
 <Layout title="Play Sorbonne Université">
   <div class="color_ligne"></div>
@@ -49,11 +52,47 @@ import {Content as Association} from "../content/accueil/association.md";
   <section class="association">
     <div class="content">
       <h1 class="title title__association">L'association</h1>
-      <div class="color_ligne"/>
+      <div class="color_ligne"></div>
       <Association />
     </div>
   </section>
 
+  <section class="clubs">
+    <div class="content">
+      <h1 class="title">Les Clubs</h1>
+      <div class="color_ligne"></div>
+
+      <p>
+        <strong
+          >Lorem ipsum, dolor sit amet consectetur adipisicing elit. Harum vero
+          ducimus veniam aspernatur molestias quod consectetur pariatur
+          voluptatum placeat hic animi eligendi soluta obcaecati deleniti,
+          ipsam, magnam modi cupiditate error.</strong
+        >
+      </p>
+
+      <div class="icons__clubs">
+        <Club img={PLSociety}>
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem quia
+            harum.
+          </p>
+        </Club>
+        <Club img={LeDLC}>
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem quia
+            harum repellat doloremque ipsa accusantium.
+          </p>
+        </Club>
+        <Club img={LuxLudi}>
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem quia
+            harum.
+          </p>
+        </Club>
+      </div>
+    </div>
+  </section>
 </Layout>
 
 <style>
@@ -134,5 +173,14 @@ import {Content as Association} from "../content/accueil/association.md";
 
   .title__association {
     color: white;
+  }
+
+  .icons__clubs {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 20px 0;
   }
 </style>
