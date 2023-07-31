@@ -1,60 +1,75 @@
 ---
-import Layout from '../layouts/Layout.astro';
-
-import img from "../assets/imageaccueil.webp"
+import Layout from "../layouts/Layout.astro";
+import { Content as Festival } from "../content/accueil/festival.md";
 ---
 
 <Layout title="Play Sorbonne Université - festival">
+  <div class="color_ligne"></div>
 
-  <div class="color_ligne"/>
   <section class="titre">
     <div class="text__titre">
-    <h1 class="title__titre">Le festival étudiant du jeu.</h1>
-    <h2 class="subtitle__titre">du 00 et 00 mois 2023</h2>
+      <h1 class="title">Le festival étudiant du jeu.</h1>
+      <h2 class="subtitle__titre">du 00 et 00 mois 2023</h2>
     </div>
   </section>
 
+  <section class="festival">
+    <h1 class="title title__festival">Le festival</h1>
+    <div class="color_ligne"></div>
+    <Festival />
+  </section>
 </Layout>
 
 <style>
+  section {
+    padding: 30px 45px;
+  }
 
-.titre {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 40vh;
-  background-size: cover;
+  .titre {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 40vh;
+    background-size: cover;
 
-  background-image: url(/src/assets/imageaccueil.webp);
-  /* HACK */
-}
+    background-image: url(/src/assets/imageaccueil.webp);
+    /* HACK */
+  }
 
-.color_ligne {
-  height: 5px;
-  background: linear-gradient(0.25turn, #29C8FF, #FF7DC5);
-}
+  .color_ligne {
+    height: 5px;
+    background: linear-gradient(0.25turn, #29c8ff, #ff7dc5);
+  }
 
-.text__titre {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  color: white;
-}
+  .text__titre {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    color: white;
+  }
 
-.title__titre {
-  font-size: 3rem;
-  font-weight: 900;
-  text-transform: uppercase;
-}
+  .title {
+    font-size: 3rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
 
-.subtitle__titre {
-  font-size: 2.5rem;
-  font-weight: 200;
-  text-transform: uppercase;
-}
+  .subtitle__titre {
+    font-size: 2.5rem;
+    font-weight: 200;
+    text-transform: uppercase;
+  }
 
+  .title__festival {
+    color: rgb(var(--black-title));
+  }
 
+  :global(strong) {
+    color: red;
+  }
 
-
+  section :global(p) {
+    padding: 30px;
+  }
 </style>
