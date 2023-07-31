@@ -1,5 +1,14 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Icon from "../components/Icon.astro";
+
+import Tetris from "../assets/tetris.svg";
+import Trophy from "../assets/trophy.svg";
+import Proj from "../assets/proj.svg";
+import Pen_Ruler from "../assets/pen_ruler.svg";
+import Mic from "../assets/mic.svg";
+import Dices from "../assets/dices.svg";
+
 import { Content as Festival } from "../content/accueil/festival.md";
 ---
 
@@ -9,7 +18,7 @@ import { Content as Festival } from "../content/accueil/festival.md";
   <section class="titre">
     <div class="text__titre">
       <h1 class="title">Le festival étudiant du jeu.</h1>
-      <h2 class="subtitle__titre">du 00 et 00 mois 2023</h2>
+      <h2 class="subtitle__titre">le 16 septembre 2023</h2>
     </div>
   </section>
 
@@ -17,12 +26,26 @@ import { Content as Festival } from "../content/accueil/festival.md";
     <h1 class="title title__festival">Le festival</h1>
     <div class="color_ligne"></div>
     <Festival />
+
+    <div class="icons">
+      <Icon
+        img={Tetris}
+        title="Rétro-gaming"
+        subtitle="pour les nostalgiques"
+      />
+      <Icon img={Pen_Ruler} title="Jeux indés" subtitle="pour les pionners" />
+      <Icon img={Trophy} title="E-sport" subtitle="pour les try-hardeurs" />
+      <Icon img={Mic} title="Conférences" subtitle="pour les intellectuels" />
+      <Icon img={Dices} title="Jeux de plateau" subtitle="pour les IRL" />
+      <Icon img={Proj} title="Expos" subtitle="pour les curieux" />
+    </div>
   </section>
 </Layout>
 
 <style>
   section {
     padding: 30px 45px;
+    color: rgb(var(--black-text));
   }
 
   .titre {
@@ -71,5 +94,12 @@ import { Content as Festival } from "../content/accueil/festival.md";
 
   p {
     padding-top: 20px;
+  }
+
+  .icons {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
   }
 </style>
