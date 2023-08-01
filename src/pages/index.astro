@@ -16,6 +16,14 @@ import LeDLC from "../assets/ledlc.png";
 import { Content as Festival } from "../content/accueil/festival.md";
 import { Content as Association } from "../content/accueil/association.md";
 import Club from "../components/Club.astro";
+
+interface Frontmatter {
+  title: string;
+  img: string;
+}
+const posts = await Astro.glob<Frontmatter>(
+  "../content/accueil/programme/*.md"
+);
 ---
 
 <Layout title="Play Sorbonne Université">
@@ -90,6 +98,33 @@ import Club from "../components/Club.astro";
             harum.
           </p>
         </Club>
+      </div>
+    </div>
+  </section>
+
+  <section class="programme">
+    <div class="content">
+      <h1 class="title">Le programme</h1>
+      <div class="color_ligne"></div>
+
+      <div class="content__programme">
+        {
+          posts.map((post, i) => (
+            <div class="element">
+              <p class="title__element">{post.frontmatter.title}</p>
+              <div class={`content__element ${i % 2 && "content_left"}`}>
+                <img
+                  src={`/src/assets/${post.frontmatter.img}`}
+                  alt=""
+                  class="img__element"
+                />
+                <div>
+                  <post.Content />
+                </div>
+              </div>
+            </div>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -182,5 +217,38 @@ import Club from "../components/Club.astro";
     align-items: flex-start;
     flex-wrap: wrap;
     padding: 20px 0;
+  }
+
+  .content__programme {
+    padding-top: 20px;
+  }
+
+  .img__element {
+    max-width: 40%;
+    max-height: 200px;
+    height: 100%;
+    box-shadow: 8px 8px 2px 1px rgba(var(--pink), 0.4);
+    margin: 0 20px;
+  }
+
+  .content__element {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .title__element {
+    color: rgb(var(--black-text));
+    font-weight: bold;
+    text-decoration: underline;
+  }
+
+  .content_left {
+    flex-direction: row-reverse;
+  }
+
+  .element {
+    padding: 5px 0;
   }
 </style>
