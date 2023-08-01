@@ -1,5 +1,5 @@
 ---
-title: Jouer Enemble
+title: Jouer ensemble
 img: image5.webp
 ---
 

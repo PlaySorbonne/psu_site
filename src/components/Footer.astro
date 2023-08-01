@@ -1,0 +1,45 @@
+---
+import Insta from "../assets/insta.svg"
+import Discord from "../assets/discord.svg"
+---
+<footer>
+    <div class="container">
+        <div class="icons">
+          <a href="https://discord.gg/be5X7qMNSQ" target="_blank">
+            <img src={Discord} alt="discord invite">
+          </a>
+          <a href="https://www.instagram.com/play_sorbonne_u/" target="_blank">
+            <img src={Insta} alt="Insta">
+          </a>
+        </div>
+        <p>
+          PlaySorbonne © 2023
+        </p>
+    </div>
+</footer>
+
+<style>
+  footer {
+    height: 100px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(var(--black-text));
+    color: white;
+  }
+
+  img {
+    width: 40px;
+    filter: invert(1);
+    margin: 0 10px;
+  }
+
+  .icons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 10px
+  }
+</style>

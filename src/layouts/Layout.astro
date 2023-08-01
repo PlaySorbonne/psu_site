@@ -5,6 +5,7 @@ interface Props {
 
 const { title } = Astro.props;
 
+import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 ---
 
@@ -28,6 +29,7 @@ import Header from "../components/Header.astro";
   <body>
     <Header />
     <slot />
+    <Footer />
   </body>
 </html>
 <style is:global>
@@ -39,7 +41,7 @@ import Header from "../components/Header.astro";
   html {
     background-color: #f6f6f6;
     font-family: "Titillium Web", sans-serif;
-    /* 200, 400, 900 */
+    scroll-behavior: smooth;
   }
   * {
     box-sizing: border-box;

@@ -29,14 +29,14 @@ const posts = await Astro.glob<Frontmatter>(
 <Layout title="Play Sorbonne Université">
   <div class="color_ligne"></div>
 
-  <section class="titre">
+  <section class="titre" id="accueil">
     <div class="text__titre">
       <h1 class="title">Le festival étudiant du jeu.</h1>
       <h2 class="subtitle__titre">le 16 septembre 2023</h2>
     </div>
   </section>
 
-  <section class="festival">
+  <section class="festival" id="festival">
     <div class="content">
       <h1 class="title title__festival">Le festival</h1>
       <div class="color_ligne"></div>
@@ -57,7 +57,7 @@ const posts = await Astro.glob<Frontmatter>(
     </div>
   </section>
 
-  <section class="association">
+  <section class="association" id="association">
     <div class="content">
       <h1 class="title title__association">L'association</h1>
       <div class="color_ligne"></div>
@@ -65,7 +65,7 @@ const posts = await Astro.glob<Frontmatter>(
     </div>
   </section>
 
-  <section class="clubs">
+  <section class="clubs" id="clubs">
     <div class="content">
       <h1 class="title">Les Clubs</h1>
       <div class="color_ligne"></div>
@@ -102,7 +102,7 @@ const posts = await Astro.glob<Frontmatter>(
     </div>
   </section>
 
-  <section class="programme">
+  <section class="programme" id="programme">
     <div class="content">
       <h1 class="title">Le programme</h1>
       <div class="color_ligne"></div>
