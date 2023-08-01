@@ -1,6 +1,6 @@
 ---
 title: Laisser faire les pros
-image: /src/assets/image3.webp
+image: /image3.webp
 ---
 
 L’e-sport, pratique compétitive professionnelle du jeu vidéo, est une discipline en plein essor. Les compétitions de certains jeux remplissent des stades entiers (Rocket League, Starcraft, League of Legends, Dota, Fifa, Counter Strike...) et les grandes écuries sportives ou industrielles créent leur propres équipes (Renault Vitality, PSG e-sport, FC Barcelona e-sport, Samsung Galaxy Pro Game Team...).

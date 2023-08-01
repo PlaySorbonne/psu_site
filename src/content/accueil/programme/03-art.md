@@ -1,6 +1,6 @@
 ---
 title: Exposer l'art vidéoludique
-image: /src/assets/image4.webp
+image: /image4.webp
 ---
 
 Si l’on parle parfois de « jeux d’auteurs » pour certaines créations indépendantes, même les plus grosses productions peuvent être des médiums d’expression artistique. Ainsi, le jeu vidéo s’invite déjà dans de nombreuses collections et expositions temporaires (Grand Palais, MoMa, Cité des sciences, Fondation EDF...).
