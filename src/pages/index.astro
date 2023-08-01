@@ -217,6 +217,15 @@ const posts = await Astro.glob<Frontmatter>(
     align-items: flex-start;
     flex-wrap: wrap;
     padding: 20px 0;
+    width: 100%;
+  }
+
+  @media (max-width: 700px) {
+    .icons__clubs {
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+    }
   }
 
   .content__programme {
@@ -238,15 +247,28 @@ const posts = await Astro.glob<Frontmatter>(
     align-items: center;
   }
 
+  .content_left {
+    flex-direction: row-reverse;
+  }
+
+  @media (max-width: 700px) {
+    .content__element {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .content_left {
+      flex-direction: column;
+    }
+
+  }
+
   .title__element {
     color: rgb(var(--black-text));
     font-weight: bold;
     text-decoration: underline;
   }
 
-  .content_left {
-    flex-direction: row-reverse;
-  }
 
   .element {
     padding: 5px 0;

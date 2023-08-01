@@ -3,20 +3,38 @@ import logo from "../assets/logo.svg";
 ---
 
 <header>
-  <div class="logo_wrapper">
-    <img class="logo" src={logo} alt="logo" />
+  <div class="desktop">
+    <div class="logo_wrapper">
+      <img class="logo" src={logo} alt="logo" />
+    </div>
+    <div class="links">
+      <a href="#accueil">accueil</a>
+      <a href="#festival">le festival</a>
+      <a href="#association">l'association</a>
+      <a href="#clubs">les clubs</a>
+      <a href="#programme">le programme</a>
+    </div>
   </div>
-  <div class="links">
-    <a href="#accueil">accueil</a>
-    <a href="#festival">le festival</a>
-    <a href="#association">l'association</a>
-    <a href="#clubs">les clubs</a>
-    <a href="#programme">le programme</a>
+
+  <div class="mobile">
+      <img class="logo_mobile" src={logo} alt="logo" />
   </div>
 </header>
 
 <style>
-  header {
+  .mobile {
+    display: none;
+    height: 40px;
+    background-color: rgb(var(--pink));
+    justify-content: center;
+    align-items: center;
+  }
+
+  .logo_mobile {
+    height: 40px;
+  }
+
+  .desktop {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
@@ -46,5 +64,14 @@ import logo from "../assets/logo.svg";
 
   .logo {
     width: 80%;
+  }
+
+  @media (max-width: 700px) {
+    .desktop {
+      display: none;
+    }
+    .mobile {
+      display: flex;
+    }
   }
 </style>

@@ -29,4 +29,18 @@ const { img, alt } = Astro.props;
   .img {
     width: 100%;
   }
+
+  @media (max-width: 700px) {
+    .wrapper {
+      flex-direction: row;
+      width: 100%;
+      margin: 20px 0;
+      padding: 10px 5px;
+    }
+    .img {
+      width: 30%;
+    }
+
+  }
+
 </style>
