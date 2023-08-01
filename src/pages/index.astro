@@ -19,7 +19,7 @@ import Club from "../components/Club.astro";
 
 interface Frontmatter {
   title: string;
-  img: string;
+  image: string;
 }
 const posts = await Astro.glob<Frontmatter>(
   "../content/accueil/programme/*.md"
@@ -114,7 +114,7 @@ const posts = await Astro.glob<Frontmatter>(
               <p class="title__element">{post.frontmatter.title}</p>
               <div class={`content__element ${i % 2 && "content_left"}`}>
                 <img
-                  src={`/src/assets/${post.frontmatter.img}`}
+                  src={post.frontmatter.image}
                   alt=""
                   class="img__element"
                 />
