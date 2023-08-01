@@ -12,9 +12,9 @@ import Discord from "../assets/discord.svg"
             <img src={Insta} alt="Insta">
           </a>
         </div>
-        <p>
-          PlaySorbonne © 2023
-        </p>
+        <a href="mailto:playsorbonnefestival@gmail.com">
+          playsorbonnefestival@gmail.com
+        </a>
     </div>
 </footer>
 
@@ -33,6 +33,17 @@ import Discord from "../assets/discord.svg"
     width: 40px;
     filter: invert(1);
     margin: 0 10px;
+  }
+
+  img:hover {
+    filter: invert(49%) sepia(78%) saturate(493%) hue-rotate(281deg) brightness(97%) contrast(87%);
+  }
+
+  a {
+    font-size: 1.2rem;
+  }
+  a:hover {
+    color: rgb(var(--pink));
   }
 
   .icons {

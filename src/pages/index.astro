@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Icon from "../components/Icon.astro";
+import Club from "../components/Club.astro";
 
 import Tetris from "../assets/tetris.svg";
 import Trophy from "../assets/trophy.svg";
@@ -15,7 +16,6 @@ import LeDLC from "../assets/ledlc.png";
 
 import { Content as Festival } from "../content/accueil/festival.md";
 import { Content as Association } from "../content/accueil/association.md";
-import Club from "../components/Club.astro";
 
 interface Frontmatter {
   title: string;
@@ -182,6 +182,17 @@ const posts = await Astro.glob<Frontmatter>(
     text-transform: uppercase;
   }
 
+  @media (max-width: 768px) {
+    .title {
+      font-size: 2rem;
+    }
+    
+    .subtitle__titre {
+      font-size: 1.5rem;
+    }
+  }
+
+
   .title__festival {
     color: rgb(var(--black-title));
   }
@@ -199,6 +210,7 @@ const posts = await Astro.glob<Frontmatter>(
     display: flex;
     justify-content: space-around;
     align-items: center;
+    flex-wrap: wrap;
   }
 
   .association {
@@ -220,7 +232,7 @@ const posts = await Astro.glob<Frontmatter>(
     width: 100%;
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: 768px) {
     .icons__clubs {
       flex-direction: column;
       align-items: center;
@@ -251,7 +263,7 @@ const posts = await Astro.glob<Frontmatter>(
     flex-direction: row-reverse;
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: 768px) {
     .content__element {
       flex-direction: column;
       align-items: center;
