@@ -31,7 +31,7 @@ const posts = await Astro.glob<Frontmatter>(
 
   <section class="titre" id="accueil">
     <div class="text__titre">
-      <h1 class="title">Le festival étudiant du jeu.</h1>
+      <h1 class="title">Le festival du jeu.</h1>
       <h2 class="subtitle__titre">le 16 septembre 2023</h2>
     </div>
   </section>
@@ -72,30 +72,33 @@ const posts = await Astro.glob<Frontmatter>(
 
       <p>
         <strong
-          >Lorem ipsum, dolor sit amet consectetur adipisicing elit. Harum vero
-          ducimus veniam aspernatur molestias quod consectetur pariatur
-          voluptatum placeat hic animi eligendi soluta obcaecati deleniti,
-          ipsam, magnam modi cupiditate error.</strong
+          >L'association Play Sorbonne Université (PSU) a pour projet d'étendre
+          ses actions pour partager la passion du jeu au plus grand nombre au
+          sein de l'université. Pour mieux nous organiser dans cette entreprise,
+          nous avons choisi de diviser nos principaux objectifs en plusieurs
+          équipes : Lux Ludi, le DLC, Loading Games et Play & Learn Society.</strong
         >
       </p>
 
       <div class="icons__clubs">
         <Club img={PLSociety}>
           <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem quia
-            harum.
+            Vulgariser, dévoiler, transmettre. Nous avons pour but de donner de
+            la légitimité au domaine du jeu vidéo, en traitant avec rigueur les
+            thèmes associés, dont la recherche axée sur ce domaine.
           </p>
         </Club>
         <Club img={LeDLC}>
           <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem quia
-            harum repellat doloremque ipsa accusantium.
+            Le club le DLC a pour objectif d'animer la vie du campus, de
+            fidéliser les étudiants et de créer des liens avec d'autres
+            associations.
           </p>
         </Club>
         <Club img={LuxLudi}>
           <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Rem quia
-            harum.
+            Le club Lux Ludi a pour but de trouver, produire et diffuser des
+            jeux de société inventés par les étudiants de Sorbonne Université.
           </p>
         </Club>
       </div>
@@ -113,11 +116,7 @@ const posts = await Astro.glob<Frontmatter>(
             <div class="element">
               <p class="title__element">{post.frontmatter.title}</p>
               <div class={`content__element ${i % 2 && "content_left"}`}>
-                <img
-                  src={post.frontmatter.image}
-                  alt=""
-                  class="img__element"
-                />
+                <img src={post.frontmatter.image} alt="" class="img__element" />
                 <div>
                   <post.Content />
                 </div>
@@ -186,12 +185,11 @@ const posts = await Astro.glob<Frontmatter>(
     .title {
       font-size: 2rem;
     }
-    
+
     .subtitle__titre {
       font-size: 1.5rem;
     }
   }
-
 
   .title__festival {
     color: rgb(var(--black-title));
@@ -272,7 +270,6 @@ const posts = await Astro.glob<Frontmatter>(
     .content_left {
       flex-direction: column;
     }
-
   }
 
   .title__element {
@@ -280,7 +277,6 @@ const posts = await Astro.glob<Frontmatter>(
     font-weight: bold;
     text-decoration: underline;
   }
-
 
   .element {
     padding: 5px 0;
