@@ -3,7 +3,8 @@ interface Props {
   imgs: {
     src: string;
     alt: string;
-    text: string;
+    title: string;
+    subtitle?: string;
   }[];
   className?: string;
 }
@@ -11,29 +12,20 @@ interface Props {
 const { imgs, className } = Astro.props;
 ---
 
-<div class="slide-container">
+<div class={"slide-container " + (className ?? "")}>
   {
-    imgs.map((item, index) => {
+    imgs.map((item) => {
       return (
-        <div class="custom-slider fade">
-          <div class="slide-index">
-            {index + 1} / {imgs.length}
+        <div
+          class="custom-slider"
+          style={`background-image: url(${item.src});`}
+        >
+          <div class="btns">
+            <a class="prev">uwu</a>
+            <div class="slide-text">{item.title}</div>
+            <a class="next">owo</a>
           </div>
-          <img class="slide-img" src={item.src} alt={item.alt} />
-          <div class="slide-text">{item.text}</div>
         </div>
-      );
-    })
-  }
-  <a class="prev" onclick="plusSlides(-1); "></a>
-  <a class="next" onclick="plusSlides(1); "></a>
-</div>
-<br />
-<div class="slide-dot">
-  {
-    imgs.map((_, index) => {
-      return (
-        <span class="dot" onclick={`currentSlide(${index + 1}); `}></span>
       );
     })
   }
@@ -42,17 +34,19 @@ const { imgs, className } = Astro.props;
 <style>
   .custom-slider {
     display: none;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
   }
   .slide-container {
-    max-width: 800px;
-    position: relative;
-    margin: auto;
+    width: 100%;
+    height: 100%;
   }
   .prev,
   .next {
     cursor: pointer;
-    position: absolute;
-    top: 50%;
+    /* position: absolute;
+    top: 50%; */
     transform: translateY(-50%);
     width: 60px;
     height: 60px;
@@ -65,23 +59,24 @@ const { imgs, className } = Astro.props;
     background-color: rgba(0, 0, 0, 0);
     transition: background-color 0.6s ease;
   }
-  .prev {
-    left: 15px;
+
+  .btns {
+    padding-top: 30px;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
-  .next {
-    right: 15px;
-  }
+
   .prev:hover,
   .next:hover {
     background-color: rgba(0, 0, 0, 0.5);
   }
   .slide-text {
-    position: absolute;
+    /* position: absolute; */
     color: #ffffff;
     font-size: 15px;
-    padding: 15px;
-    bottom: 15px;
-    width: 100%;
     text-align: center;
   }
   .slide-index {
@@ -97,19 +92,7 @@ const { imgs, className } = Astro.props;
     object-fit: cover;
     object-position: center;
   }
-  .slide-dot {
-    text-align: center;
-  }
-  .dot {
-    cursor: pointer;
-    height: 10px;
-    width: 10px;
-    margin: 0 2px;
-    background-color: #999999;
-    border-radius: 50%;
-    display: inline-block;
-    transition: background-color 0.6s ease;
-  }
+
   .active,
   .dot:hover {
     background-color: #111111;
@@ -132,6 +115,14 @@ const { imgs, className } = Astro.props;
   var slideIndex = 1;
   showSlides(slideIndex);
 
+  document.querySelectorAll(".prev").forEach((el) => {
+    el.addEventListener("click", () => plusSlides(-1));
+  });
+
+  document.querySelectorAll(".next").forEach((el) => {
+    el.addEventListener("click", () => plusSlides(1));
+  });
+
   function plusSlides(n) {
     showSlides((slideIndex += n));
   }
@@ -144,8 +135,7 @@ const { imgs, className } = Astro.props;
     var i;
     var slides = document.getElementsByClassName(
       "custom-slider"
-    );
-    var dots = document.getElementsByClassName("dot");
+    ) as unknown as HTMLElement[]; // HACK
     if (n > slides.length) {
       slideIndex = 1;
     }
@@ -155,10 +145,6 @@ const { imgs, className } = Astro.props;
     for (i = 0; i < slides.length; i++) {
       slides[i].style.display = "none";
     }
-    for (i = 0; i < dots.length; i++) {
-      dots[i].className = dots[i].className.replace(" active", "");
-    }
     slides[slideIndex - 1].style.display = "block";
-    dots[slideIndex - 1].className += " active";
   }
 </script>

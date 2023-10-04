@@ -1,6 +1,6 @@
 ---
 title: Jouer ensemble
-image: /image5.webp
+image: /accueil/programme/image5.webp
 ---
 
 Le coeur du festival reste évidemment la célébration d’une passion à peine cinquantenaire mais qui fédère pourtant les générations.

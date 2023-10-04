@@ -10,7 +10,7 @@ const imgs = [
   {
     src: ImgAcc,
     alt: "image accueil",
-    text: "uwu",
+    text: "uwu nyah~",
   },
   {
     src: ImgAcc,
@@ -38,27 +38,33 @@ import LeDLC from "../assets/ledlc.png";
 import { Content as Festival } from "../content/accueil/festival.md";
 import { Content as Association } from "../content/accueil/association.md";
 
-interface Frontmatter {
-  title: string;
-  image: string;
-}
-const posts = await Astro.glob<Frontmatter>(
+const posts = await Astro.glob<{ title: string; image: string }>(
   "../content/accueil/programme/*.md"
 );
+
+interface carrouselT {
+  title: string;
+  subtitle?: string;
+  src: string;
+  alt: string;
+}
+const carrousel = (
+  await Astro.glob<carrouselT>("../content/accueil/carrousel/*.md")
+).map((e) => {
+  return {
+    title: e.frontmatter.title,
+    subtitle: e.frontmatter.subtitle,
+    src: e.frontmatter.src,
+    alt: e.frontmatter.alt ?? "",
+  };
+}) as carrouselT[];
 ---
 
 <Layout title="Play Sorbonne Université">
   <div class="color_ligne"></div>
 
   <section class="titre" id="accueil">
-    {
-      /*<div class="text__titre">
-      <h1 class="title">Le festival du jeu</h1>
-      <h3 class="subtitle__titre">le 16 septembre 2023, de 10h à 19h</h3>
-  </div>*/
-    }
-
-    <ImgCar {imgs} client:load/>
+    <ImgCar imgs={carrousel} />
   </section>
 
   <section class="festival" id="festival">
@@ -171,6 +177,7 @@ const posts = await Astro.glob<Frontmatter>(
   }
 
   .titre {
+    padding: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
