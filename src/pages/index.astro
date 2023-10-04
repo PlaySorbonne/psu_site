@@ -2,6 +2,27 @@
 import Layout from "../layouts/Layout.astro";
 import Icon from "../components/Icon.astro";
 import Club from "../components/Club.astro";
+import ImgCar from "../components/ImgCar.astro";
+
+import ImgAcc from "../assets/imageaccueil.webp";
+
+const imgs = [
+  {
+    src: ImgAcc,
+    alt: "image accueil",
+    text: "uwu",
+  },
+  {
+    src: ImgAcc,
+    alt: "image accueil",
+    text: "uwu",
+  },
+  {
+    src: ImgAcc,
+    alt: "image accueil",
+    text: "uwu",
+  },
+];
 
 import Tetris from "../assets/tetris.svg";
 import Trophy from "../assets/trophy.svg";
@@ -30,10 +51,14 @@ const posts = await Astro.glob<Frontmatter>(
   <div class="color_ligne"></div>
 
   <section class="titre" id="accueil">
-    <div class="text__titre">
+    {
+      /*<div class="text__titre">
       <h1 class="title">Le festival du jeu</h1>
       <h3 class="subtitle__titre">le 16 septembre 2023, de 10h à 19h</h3>
-    </div>
+  </div>*/
+    }
+
+    <ImgCar {imgs} client:load/>
   </section>
 
   <section class="festival" id="festival">
@@ -153,7 +178,7 @@ const posts = await Astro.glob<Frontmatter>(
     height: 40vh;
     background-size: cover;
 
-    background-image: url(/src/assets/imageaccueil.webp);
+    /*background-image: url(/src/assets/imageaccueil.webp);*/
     /* HACK */
   }
 
