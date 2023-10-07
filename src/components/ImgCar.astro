@@ -1,4 +1,7 @@
 ---
+import LeftArrow from "../assets/left-arrow.svg"
+import RightArrow from "../assets/right-arrow.svg"
+
 interface Props {
   imgs: {
     src: string;
@@ -21,9 +24,13 @@ const { imgs, className } = Astro.props;
           style={`background-image: url(${item.src});`}
         >
           <div class="btns">
-            <a class="prev">uwu</a>
+            <a class="prev">
+              <img src={LeftArrow} />
+            </a>
             <div class="slide-text">{item.title}</div>
-            <a class="next">owo</a>
+            <a class="next">
+              <img src={RightArrow} />
+            </a>
           </div>
         </div>
       );
@@ -32,6 +39,12 @@ const { imgs, className } = Astro.props;
 </div>
 
 <style>
+  img {
+    filter: invert(1);
+    width: 100%;
+    height: 100%;
+  }
+
   .custom-slider {
     display: none;
     width: 100%;
@@ -50,6 +63,7 @@ const { imgs, className } = Astro.props;
     transform: translateY(-50%);
     width: 60px;
     height: 60px;
+    padding: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
