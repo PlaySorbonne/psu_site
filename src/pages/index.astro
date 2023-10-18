@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import Icon from "../components/Icon.astro";
 import Club from "../components/Club.astro";
 import ImgCar from "../components/ImgCar.astro";
+import MySwiper from "../components/Swip.jsx";
 
 import Tetris from "../assets/tetris.svg";
 import Trophy from "../assets/trophy.svg";
@@ -44,7 +45,7 @@ const carrousel = (
   <div class="color_ligne"></div>
 
   <section class="titre" id="accueil">
-    <ImgCar imgs={carrousel} />
+    <MySwiper/>
   </section>
 
   <section class="festival" id="festival">
