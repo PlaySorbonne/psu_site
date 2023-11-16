@@ -16,7 +16,6 @@ export default function Carrousel(props: { slides: carrouselT[] }) {
   console.log(props.slides);
   return (
     <Swiper
-      cssMode={true}
       navigation={true}
       mousewheel={true}
       keyboard={true}
@@ -84,10 +83,12 @@ const titleStyle: React.CSSProperties = {
   fontSize: "3rem",
   fontWeight: "900",
   textTransform: "uppercase",
+  textAlign: "center",
 };
 
 const subtitleStyle: React.CSSProperties = {
   fontSize: "2rem",
   fontWeight: "200",
   textTransform: "uppercase",
+  textAlign: "center",
 };
