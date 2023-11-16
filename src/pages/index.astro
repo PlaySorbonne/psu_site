@@ -40,6 +40,13 @@ const carrousel = (
   <div class="color_ligne"></div>
 
   <section class="titre" id="accueil">
+    <noscript style="width:100%; height:100%">
+      <div class="noScript">
+        <div class="text__titre">
+          <h1 class="title">Bienvenue sur le site de PSU !</h1>
+        </div>
+      </div>
+    </noscript>
     <Carrousel client:only="react" slides={carrousel} />
   </section>
 
@@ -157,6 +164,13 @@ const carrousel = (
     flex-direction: column;
     align-items: center;
     justify-content: center;
+  }
+
+  .noScript {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-image: url(/src/assets/imageaccueil.webp);
   }
 
   .content {
