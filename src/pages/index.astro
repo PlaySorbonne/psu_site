@@ -2,8 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import Icon from "../components/Icon.astro";
 import Club from "../components/Club.astro";
-// import ImgCar from "../components/ImgCar.astro";
-import MySwiper from "../components/Swip.jsx";
+import Carrousel, { type carrouselT } from "../components/Carrousel.tsx";
 
 import Tetris from "../assets/tetris.svg";
 import Trophy from "../assets/trophy.svg";
@@ -23,12 +22,6 @@ const posts = await Astro.glob<{ title: string; image: string }>(
   "../content/accueil/programme/*.md"
 );
 
-interface carrouselT {
-  title: string;
-  subtitle?: string;
-  src: string;
-  alt: string;
-}
 const carrousel = (
   await Astro.glob<carrouselT>("../content/accueil/carrousel/*.md")
 ).map((e) => {
@@ -45,7 +38,7 @@ const carrousel = (
   <div class="color_ligne"></div>
 
   <section class="titre" id="accueil">
-    <MySwiper client:only="react" />
+    <Carrousel client:only="react" slides={carrousel} />
   </section>
 
   <section class="festival" id="festival">
@@ -60,9 +53,21 @@ const carrousel = (
           title="Rétro-gaming"
           subtitle="pour les nostalgiques"
         />
-        <Icon img={Pen_Ruler.src} title="Jeux indés" subtitle="pour les pionners" />
-        <Icon img={Trophy.src} title="E-sport" subtitle="pour les try-hardeurs" />
-        <Icon img={Mic.src} title="Conférences" subtitle="pour les intellectuels" />
+        <Icon
+          img={Pen_Ruler.src}
+          title="Jeux indés"
+          subtitle="pour les pionners"
+        />
+        <Icon
+          img={Trophy.src}
+          title="E-sport"
+          subtitle="pour les try-hardeurs"
+        />
+        <Icon
+          img={Mic.src}
+          title="Conférences"
+          subtitle="pour les intellectuels"
+        />
         <Icon img={Dices.src} title="Jeux de plateau" subtitle="pour les IRL" />
         <Icon img={Proj.src} title="Expos" subtitle="pour les curieux" />
       </div>

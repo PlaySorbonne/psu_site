@@ -1,4 +1,4 @@
 ---
-title: Des jeux originaux !
+title: Jeux originaux
 src: /accueil/carrousel/memo.webp
 ---
