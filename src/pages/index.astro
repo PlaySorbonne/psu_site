@@ -2,8 +2,8 @@
 import Layout from "../layouts/Layout.astro";
 import Icon from "../components/Icon.astro";
 import Club from "../components/Club.astro";
-import ImgCar from "../components/ImgCar.astro";
-import MySwiper from "../components/Swip.jsx";
+// import ImgCar from "../components/ImgCar.astro";
+import MySwiper from "../components/react/Swip.jsx";
 
 import Tetris from "../assets/tetris.svg";
 import Trophy from "../assets/trophy.svg";
@@ -45,7 +45,7 @@ const carrousel = (
   <div class="color_ligne"></div>
 
   <section class="titre" id="accueil">
-    <MySwiper/>
+    <MySwiper client:only="react" />
   </section>
 
   <section class="festival" id="festival">
@@ -56,15 +56,15 @@ const carrousel = (
 
       <div class="icons">
         <Icon
-          img={Tetris}
+          img={Tetris.src}
           title="Rétro-gaming"
           subtitle="pour les nostalgiques"
         />
-        <Icon img={Pen_Ruler} title="Jeux indés" subtitle="pour les pionners" />
-        <Icon img={Trophy} title="E-sport" subtitle="pour les try-hardeurs" />
-        <Icon img={Mic} title="Conférences" subtitle="pour les intellectuels" />
-        <Icon img={Dices} title="Jeux de plateau" subtitle="pour les IRL" />
-        <Icon img={Proj} title="Expos" subtitle="pour les curieux" />
+        <Icon img={Pen_Ruler.src} title="Jeux indés" subtitle="pour les pionners" />
+        <Icon img={Trophy.src} title="E-sport" subtitle="pour les try-hardeurs" />
+        <Icon img={Mic.src} title="Conférences" subtitle="pour les intellectuels" />
+        <Icon img={Dices.src} title="Jeux de plateau" subtitle="pour les IRL" />
+        <Icon img={Proj.src} title="Expos" subtitle="pour les curieux" />
       </div>
     </div>
   </section>
@@ -93,21 +93,21 @@ const carrousel = (
       </p>
 
       <div class="icons__clubs">
-        <Club img={PLSociety}>
+        <Club img={PLSociety.src}>
           <p>
             Vulgariser, dévoiler, transmettre. Nous avons pour but de donner de
             la légitimité au domaine du jeu vidéo, en traitant avec rigueur les
             thèmes associés, dont la recherche axée sur ce domaine.
           </p>
         </Club>
-        <Club img={LeDLC}>
+        <Club img={LeDLC.src}>
           <p>
             Le club le DLC a pour objectif d'animer la vie du campus, de
             fidéliser les étudiants et de créer des liens avec d'autres
             associations.
           </p>
         </Club>
-        <Club img={LuxLudi}>
+        <Club img={LuxLudi.src}>
           <p>
             Le club Lux Ludi a pour but de trouver, produire et diffuser des
             jeux de société inventés par les étudiants de Sorbonne Université.
