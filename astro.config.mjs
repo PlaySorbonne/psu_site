@@ -8,6 +8,6 @@ export default defineConfig({
   site: "https://playsorbonne.fr/",
   integrations: [
     react(),
-    compress(),
+    // compress(),
   ],
 });

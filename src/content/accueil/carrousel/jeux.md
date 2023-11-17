@@ -1,5 +1,5 @@
 ---
-title: Soirée jeux
-subtitle: Tout les jeudi à Jussieu !
+title: Soirées jeux
+subtitle: Tout les jeudis à Jussieu !
 src: /accueil/carrousel/jeux.webp
 ---

@@ -16,6 +16,7 @@ export default function Carrousel(props: { slides: carrouselT[] }) {
   console.log(props.slides);
   return (
     <Swiper
+      loop={true}
       navigation={true}
       mousewheel={true}
       keyboard={true}
