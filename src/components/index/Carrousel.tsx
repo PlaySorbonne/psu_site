@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Mousewheel, Keyboard } from "swiper/modules";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -18,10 +18,13 @@ export default function Carrousel(props: { slides: carrouselT[] }) {
     <Swiper
       loop={true}
       navigation={true}
-      mousewheel={true}
-      keyboard={true}
       pagination={true}
-      modules={[Navigation, Mousewheel, Keyboard, Pagination]}
+      modules={[Navigation, Pagination, Autoplay]}
+      autoplay={{
+        delay: 2500,
+        disableOnInteraction: false,
+        pauseOnMouseEnter: true,
+      }}
       style={carrouselStyle}
     >
       {props.slides.map((slide, index) => (
