@@ -1,5 +1,5 @@
 ---
 title: Festival de jeu
-subtitle: en Septembre !
+subtitle: tous les Septembres !
 src: /accueil/carrousel/arcades.webp
 ---

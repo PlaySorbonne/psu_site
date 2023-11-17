@@ -54,6 +54,7 @@ const slideStyle: React.CSSProperties = {
   alignItems: "center",
   color: "white",
   backgroundSize: "cover",
+  backgroundPosition: "center",
 };
 
 const contentStyle: React.CSSProperties = {
@@ -76,8 +77,7 @@ const textWrapperStyle: React.CSSProperties = {
   maxWidth: "50%",
   display: "flex",
   flexDirection: "column",
-  alignItems: "center"
-
+  alignItems: "center",
 };
 
 const titleStyle: React.CSSProperties = {
