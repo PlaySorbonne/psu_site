@@ -10,7 +10,7 @@ const { img, className, title, subtitle } = Astro.props;
 ---
 
 <div class=`wrapper ${className ?? ""}`>
-  <img class="img" src={img} alt="icon" />
+  <img class="img" src={img} alt="icon" loading="lazy"/>
 
   <p class="title">
     {title}

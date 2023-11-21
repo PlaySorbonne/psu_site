@@ -1,15 +1,16 @@
 ---
 interface Props {
   title: string;
+  prefetchs?: string[];
 }
 
-const { title } = Astro.props;
+const { title, prefetchs } = Astro.props;
 
 import Footer from "../components/global/Footer.astro";
 import Header from "../components/global/Header.astro";
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -25,6 +26,7 @@ import Header from "../components/global/Header.astro";
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;700&family=Titillium+Web:wght@200;400;700;900&display=swap"
       rel="stylesheet"
     />
+    {prefetchs?.map((prefetch) => <link rel="prefetch" href={prefetch} />)}
   </head>
   <body>
     <Header />

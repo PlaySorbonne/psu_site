@@ -36,7 +36,7 @@ const carrousel = (
 }) as carrouselT[];
 ---
 
-<Layout title="Play Sorbonne Université">
+<Layout title="Play Sorbonne Université" prefetchs={[carrousel[0].src]}>
   <div class="color_ligne"></div>
 
   <section class="titre" id="accueil">
@@ -135,7 +135,7 @@ const carrousel = (
             <div class="element">
               <p class="title__element">{post.frontmatter.title}</p>
               <div class={`content__element ${i % 2 && "content_left"}`}>
-                <img src={post.frontmatter.image} alt="" class="img__element" />
+                <img loading="lazy" src={post.frontmatter.image} alt="" class="img__element" />
                 <div>
                   <post.Content />
                 </div>
