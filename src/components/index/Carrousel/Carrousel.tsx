@@ -15,7 +15,6 @@ export interface carrouselT {
 }
 
 export default function Carrousel(props: { slides: carrouselT[] }) {
-  console.log(props.slides);
   return (
     <Swiper
       loop={true}
