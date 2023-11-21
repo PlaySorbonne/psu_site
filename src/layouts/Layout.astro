@@ -36,14 +36,18 @@ import Header from "../components/global/Header.astro";
 </html>
 <style is:global>
   :root {
-    --pink: 232, 101, 173;
+    --main-color: 232, 101, 173;
     --black-text: 61, 61, 111;
     --black-title: 0, 32, 51;
+    --secondary-color: var(--black-text);
   }
   html {
     background-color: #f6f6f6;
     font-family: "Titillium Web", sans-serif;
     scroll-behavior: smooth;
+  }
+  body {
+    color: rgb(var(--black-text));
   }
   * {
     box-sizing: border-box;
