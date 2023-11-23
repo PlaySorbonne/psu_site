@@ -3,9 +3,9 @@
 
 import type { MarkdownLayoutProps } from "astro";
 import FrontPage from "../FrontPage.astro";
-import type { carrouselT } from "@/components/index/Carrousel/Carrousel";
+import type { Slide } from "@/helpers";
 
-type Props = { logo?: string } & MarkdownLayoutProps<{
+type Props = { logo?: ClubName } & MarkdownLayoutProps<{
   title: string;
   subtitle?: string;
   src?: string;
@@ -15,9 +15,10 @@ type Props = { logo?: string } & MarkdownLayoutProps<{
 
 const {
   frontmatter: { title, subtitle, src },
+  logo,
 } = Astro.props;
 
-const slide: carrouselT[] = [
+const slide: Slide[] = [
   {
     title,
     subtitle,
@@ -27,6 +28,8 @@ const slide: carrouselT[] = [
 ];
 ---
 
-<FrontPage title={title} slides={slide}>
-  <slot />
-</FrontPage>;
+<FrontPage title={title} slides={slide} logo={logo}>
+  <section>
+    <slot />
+  </section>
+</FrontPage>

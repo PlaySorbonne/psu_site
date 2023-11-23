@@ -1,15 +1,15 @@
 ---
 import type { NavItem } from "@/components/global/Header.astro";
 import DefaultPage from "./DefaultPage.astro";
-import type { carrouselT } from "@/components/index/Carrousel/Carrousel";
 import Carrousel from "@/components/index/Carrousel/Carrousel";
+import type { Slide } from "@/helpers";
 
 interface Props {
   logo?: ClubName;
   nav?: NavItem[];
   title: string;
   prefetchs?: string[];
-  slides?: carrouselT[];
+  slides?: Slide[];
 }
 
 const { logo, nav = [], title, prefetchs, slides } = Astro.props;
@@ -52,6 +52,10 @@ const navs = [
     flex-direction: column;
     align-items: center;
     justify-content: center;
+  }
+
+  :global(section) > :global(.content){
+    max-width: 900px;
   }
   .titre {
     display: block;

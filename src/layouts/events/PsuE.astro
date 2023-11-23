@@ -1,0 +1,19 @@
+---
+import type { MarkdownLayoutProps } from "astro";
+import Event from "./Event.astro";
+import PsuS from "../style/PsuS.astro";
+
+type Props = MarkdownLayoutProps<{
+  title: string;
+  subtitle?: string;
+  src?: string;
+  priority?: boolean;
+  inCarrousel?: boolean;
+}>;
+---
+
+<PsuS>
+  <Event {...Astro.props} logo="psu">
+    <slot />
+  </Event>
+</PsuS>

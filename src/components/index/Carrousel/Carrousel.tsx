@@ -1,21 +1,15 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 
+import type { Slide } from "@/helpers";
+
 import styles from "./Carrousel.module.css";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-export interface carrouselT {
-  title: string;
-  subtitle?: string;
-  src: string;
-  alt: string;
-  link?: string;
-}
-
-export default function Carrousel(props: { slides: carrouselT[] }) {
+export default function Carrousel(props: { slides: Slide[] }) {
   return (
     <Swiper
       loop={true}
@@ -35,12 +29,15 @@ export default function Carrousel(props: { slides: carrouselT[] }) {
           className={styles.slide}
           style={{ backgroundImage: `url(${slide.src})` }}
         >
-          <a className={styles.content} href={slide.link}>
-            <div className={styles.textWrapper}>
+          <div className={styles.content}>
+            <a
+              className={styles.textWrapper}
+              href={slide.noLink ? undefined : slide.link}
+            >
               <h1 className={styles.title}>{slide.title}</h1>
               <h2 className={styles.subtitle}>{slide.subtitle}</h2>
-            </div>
-          </a>
+            </a>
+          </div>
         </SwiperSlide>
       ))}
     </Swiper>

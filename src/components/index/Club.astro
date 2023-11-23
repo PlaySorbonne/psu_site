@@ -2,30 +2,45 @@
 interface Props {
   img: string;
   alt?: string;
+  link?: string;
 }
 
-const { img, alt } = Astro.props;
+const { img, alt, link } = Astro.props;
 ---
 
-<div class="wrapper">
+<a class="wrapper" href={link}>
   <img src={img} alt={alt ?? "logo"} class="img" />
   <slot />
-</div>
+</a>
 
 <style>
+
+  @keyframes onHover {
+    from { transform: scale(1); }
+    to { transform: scale(1.1); }
+  }
+
   .wrapper {
+    background-color: rgb(var(--main-color));
     max-width: 200px;
     width: 25%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #e865ad;
     padding: 20px;
     color: white;
     font-weight: bold;
     text-justify: auto;
     margin: 0 20px;
+    animation: uwu 1s ease-in-out infinite;
   }
+
+  .wrapper:hover {
+    background-color: rgba(var(--main-color), 0.8));
+    transform: scale(1.1);
+    animation: onHover 0.5s linear;
+  }
+
   .img {
     width: 100%;
   }

@@ -1,10 +1,10 @@
 ---
 import FrontPage from "@/layouts/FrontPage.astro";
+import PsuS from "@/layouts/style/PsuS.astro";
 
 import Icon from "@/components/index/Icon.astro";
 
 import Club from "@/components/index/Club.astro";
-import { type carrouselT } from "@/components/index/Carrousel/Carrousel";
 
 import Tetris from "@/assets/tetris.svg";
 import Trophy from "@/assets/trophy.svg";
@@ -19,6 +19,7 @@ import LeDLC from "@/assets/logos/dlc.png";
 
 import { Content as Festival } from "@/content/accueil/festival.md";
 import { Content as Association } from "@/content/accueil/association.md";
+import { rawMDtoSortedArray, type Slide } from "@/helpers";
 
 const navBar = [
   { name: "le festival", link: "#festival" },
@@ -32,165 +33,144 @@ const posts = await Astro.glob<{ title: string; image: string }>(
 );
 
 // import all the carrousel images
-const carrousel = (
-  await Astro.glob<carrouselT & { priority: boolean; inCarrousel: boolean }>(
-    "../content/carrousel/**/*.md"
-  )
-)
-  .filter((e) => e.frontmatter.inCarrousel)
-  .map((e) => {
-    return {
-      title: e.frontmatter.title,
-      subtitle: e.frontmatter.subtitle,
-      src: e.frontmatter.src,
-      alt: e.frontmatter.alt ?? "",
-      priority: e.frontmatter.priority ?? false,
-    };
-  }) as (carrouselT & { priority: boolean })[];
-
-const priorityCarrousel = carrousel.filter((e) => e.priority);
+const carrousel = await Astro.glob<Slide>("./**/*.md");
 
 // importing the carrousel images for PSU
-const psuCar = (
-  await Astro.glob<carrouselT>("../content/carrousel/PSU/*.md")
-).map((e) => {
-  return {
-    title: e.frontmatter.title,
-    subtitle: e.frontmatter.subtitle,
-    src: e.frontmatter.src,
-    alt: e.frontmatter.alt ?? "",
-  };
-}) as carrouselT[];
+const psuCar = await Astro.glob<Slide>("./*.md");
 
-// On met les images prioritaire et psu en premier, mais ils sont en double, removing duplicates
-const slides = [...priorityCarrousel, ...psuCar, ...carrousel].reduce(
-  (acc, curr) => {
-    if (acc.find((e) => e.src === curr.src)) return acc;
-    return [...acc, curr];
-  },
-  [] as carrouselT[]
-);
+const slides = rawMDtoSortedArray([...psuCar, ...carrousel]);
 ---
 
-<FrontPage
-  title="Play Sorbonne Université"
-  prefetchs={[carrousel[0].src]}
-  slides={slides}
-  nav={navBar}
->
-  <section class="festival" id="festival">
-    <div class="content">
-      <h1 class="title title__festival">Le festival</h1>
-      <div class="color_ligne"></div>
-      <Festival />
+<PsuS>
+  <FrontPage
+    title="Play Sorbonne Université"
+    prefetchs={[slides[0].src]}
+    slides={slides}
+    nav={navBar}
+  >
+    <section class="festival" id="festival">
+      <div class="content">
+        <h1 class="title title__festival">Le festival</h1>
+        <div class="color_ligne"></div>
+        <Festival />
 
-      <div class="icons">
-        <Icon
-          img={Tetris.src}
-          title="Rétro-gaming"
-          subtitle="pour les nostalgiques"
-        />
-        <Icon
-          img={Pen_Ruler.src}
-          title="Jeux indés"
-          subtitle="pour les pionners"
-        />
-        <Icon
-          img={Trophy.src}
-          title="E-sport"
-          subtitle="pour les try-hardeurs"
-        />
-        <Icon
-          img={Mic.src}
-          title="Conférences"
-          subtitle="pour les intellectuels"
-        />
-        <Icon img={Dices.src} title="Jeux de plateau" subtitle="pour les IRL" />
-        <Icon img={Proj.src} title="Expos" subtitle="pour les curieux" />
+        <div class="icons">
+          <Icon
+            img={Tetris.src}
+            title="Rétro-gaming"
+            subtitle="pour les nostalgiques"
+          />
+          <Icon
+            img={Pen_Ruler.src}
+            title="Jeux indés"
+            subtitle="pour les pionners"
+          />
+          <Icon
+            img={Trophy.src}
+            title="E-sport"
+            subtitle="pour les try-hardeurs"
+          />
+          <Icon
+            img={Mic.src}
+            title="Conférences"
+            subtitle="pour les intellectuels"
+          />
+          <Icon
+            img={Dices.src}
+            title="Jeux de plateau"
+            subtitle="pour les IRL"
+          />
+          <Icon img={Proj.src} title="Expos" subtitle="pour les curieux" />
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="association" id="association">
-    <div class="content">
-      <h1 class="title title__association">L'association</h1>
-      <div class="color_ligne"></div>
-      <Association />
-    </div>
-  </section>
-
-  <section class="clubs" id="clubs">
-    <div class="content">
-      <h1 class="title">Les Clubs</h1>
-      <div class="color_ligne"></div>
-
-      <p>
-        <strong
-          >L'association Play Sorbonne Université (PSU) a pour projet d'étendre
-          ses actions pour partager la passion du jeu au plus grand nombre au
-          sein de l'université. Pour mieux nous organiser dans cette entreprise,
-          nous avons choisi de diviser nos principaux objectifs en plusieurs
-          équipes : Lux Ludi, le DLC, Loading Games et Play & Learn Society.</strong
-        >
-      </p>
-
-      <div class="icons__clubs">
-        <Club img={PLSociety.src}>
-          <p>
-            Vulgariser, dévoiler, transmettre. Nous avons pour but de donner de
-            la légitimité au domaine du jeu vidéo, en traitant avec rigueur les
-            thèmes associés, dont la recherche axée sur ce domaine.
-          </p>
-        </Club>
-        <Club img={LeDLC.src}>
-          <p>
-            Le club le DLC a pour objectif d'animer la vie du campus, de
-            fidéliser les étudiants et de créer des liens avec d'autres
-            associations.
-          </p>
-        </Club>
-        <Club img={LuxLudi.src}>
-          <p>
-            Le club Lux Ludi a pour but de trouver, produire et diffuser des
-            jeux de société inventés par les étudiants de Sorbonne Université.
-          </p>
-        </Club>
+    <section class="association" id="association">
+      <div class="content">
+        <h1 class="title title__association">L'association</h1>
+        <div class="color_ligne"></div>
+        <Association />
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="programme" id="programme">
-    <div class="content">
-      <h1 class="title">Le programme</h1>
-      <div class="color_ligne"></div>
+    <section class="clubs" id="clubs">
+      <div class="content">
+        <h1 class="title">Les Clubs</h1>
+        <div class="color_ligne"></div>
 
-      <div class="content__programme">
-        {
-          posts.map((post, i) => (
-            <div class="element">
-              <p class="title__element">{post.frontmatter.title}</p>
-              <div class={`content__element ${i % 2 && "content_left"}`}>
-                <img
-                  loading="lazy"
-                  src={post.frontmatter.image}
-                  alt=""
-                  class="img__element"
-                />
-                <div>
-                  <post.Content />
+        <p>
+          <strong
+            >L'association Play Sorbonne Université (PSU) a pour projet
+            d'étendre ses actions pour partager la passion du jeu au plus grand
+            nombre au sein de l'université. Pour mieux nous organiser dans cette
+            entreprise, nous avons choisi de diviser nos principaux objectifs en
+            plusieurs équipes : Lux Ludi, le DLC, Loading Games et Play & Learn
+            Society.</strong
+          >
+        </p>
+
+        <div class="icons__clubs">
+          <Club img={PLSociety.src} link="/pls">
+            <p>
+              Vulgariser, dévoiler, transmettre. Nous avons pour but de donner
+              de la légitimité au domaine du jeu vidéo, en traitant avec rigueur
+              les thèmes associés, dont la recherche axée sur ce domaine.
+            </p>
+          </Club>
+          <Club img={LeDLC.src} link="/dlc">
+            <p>
+              Le club le DLC a pour objectif d'animer la vie du campus, de
+              fidéliser les étudiants et de créer des liens avec d'autres
+              associations.
+            </p>
+          </Club>
+          <Club img={LuxLudi.src} link="/luxludi">
+            <p>
+              Le club Lux Ludi a pour but de trouver, produire et diffuser des
+              jeux de société inventés par les étudiants de Sorbonne Université.
+            </p>
+          </Club>
+        </div>
+      </div>
+    </section>
+
+    <section class="programme" id="programme">
+      <div class="content">
+        <h1 class="title">Le programme</h1>
+        <div class="color_ligne"></div>
+
+        <div class="content__programme">
+          {
+            posts.map((post, i) => (
+              <div class="element">
+                <p class="title__element">{post.frontmatter.title}</p>
+                <div class={`content__element ${i % 2 && "content_left"}`}>
+                  <img
+                    loading="lazy"
+                    src={post.frontmatter.image}
+                    alt=""
+                    class="img__element"
+                  />
+                  <div>
+                    <post.Content />
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
-        }
+            ))
+          }
+        </div>
       </div>
-    </div>
-  </section>
-</FrontPage>
+    </section>
+  </FrontPage>
+</PsuS>
 
 <style>
+  :root {
+    --main-color: 232, 101, 173;
+    --dark-color: 61, 61, 111;
+    --secondary-color: 41, 200, 255;
+  }
   .content {
-    max-width: 900px;
     width: 100%;
   }
 

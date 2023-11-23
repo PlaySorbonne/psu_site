@@ -27,8 +27,16 @@ const psuLogo = getClubLogo("psuRond");
 <header>
   <div class="desktop">
     <div class="logo_wrapper">
-      {isClub && <img class="logo" src={psuLogo.src} alt="logo" />}
-      <img class="logo" src={imgLogo.src} alt="logo" />
+      {
+        isClub && (
+          <a href="/" style="height:100%;">
+            <img class="logo" src={psuLogo.src} alt="logo" />
+          </a>
+        )
+      }
+      <a href="." style="height:100%;">
+        <img class="logo" src={imgLogo.src} alt="logo" />
+      </a>
     </div>
     <div class="links">
       {nav?.map(({ name, link }) => <a href={link}>{name}</a>)}

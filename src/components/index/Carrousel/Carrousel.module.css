@@ -1,3 +1,12 @@
+@keyframes onHover {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
+
 .carrousel {
   width: 100%;
   height: 100%;
@@ -41,6 +50,10 @@
   align-items: center;
 }
 
+.textWrapper:hover {
+  animation: onHover 0.5s ease-in-out forwards;
+}
+
 .title {
   font-size: 3rem;
   font-weight: 900;
@@ -56,7 +69,6 @@
 }
 
 @media (max-width: 768px) {
-
   .textWrapper {
     max-width: 80%;
   }
@@ -68,5 +80,4 @@
   .subtitle {
     font-size: 1.5rem;
   }
-
 }
