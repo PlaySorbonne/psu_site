@@ -12,6 +12,7 @@ export interface carrouselT {
   subtitle?: string;
   src: string;
   alt: string;
+  link?: string;
 }
 
 export default function Carrousel(props: { slides: carrouselT[] }) {
@@ -34,12 +35,12 @@ export default function Carrousel(props: { slides: carrouselT[] }) {
           className={styles.slide}
           style={{ backgroundImage: `url(${slide.src})` }}
         >
-          <div className={styles.content}>
+          <a className={styles.content} href={slide.link}>
             <div className={styles.textWrapper}>
               <h1 className={styles.title}>{slide.title}</h1>
               <h2 className={styles.subtitle}>{slide.subtitle}</h2>
             </div>
-          </div>
+          </a>
         </SwiperSlide>
       ))}
     </Swiper>

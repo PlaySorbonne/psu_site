@@ -10,7 +10,7 @@ const { img, className, title, subtitle } = Astro.props;
 ---
 
 <div class=`wrapper ${className ?? ""}`>
-  <img class="img" src={img} alt="icon" loading="lazy"/>
+  <img class="img" src={img} alt="icon" loading="lazy" />
 
   <p class="title">
     {title}
@@ -26,13 +26,13 @@ const { img, className, title, subtitle } = Astro.props;
   }
   .img {
     max-width: 70px;
-    filter: drop-shadow(4px 0px 0px rgba(var(--main-color), 0.6));
+    /*filter: drop-shadow(4px 0px 0px rgba(var(--main-color), 0.6));*/
   }
 
   .title {
     font-size: 0.8rem;
     font-weight: 700;
-    color: rgb(var(--black-title))
+    color: rgb(var(--black-title));
   }
 
   .subtitle {

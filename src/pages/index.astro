@@ -1,31 +1,58 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import FrontPage from "@/layouts/FrontPage.astro";
 
-import Icon from "../components/index/Icon.astro";
+import Icon from "@/components/index/Icon.astro";
 
-import Club from "../components/index/Club.astro";
-import Carrousel, { type carrouselT } from "../components/index/Carrousel/Carrousel";
+import Club from "@/components/index/Club.astro";
+import { type carrouselT } from "@/components/index/Carrousel/Carrousel";
 
-import Tetris from "../assets/tetris.svg";
-import Trophy from "../assets/trophy.svg";
-import Proj from "../assets/proj.svg";
-import Pen_Ruler from "../assets/pen_ruler.svg";
-import Mic from "../assets/mic.svg";
-import Dices from "../assets/dices.svg";
+import Tetris from "@/assets/tetris.svg";
+import Trophy from "@/assets/trophy.svg";
+import Proj from "@/assets/proj.svg";
+import Pen_Ruler from "@/assets/pen_ruler.svg";
+import Mic from "@/assets/mic.svg";
+import Dices from "@/assets/dices.svg";
 
-import PLSociety from "../assets/plsociety.png";
-import LuxLudi from "../assets/luxludi.png";
-import LeDLC from "../assets/ledlc.png";
+import PLSociety from "@/assets/logos/pls.png";
+import LuxLudi from "@/assets/logos/luxludi.png";
+import LeDLC from "@/assets/logos/dlc.png";
 
-import { Content as Festival } from "../content/accueil/festival.md";
-import { Content as Association } from "../content/accueil/association.md";
+import { Content as Festival } from "@/content/accueil/festival.md";
+import { Content as Association } from "@/content/accueil/association.md";
+
+const navBar = [
+  { name: "le festival", link: "#festival" },
+  { name: "association", link: "#association" },
+  { name: "clubs", link: "#clubs" },
+  { name: "programme", link: "#programme" },
+];
 
 const posts = await Astro.glob<{ title: string; image: string }>(
   "../content/accueil/programme/*.md"
 );
 
+// import all the carrousel images
 const carrousel = (
-  await Astro.glob<carrouselT>("../content/accueil/carrousel/*.md")
+  await Astro.glob<carrouselT & { priority: boolean; inCarrousel: boolean }>(
+    "../content/carrousel/**/*.md"
+  )
+)
+  .filter((e) => e.frontmatter.inCarrousel)
+  .map((e) => {
+    return {
+      title: e.frontmatter.title,
+      subtitle: e.frontmatter.subtitle,
+      src: e.frontmatter.src,
+      alt: e.frontmatter.alt ?? "",
+      priority: e.frontmatter.priority ?? false,
+    };
+  }) as (carrouselT & { priority: boolean })[];
+
+const priorityCarrousel = carrousel.filter((e) => e.priority);
+
+// importing the carrousel images for PSU
+const psuCar = (
+  await Astro.glob<carrouselT>("../content/carrousel/PSU/*.md")
 ).map((e) => {
   return {
     title: e.frontmatter.title,
@@ -34,15 +61,23 @@ const carrousel = (
     alt: e.frontmatter.alt ?? "",
   };
 }) as carrouselT[];
+
+// On met les images prioritaire et psu en premier, mais ils sont en double, removing duplicates
+const slides = [...priorityCarrousel, ...psuCar, ...carrousel].reduce(
+  (acc, curr) => {
+    if (acc.find((e) => e.src === curr.src)) return acc;
+    return [...acc, curr];
+  },
+  [] as carrouselT[]
+);
 ---
 
-<Layout title="Play Sorbonne Université" prefetchs={[carrousel[0].src]}>
-  <div class="color_ligne"></div>
-
-  <section class="titre" id="accueil">
-    <Carrousel client:load slides={carrousel} />
-  </section>
-
+<FrontPage
+  title="Play Sorbonne Université"
+  prefetchs={[carrousel[0].src]}
+  slides={slides}
+  nav={navBar}
+>
   <section class="festival" id="festival">
     <div class="content">
       <h1 class="title title__festival">Le festival</h1>
@@ -135,7 +170,12 @@ const carrousel = (
             <div class="element">
               <p class="title__element">{post.frontmatter.title}</p>
               <div class={`content__element ${i % 2 && "content_left"}`}>
-                <img loading="lazy" src={post.frontmatter.image} alt="" class="img__element" />
+                <img
+                  loading="lazy"
+                  src={post.frontmatter.image}
+                  alt=""
+                  class="img__element"
+                />
                 <div>
                   <post.Content />
                 </div>
@@ -146,47 +186,12 @@ const carrousel = (
       </div>
     </div>
   </section>
-</Layout>
+</FrontPage>
 
 <style>
-  section {
-    padding: 30px 45px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .noScript {
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-image: url(/src/assets/imageaccueil.webp);
-  }
-
   .content {
     max-width: 900px;
     width: 100%;
-  }
-
-  .titre {
-    display: block;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 40vh;
-    background-size: cover;
-
-    /*background-image: url(/src/assets/imageaccueil.webp);*/
-    /* HACK */
-  }
-
-  .color_ligne {
-    height: 5px;
-    background: linear-gradient(0.25turn, #29c8ff, #ff7dc5);
   }
 
   .text__titre {
@@ -239,7 +244,7 @@ const carrousel = (
   }
 
   .association {
-    background-color: rgb(var(--secondary-color));
+    background-color: rgb(var(--dark-color));
     color: white;
   }
 

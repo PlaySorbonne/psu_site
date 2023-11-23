@@ -1,0 +1,30 @@
+---
+import type { carrouselT } from "@/components/index/Carrousel/Carrousel";
+import FrontPage from "@/layouts/FrontPage.astro";
+
+const slides = (await Astro.glob<carrouselT>("../../content/carrousel/LuxLudi/*.md"))
+.map((e) => {
+  return {
+    title: e.frontmatter.title,
+    subtitle: e.frontmatter.subtitle,
+    src: e.frontmatter.src,
+    alt: e.frontmatter.alt ?? "",
+  };
+}) as carrouselT[];
+
+---
+
+<FrontPage
+  title="LuxLudi"  
+  logo="luxludi"
+  slides={slides}
+>
+
+</FrontPage>
+
+<style>
+  :root {
+    --main-color: 174,126,209;
+    --secondary-color: 255,230,60;
+  }
+</style>

@@ -1,0 +1,66 @@
+---
+import type { NavItem } from "@/components/global/Header.astro";
+import DefaultPage from "./DefaultPage.astro";
+import type { carrouselT } from "@/components/index/Carrousel/Carrousel";
+import Carrousel from "@/components/index/Carrousel/Carrousel";
+
+interface Props {
+  logo?: ClubName;
+  nav?: NavItem[];
+  title: string;
+  prefetchs?: string[];
+  slides?: carrouselT[];
+}
+
+const { logo, nav = [], title, prefetchs, slides } = Astro.props;
+
+const navs = [
+  {
+    name: "accueil",
+    link: "#accueil",
+  },
+];
+---
+
+<DefaultPage
+  title={title}
+  prefetchs={prefetchs}
+  logo={logo}
+  nav={[...navs, ...nav]}
+>
+  <main>
+    <div class="color_ligne"></div>
+
+    <section class="titre" id="accueil">
+      <Carrousel client:load slides={slides} />
+    </section>
+
+    <div class="color_ligne"></div>
+
+    <slot />
+  </main>
+</DefaultPage>
+
+<style>
+  main {
+    min-height: calc(100vh - 100px - 80px); /* 80px = header, 100px = footer */
+  }
+  main :global(section) {
+    padding: 30px 45px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .titre {
+    display: block;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 40vh;
+    background-size: cover;
+  }
+</style>

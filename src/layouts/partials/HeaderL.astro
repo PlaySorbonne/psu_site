@@ -5,9 +5,6 @@ interface Props {
 }
 
 const { title, prefetchs } = Astro.props;
-
-import Footer from "../components/global/Footer.astro";
-import Header from "../components/global/Header.astro";
 ---
 
 <!doctype html>
@@ -29,17 +26,14 @@ import Header from "../components/global/Header.astro";
     {prefetchs?.map((prefetch) => <link rel="prefetch" href={prefetch} />)}
   </head>
   <body>
-    <Header />
     <slot />
-    <Footer />
   </body>
+
 </html>
 <style is:global>
   :root {
-    --main-color: 232, 101, 173;
     --black-text: 61, 61, 111;
     --black-title: 0, 32, 51;
-    --secondary-color: var(--black-text);
   }
   html {
     background-color: #f6f6f6;

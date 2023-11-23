@@ -1,0 +1,38 @@
+---
+// You can override --main-color --dark-color and --secondary-color
+import Header, { type NavItem } from "@/components/global/Header.astro";
+import Footer from "@/components/global/Footer.astro";
+import HeaderL from "./partials/HeaderL.astro";
+
+interface Props {
+  logo?: ClubName;
+  nav?: NavItem[];
+  title: string;
+  prefetchs?: string[];
+}
+
+const { logo, nav, title, prefetchs } = Astro.props;
+---
+
+<HeaderL title={title} prefetchs={prefetchs}>
+  <Header logo={logo} nav={nav} />
+  <slot />
+  <Footer />
+</HeaderL>
+
+<style is:global>
+  :root {
+    --main-color: 232, 101, 173;
+    --dark-color: 61, 61, 111;
+    --secondary-color: 41, 200, 255;
+  }
+
+  .color_ligne {
+    height: 5px;
+    background: linear-gradient(
+      0.25turn,
+      rgb(var(--secondary-color)),
+      rgb(var(--main-color))
+    );
+  }
+</style>

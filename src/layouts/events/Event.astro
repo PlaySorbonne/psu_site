@@ -1,0 +1,32 @@
+---
+// à utiliser sur un markdown
+
+import type { MarkdownLayoutProps } from "astro";
+import FrontPage from "../FrontPage.astro";
+import type { carrouselT } from "@/components/index/Carrousel/Carrousel";
+
+type Props = { logo?: string } & MarkdownLayoutProps<{
+  title: string;
+  subtitle?: string;
+  src?: string;
+  priority?: boolean;
+  inCarrousel?: boolean;
+}>;
+
+const {
+  frontmatter: { title, subtitle, src },
+} = Astro.props;
+
+const slide: carrouselT[] = [
+  {
+    title,
+    subtitle,
+    alt: title,
+    src,
+  },
+];
+---
+
+<FrontPage title={title} slides={slide}>
+  <slot />
+</FrontPage>;
