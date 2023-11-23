@@ -1,13 +1,18 @@
 ---
 import { rawMDtoSortedArray, type Slide } from "@/helpers";
 import FrontPage from "@/layouts/FrontPage.astro";
-import LuxLudiS from "@/layouts/style/LuxLudiS.astro";
 
 const slides = rawMDtoSortedArray(await Astro.glob<Slide>("./*.md"));
 ---
 
-<LuxLudiS>
-  <FrontPage title="LuxLudi" logo="luxludi" slides={slides}>
-    En construction
-  </FrontPage>
-</LuxLudiS>
+<FrontPage title="LuxLudi" logo="luxludi" slides={slides}>
+  En construction
+</FrontPage>
+
+<style is:inline>
+  :root {
+    --main-color: 174, 126, 209;
+    --secondary-color: 255, 230, 60;
+  }
+</style>
+

@@ -1,13 +1,10 @@
 ---
 import { rawMDtoSortedArray, type Slide } from "@/helpers";
 import FrontPage from "@/layouts/FrontPage.astro";
-import LuxLudiS from "@/layouts/style/LuxLudiS.astro";
 
 const slides = rawMDtoSortedArray(await Astro.glob<Slide>("./*.md"));
 ---
 
-<LuxLudiS>
-  <FrontPage title="Play and Learn Society" logo="pls" slides={slides}>
-    En construction
-  </FrontPage>
-</LuxLudiS>
+<FrontPage title="Play and Learn Society" logo="pls" slides={slides}>
+  En construction
+</FrontPage>

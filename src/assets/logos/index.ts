@@ -2,14 +2,14 @@ import dlc from "./dlc.png";
 import luxludi from "./luxludi.png";
 import psu from "./psu.svg";
 import pls from "./pls.png";
-import psuRond from "./psu_rond.png";
+import champsu from "./champsu.png"
 
 export const clubLogos = {
   dlc,
   luxludi,
   psu,
   pls,
-  psuRond
+  champsu
 } as const;
 
 /* return by default the psu logo */

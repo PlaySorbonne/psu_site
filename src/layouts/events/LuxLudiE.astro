@@ -1,7 +1,6 @@
 ---
 import type { MarkdownLayoutProps } from "astro";
 import Event from "./Event.astro";
-import LuxLudiS from "../style/LuxLudiS.astro";
 
 type Props = MarkdownLayoutProps<{
   title: string;
@@ -12,8 +11,12 @@ type Props = MarkdownLayoutProps<{
 }>;
 ---
 
-<LuxLudiS>
-  <Event {...Astro.props} logo="luxludi">
-    <slot />
-  </Event>
-</LuxLudiS>
+<Event {...Astro.props} logo="luxludi">
+  <slot />
+</Event>
+<style is:inline>
+  :root {
+    --main-color: 174, 126, 209;
+    --secondary-color: 255, 230, 60;
+  }
+</style>

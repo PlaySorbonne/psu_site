@@ -21,7 +21,7 @@ const { logo, nav = defaultNav } = Astro.props;
 
 const imgLogo = getClubLogo(logo);
 const isClub = logo && logo !== "psu";
-const psuLogo = getClubLogo("psuRond");
+const psuLogo = getClubLogo("champsu");
 ---
 
 <header>
@@ -34,7 +34,7 @@ const psuLogo = getClubLogo("psuRond");
           </a>
         )
       }
-      <a href="." style="height:100%;">
+      <a href={`/${logo}`} style="height:100%;">
         <img class="logo" src={imgLogo.src} alt="logo" />
       </a>
     </div>

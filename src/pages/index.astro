@@ -1,6 +1,5 @@
 ---
 import FrontPage from "@/layouts/FrontPage.astro";
-import PsuS from "@/layouts/style/PsuS.astro";
 
 import Icon from "@/components/index/Icon.astro";
 
@@ -41,7 +40,6 @@ const psuCar = await Astro.glob<Slide>("./*.md");
 const slides = rawMDtoSortedArray([...psuCar, ...carrousel]);
 ---
 
-<PsuS>
   <FrontPage
     title="Play Sorbonne Université"
     prefetchs={[slides[0].src]}
@@ -162,14 +160,8 @@ const slides = rawMDtoSortedArray([...psuCar, ...carrousel]);
       </div>
     </section>
   </FrontPage>
-</PsuS>
 
 <style>
-  :root {
-    --main-color: 232, 101, 173;
-    --dark-color: 61, 61, 111;
-    --secondary-color: 41, 200, 255;
-  }
   .content {
     width: 100%;
   }
