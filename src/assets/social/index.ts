@@ -5,24 +5,19 @@ import youtube from "./youtube.svg";
 import twitch from "./twitch.svg";
 import Default from "./default.svg";
 
-export function getIconSrc(name: string) {
-  return (
-    {
-      discord,
-      insta,
-      twitter,
-      youtube,
-      twitch,
-      unknown: Default,
-    }[name]?.src || Default.src
-  );
-}
-
-export default {
+export const socialsIcons = {
   discord,
   insta,
   twitter,
   youtube,
   twitch,
   unknown: Default,
+} as const;
+
+export function getSocialIcon(name: string) {
+  return socialsIcons[name] || Default;
+}
+
+export default {
+  ...socialsIcons,
 };

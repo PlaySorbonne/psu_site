@@ -1,37 +1,57 @@
 ---
-import logo from "../../assets/logo.svg";
+import { getClubLogo } from "@/assets/logos";
+export type NavItem = {
+  name: string;
+  link: string;
+};
+
+const defaultNav = [
+  { name: "acceuil", link: "#acceuil" },
+  { name: "le festival", link: "#festival" },
+  { name: "association", link: "#association" },
+  { name: "clubs", link: "#clubs" },
+  { name: "programme", link: "#programme" },
+];
+
+interface Props {
+  logo?: ClubName;
+  nav?: NavItem[];
+}
+const { logo, nav = defaultNav } = Astro.props;
+
+const imgLogo = getClubLogo(logo);
+const isClub = logo && logo !== "psu";
+const psuLogo = getClubLogo("psuRond");
 ---
 
 <header>
   <div class="desktop">
     <div class="logo_wrapper">
-      <img class="logo" src={logo.src} alt="logo" />
+      {isClub && <img class="logo" src={psuLogo.src} alt="logo" />}
+      <img class="logo" src={imgLogo.src} alt="logo" />
     </div>
     <div class="links">
-      <a href="#accueil">accueil</a>
-      <a href="#festival">le festival</a>
-      <a href="#association">l'association</a>
-      <a href="#clubs">les clubs</a>
-      <a href="#programme">le programme</a>
+      {nav?.map(({ name, link }) => <a href={link}>{name}</a>)}
     </div>
   </div>
 
   <div class="mobile">
-      <img class="logo_mobile" src={logo.src} alt="logo" />
+    {isClub && <img class="logo" src={psuLogo.src} alt="logo" />}
+    <img class="logo_mobile" src={imgLogo.src} alt="logo" />
   </div>
 </header>
 
 <style>
   .mobile {
     display: none;
-    height: 40px;
+    height: 80px;
     background-color: rgb(var(--main-color));
     justify-content: center;
     align-items: center;
   }
 
   .logo_mobile {
-    height: 40px;
+    height: 100%;
   }
 
   .desktop {
@@ -59,7 +79,6 @@ import logo from "../../assets/logo.svg";
   .logo_wrapper {
     position: relative;
     top: 60px;
-    width: 300px;
     height: 100px;
     background-color: rgb(var(--main-color));
     display: flex;
@@ -67,10 +86,12 @@ import logo from "../../assets/logo.svg";
     align-items: center;
     box-shadow: 8px 8px 2px 1px rgba(var(--main-color), 0.4);
     z-index: 1000;
+    padding: 0 20px;
   }
 
   .logo {
-    width: 80%;
+    height: 100%;
+    padding: 10px;
   }
 
   @media (max-width: 900px) {
