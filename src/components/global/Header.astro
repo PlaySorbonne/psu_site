@@ -1,6 +1,6 @@
 ---
 import { getClubLogo } from "@/assets/logos";
-import type { ClubName } from "@/helpers"
+import type { ClubName } from "@/helpers";
 export type NavItem = {
   name: string;
   link: string;
@@ -45,8 +45,16 @@ const psuLogo = getClubLogo("champsu");
   </div>
 
   <div class="mobile">
-    {isClub && <img class="logo" src={psuLogo.src} alt="logo" />}
-    <img class="logo_mobile" src={imgLogo.src} alt="logo" />
+    {
+      isClub && (
+        <a href="/" style="height:100%;">
+          <img class="logo_mobile" src={psuLogo.src} alt="logo" />
+        </a>
+      )
+    }
+    <a href={`/${logo === "psu" ? "" : logo}`} style="height:100%;">
+      <img class="logo" src={imgLogo.src} alt="logo" />
+    </a>
   </div>
 </header>
 
