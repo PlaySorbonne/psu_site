@@ -14,12 +14,6 @@ const { img, alt, link } = Astro.props;
 </a>
 
 <style>
-
-  @keyframes onHover {
-    from { transform: scale(1); }
-    to { transform: scale(1.1); }
-  }
-
   .wrapper {
     background-color: rgb(var(--main-color));
     max-width: 200px;
@@ -32,12 +26,14 @@ const { img, alt, link } = Astro.props;
     font-weight: bold;
     text-justify: auto;
     margin: 0 20px;
+
+    transform: scale(1);
+    transition: all 0.5s ease-in-out;
   }
 
   .wrapper:hover {
-    background-color: rgba(var(--main-color), 0.8));
     transform: scale(1.1);
-    animation: onHover 0.5s linear;
+    transition: all 0.5s ease-in-out;
   }
 
   .img {

@@ -1,12 +1,3 @@
-@keyframes onHover {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.1);
-  }
-}
-
 .carrousel {
   width: 100%;
   height: 100%;
@@ -50,8 +41,14 @@
   align-items: center;
 }
 
+.animate {
+  transform: scale(1);
+  transition: all 0.5s ease-in-out;
+}
+
 .animate:hover {
-  animation: onHover 0.5s ease-in-out forwards;
+  transform: scale(1.1);
+  transition: all 0.5s ease-in-out;
 }
 
 .title {

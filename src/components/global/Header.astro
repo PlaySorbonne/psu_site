@@ -119,13 +119,14 @@ const psuLogo = getClubLogo("champsu");
       display: flex;
     }
   }
-  @keyframes onHover {
-    from { transform: scale(1); }
-    to { transform: scale(1.1); }
+
+  img {
+    transform: scale(1);
+    transition: all 0.5s ease-in-out;
   }
 
   img:hover {
-    animation: onHover 0.5s linear forwards;
+    transform: scale(1.1);
+    transition: all 0.5s ease-in-out;
   }
-
 </style>
