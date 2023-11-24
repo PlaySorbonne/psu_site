@@ -1,0 +1,62 @@
+---
+layout: ../layouts/events/PsuE.astro
+title: Festival de jeu
+subtitle: tous les Septembres !
+src: /accueil/carrousel/arcades.webp
+inCarrousel: true
+nav:
+  - name: festival
+    href: "#festival"
+---
+
+{/*
+  GIGA MOCHE GIGA HACKY mais c'est temporaire,
+  j'ai juste tranférer temporairement ce texte ici,
+  je repasserais dessus bientôt:tm:
+*/}
+
+import Tetris from "@/assets/tetris.svg";
+import Pen_Ruler from "@/assets/pen_ruler.svg";
+import Trophy from "@/assets/trophy.svg";
+import Mic from "@/assets/mic.svg";
+import Dices from "@/assets/dices.svg";
+import Proj from "@/assets/proj.svg";
+import Icon from "@/components/index/Icon.astro";
+import ColorLigne from "@/components/global/ColorLigne.astro";
+
+  <section class="festival" id="festival">
+    <div class="content">
+      <h1 class="title title__festival">Le festival</h1>
+      <ColorLigne />
+
+**Play Sorbonne Université est le festival étudiant du jeu. Organisé par des passionnés, il ambitionne de célébrer et faire découvrir la culture du jeu sous toutes ses formes : jeux vidéos et jeux de plateau sont réunis pour cette manifestation.**
+
+Le festival rassemble joueurs, développeurs, éditeurs, associations et tous ceux qui font vivre les jeux. L'événement s'adresse aux pro-gamers comme aux non-joueurs qui souhaitent découvrir cet univers.
+
+      <div class="icons">
+        <Icon
+          img={Tetris.src}
+          title="Rétro-gaming"
+          subtitle="pour les nostalgiques"
+        />
+        <Icon
+          img={Pen_Ruler.src}
+          title="Jeux indés"
+          subtitle="pour les pionners"
+        />
+        <Icon
+          img={Trophy.src}
+          title="E-sport"
+          subtitle="pour les try-hardeurs"
+        />
+        <Icon
+          img={Mic.src}
+          title="Conférences"
+          subtitle="pour les intellectuels"
+        />
+        <Icon img={Dices.src} title="Jeux de plateau" subtitle="pour les IRL" />
+        <Icon img={Proj.src} title="Expos" subtitle="pour les curieux" />
+      </div>
+    </div>
+
+  </section>
