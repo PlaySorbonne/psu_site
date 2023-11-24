@@ -21,6 +21,7 @@ export default function Carrousel(props: { slides: Slide[] }) {
         disableOnInteraction: false,
         pauseOnMouseEnter: true,
       }}
+      simulateTouch={false}
       className={styles.carrousel}
     >
       {props.slides.map((slide, index) => (
