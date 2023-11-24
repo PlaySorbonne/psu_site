@@ -10,7 +10,7 @@ import Youtube from "@/assets/social/youtube.svg";
   <div class="container">
     <div class="icons">
       <a href="https://discord.gg/be5X7qMNSQ" target="_blank">
-        <img src={Discord.src} alt="discord invite" loading="lazy"/>
+        <img src={Discord.src} alt="discord invite" loading="lazy" />
       </a>
       <a href="https://www.instagram.com/play_sorbonne_u/" target="_blank">
         <img src={Insta.src} alt="Insta" loading="lazy" />
@@ -32,6 +32,13 @@ import Youtube from "@/assets/social/youtube.svg";
 </footer>
 
 <style>
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
   footer {
     height: 100px;
     width: 100%;
