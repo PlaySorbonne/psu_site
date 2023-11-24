@@ -1,4 +1,8 @@
-import type { MarkdownInstance } from "astro";
+import type { MarkdownInstance, MDXInstance } from "astro";
+
+export type ClubName = "dlc" | "luxludi" | "psu" | "pls" | "champsu";
+
+export type MDnXInstance<T> = MarkdownInstance<T> | MDXInstance<T>;
 
 export interface Slide {
   title: string;
@@ -30,7 +34,7 @@ export function sortSlides(slides: Slide[]): Slide[] {
   }, [] as Slide[]);
 }
 
-export function rawMDtoSlide(e: MarkdownInstance<Slide>): Slide {
+export function rawMDtoSlide(e: MDnXInstance<Slide>): Slide {
   return {
     title: e.frontmatter.title,
     subtitle: e.frontmatter.subtitle,
@@ -42,6 +46,6 @@ export function rawMDtoSlide(e: MarkdownInstance<Slide>): Slide {
   };
 }
 
-export function rawMDtoSortedArray(e: MarkdownInstance<Slide>[]): Slide[] {
+export function rawMDtoSortedArray(e: MDnXInstance<Slide>[]): Slide[] {
   return sortSlides(e.map(rawMDtoSlide));
 }

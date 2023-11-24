@@ -31,7 +31,9 @@ export default function Carrousel(props: { slides: Slide[] }) {
         >
           <div className={styles.content}>
             <a
-              className={styles.textWrapper}
+              className={`${styles.textWrapper} ${
+                slide.noLink || !slide.link ? "" : styles.animate
+              }`}
               href={slide.noLink ? undefined : slide.link}
             >
               <h1 className={styles.title}>{slide.title}</h1>

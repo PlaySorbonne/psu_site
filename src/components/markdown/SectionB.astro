@@ -1,0 +1,19 @@
+---
+interface Props {
+  id?: string;
+}
+const { id } = Astro.props;
+---
+
+<section class="black" id={id}>
+  <div class="content">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .black {
+    background-color: rgb(var(--dark-color));
+    color: #fff;
+  }
+</style>

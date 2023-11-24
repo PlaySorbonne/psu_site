@@ -1,0 +1,23 @@
+---
+import type { MarkdownLayoutProps } from "astro";
+import Event from "./Event.astro";
+
+type Props = MarkdownLayoutProps<{
+  title: string;
+  subtitle?: string;
+  src?: string;
+  priority?: boolean;
+  inCarrousel?: boolean;
+}>;
+---
+
+<Event {...Astro.props} logo="dlc">
+  <slot />
+</Event>
+
+<style is:inline>
+  :root {
+    --main-color: 174, 126, 209;
+    --secondary-color: 255, 230, 60;
+  }
+</style>

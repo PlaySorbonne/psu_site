@@ -3,7 +3,8 @@
 
 import type { MarkdownLayoutProps } from "astro";
 import FrontPage from "../FrontPage.astro";
-import type { Slide } from "@/helpers";
+import type { ClubName, Slide } from "@/helpers";
+import type { NavItem } from "@/components/global/Header.astro";
 
 type Props = { logo?: ClubName } & MarkdownLayoutProps<{
   title: string;
@@ -11,10 +12,11 @@ type Props = { logo?: ClubName } & MarkdownLayoutProps<{
   src?: string;
   priority?: boolean;
   inCarrousel?: boolean;
+  nav?: NavItem[];
 }>;
 
 const {
-  frontmatter: { title, subtitle, src },
+  frontmatter: { title, subtitle, src, nav },
   logo,
 } = Astro.props;
 
@@ -28,8 +30,41 @@ const slide: Slide[] = [
 ];
 ---
 
-<FrontPage title={title} slides={slide} logo={logo}>
-  <section>
+<FrontPage title={title} slides={slide} logo={logo} nav={nav}>
+  <div class="md">
     <slot />
-  </section>
+  </div>
 </FrontPage>
+
+<style>
+  .md {
+    width: 100%;
+  }
+
+  .md :global(h1) {
+    font-size: 2rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .md :global(img) {
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .md :global(p:has(img)) {
+    text-align: center;
+    width: 100%;
+  }
+
+  .md :global(a) {
+    color: var(--main-color);
+    text-decoration: underline;
+    font-weight: bold;
+  }
+
+  .md :global(a:hover) {
+    color: var(--secondary-color);
+  }
+
+</style>

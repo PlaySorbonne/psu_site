@@ -50,7 +50,7 @@
   align-items: center;
 }
 
-.textWrapper:hover {
+.animate:hover {
   animation: onHover 0.5s ease-in-out forwards;
 }
 

@@ -3,6 +3,7 @@
 import Header, { type NavItem } from "@/components/global/Header.astro";
 import Footer from "@/components/global/Footer.astro";
 import HeaderL from "./partials/HeaderL.astro";
+import type { ClubName } from "@/helpers";
 
 interface Props {
   logo?: ClubName;
@@ -27,12 +28,5 @@ const { logo, nav, title, prefetchs } = Astro.props;
     --dark-color: 61, 61, 111;
   }
 
-  .color_ligne {
-    height: 5px;
-    background: linear-gradient(
-      0.25turn,
-      rgb(var(--secondary-color)),
-      rgb(var(--main-color))
-    );
-  }
+
 </style>

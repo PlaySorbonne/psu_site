@@ -1,5 +1,6 @@
 ---
 import { getClubLogo } from "@/assets/logos";
+import type { ClubName } from "@/helpers"
 export type NavItem = {
   name: string;
   link: string;
@@ -17,7 +18,7 @@ interface Props {
   logo?: ClubName;
   nav?: NavItem[];
 }
-const { logo, nav = defaultNav } = Astro.props;
+const { logo = "psu", nav = defaultNav } = Astro.props;
 
 const imgLogo = getClubLogo(logo);
 const isClub = logo && logo !== "psu";
@@ -34,7 +35,7 @@ const psuLogo = getClubLogo("champsu");
           </a>
         )
       }
-      <a href={`/${logo}`} style="height:100%;">
+      <a href={`/${logo === "psu" ? "" : logo}`} style="height:100%;">
         <img class="logo" src={imgLogo.src} alt="logo" />
       </a>
     </div>

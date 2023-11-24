@@ -10,6 +10,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/mdx": "^1.1.5",
     "@astrojs/react": "^3.0.5",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
@@ -17,6 +18,7 @@
     "astro-compress": "^2.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "remark-directive": "^3.0.0",
     "swiper": "^10.3.1"
   }
 }

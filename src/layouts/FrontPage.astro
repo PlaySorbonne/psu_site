@@ -2,7 +2,7 @@
 import type { NavItem } from "@/components/global/Header.astro";
 import DefaultPage from "./DefaultPage.astro";
 import Carrousel from "@/components/index/Carrousel/Carrousel";
-import type { Slide } from "@/helpers";
+import type { ClubName, Slide } from "@/helpers";
 
 interface Props {
   logo?: ClubName;
@@ -54,7 +54,7 @@ const navs = [
     justify-content: center;
   }
 
-  :global(section) > :global(.content){
+  :global(section) > :global(.content) {
     max-width: 900px;
   }
   .titre {
