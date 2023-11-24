@@ -3,5 +3,10 @@ layout: ../../layouts/events/PlsE.astro
 title: Conférences et vulgarisation
 src: /accueil/carrousel/conference.webp
 inCarrousel: true
+noLink: true
 ---
-<!> en construction <!>
+<center>
+
+# <!> en construction <!>
+
+</center>

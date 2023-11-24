@@ -4,5 +4,10 @@ title: Soirées jeux
 subtitle: Tous les jeudis à Jussieu !
 src: /accueil/carrousel/jeux.webp
 inCarrousel: true
+noLink: true
 ---
-<!> en construction <!>
+<center>
+
+# <!> en construction <!>
+
+</center>
