@@ -3,6 +3,7 @@ import type { NavItem } from "@/components/global/Header.astro";
 import DefaultPage from "./DefaultPage.astro";
 import Carrousel from "@/components/index/Carrousel/Carrousel";
 import type { ClubName, Slide } from "@/helpers";
+import ColorLigne from "@/components/global/ColorLigne.astro";
 
 interface Props {
   logo?: ClubName;
@@ -31,9 +32,11 @@ const navs = [
   <main>
     <div class="color_ligne"></div>
 
+    <ColorLigne />
     <section class="titre" id="accueil">
       <Carrousel client:load slides={slides} />
     </section>
+    <ColorLigne />
 
     <div class="color_ligne"></div>
 
