@@ -2,12 +2,15 @@
 interface Props {
   link: string;
   text?: string;
+  paddingTop?: string;
+  paddingBottom?: string;
+  color?: string;
 }
 
-const { link, text } = Astro.props;
+const { link, text, paddingBottom, paddingTop, color } = Astro.props;
 ---
 
-<div class="wrapper">
+<div class="wrapper" style={{ paddingTop, paddingBottom }}>
   <a href={link} target="_blank" class="link">
     <div class="contentwrapper">
       {text}
@@ -22,7 +25,6 @@ const { link, text } = Astro.props;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-bottom: 30px;
   }
 
   .link {
