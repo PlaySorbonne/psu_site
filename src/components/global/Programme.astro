@@ -1,3 +1,7 @@
 ---
-interface Props {}
+import type { Slide } from "@/helpers";
+interface Props {
+  events: Slide[];
+}
+const { events } = Astro.props;
 ---

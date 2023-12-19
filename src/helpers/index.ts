@@ -15,11 +15,48 @@ export interface Slide {
   inCarrousel?: boolean;
 }
 
+interface Page {
+  title: string;
+  link?: string;
+  children?: Page[];
+}
+
+export const pages: Page[] = [
+  {
+    title: "clubs",
+    children: [
+      { title: "dlc", link: "/dlc" },
+      { title: "luxludi", link: "/luxludi" },
+      { title: "pls", link: "/pls" },
+    ],
+  },
+  {
+    title: "évenements",
+    children: [
+      { title: "Festival de Jeu", link: "/festival" },
+      { title: "Soirée jeuxdi", link: "/jeux" },
+      { title: "Tournois Smash", link: "/dlc/smash" },
+      { title: "Game Jam", link: "/luxludi/gamjam" },
+      { title: "Jeux Originaux", link: "/luxludi/jeux-org" },
+      { title: "Appel à prototypes", link: "/luxludi/proto" },
+      { title: "Conférences", link: "/pls/conferences" },
+      // { title: "Serveur Minecraft", link: "/minecraft" },
+    ],
+  },
+  /* {
+    title: "Jeux Réalisés",
+    children: [
+      { title: "MemoCombo", link: "/luxludi/memocombo" },
+      { title: "Tribunaze", link: "/luxludi/tribunaze" },
+    ],
+  }, */
+];
+
 /*
-  * Sort slides by priority and remove duplicates
-  * @param slides Array of slides
-  * @returns Sorted array of slides
-*/
+ * Sort slides by priority and remove duplicates
+ * @param slides Array of slides
+ * @returns Sorted array of slides
+ */
 export function sortSlides(slides: Slide[]): Slide[] {
   let priority: Slide[] = [];
   let other: Slide[] = [];
