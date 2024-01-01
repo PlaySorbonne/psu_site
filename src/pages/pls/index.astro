@@ -5,8 +5,4 @@ import FrontPage from "@/layouts/FrontPage.astro";
 const events = rawMDtoSortedArray(await Astro.glob<EventT>("./*.md"));
 ---
 
-<FrontPage title="Play and Learn Society" logo="pls" events={events}>
-  <center>
-    <h1>En Construction</h1>
-  </center>
-</FrontPage>
+<FrontPage title="Play and Learn Society" logo="pls" events={events} />
