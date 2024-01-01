@@ -1,7 +1,7 @@
 import type { MarkdownInstance, MDXInstance } from "astro";
 
 /*
- * Sort slides by priority and remove duplicates
+ * Sort slides by priority, remove duplicates and filter out clubs
  * @param slides Array of slides
  * @returns Sorted array of slides
  */
@@ -13,10 +13,13 @@ export function sortSlides(slides: EventT[]): EventT[] {
     if (slide.priority) priority.push(slide);
     else other.push(slide);
   });
-  return priority.concat(other).reduce((acc, cur) => {
-    if (acc.find((e) => e.src === cur.src)) return acc;
-    return acc.concat(cur);
-  }, [] as EventT[]);
+  return priority
+    .concat(other)
+    .reduce((acc, cur) => {
+      if (acc.find((e) => e.src === cur.src)) return acc;
+      return acc.concat(cur);
+    }, [] as EventT[])
+    .filter((e) => !e.isClub);
 }
 
 export function filterNonCarrousel(slides: EventT[]): EventT[] {
@@ -34,6 +37,7 @@ export function rawMDtoSlide(e: MDnXInstance<EventT>): EventT {
     noLink: e.frontmatter.noLink ?? false,
     description: e.frontmatter.description ?? "",
     icon: e.frontmatter.icon ?? "",
+    isClub: e.frontmatter.isClub ?? false,
   };
 }
 
@@ -45,6 +49,18 @@ export type ClubName = "dlc" | "luxludi" | "psu" | "pls" | "champsu";
 
 export type MDnXInstance<T> = MarkdownInstance<T> | MDXInstance<T>;
 
+export type NavItem = {
+  name: string;
+  link: string;
+};
+
+// TODO not used
+export interface ParentT {
+  title: string;
+  nav?: NavItem[];
+}
+
+// TODO is support for nav universal?
 export interface EventT {
   title: string;
   subtitle?: string;
@@ -56,6 +72,8 @@ export interface EventT {
   inCarrousel?: boolean;
   description: string;
   icon?: string;
+  isClub?: boolean;
+  nav?: NavItem[];
 }
 
 interface Page {
