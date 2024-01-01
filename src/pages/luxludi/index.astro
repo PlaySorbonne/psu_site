@@ -3,7 +3,9 @@ import { rawMDtoSortedArray, type EventT } from "@/helpers";
 import FrontPage from "@/layouts/FrontPage.astro";
 import type { MarkdownInstance } from "astro";
 
-const events = rawMDtoSortedArray(await Astro.glob<MarkdownInstance<EventT>>("./*{.md,.mdx}"));
+const events = rawMDtoSortedArray(
+  await Astro.glob<MarkdownInstance<EventT>>("./*{.md,.mdx}")
+);
 ---
 
 <FrontPage title="LuxLudi" logo="luxludi" events={events}>
@@ -17,5 +19,11 @@ const events = rawMDtoSortedArray(await Astro.glob<MarkdownInstance<EventT>>("./
     --main-color: 174, 126, 209;
     --secondary-color: 255, 230, 60;
   }
+  div.color_ligne {
+    background: linear-gradient(
+      0.25turn,
+      rgb(var(--main-color)),
+      rgb(var(--secondary-color))
+    );
+  }
 </style>
-
