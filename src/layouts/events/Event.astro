@@ -13,10 +13,11 @@ type Props = { logo?: ClubName } & MarkdownLayoutProps<{
   priority?: boolean;
   inCarrousel?: boolean;
   nav?: NavItem[];
+  description?: string;
 }>;
 
 const {
-  frontmatter: { title, subtitle, src, nav },
+  frontmatter: { title, subtitle, src, nav, description },
   logo,
 } = Astro.props;
 
@@ -26,11 +27,13 @@ const event: EventT[] = [
     subtitle,
     alt: title,
     src,
+    description: description ?? "",
+    link: "",
   },
 ];
 ---
 
-<FrontPage title={title} events={event} logo={logo} nav={nav}>
+<FrontPage title={title} events={event} logo={logo} nav={nav} noEvents={true}>
   <div class="md">
     <slot />
   </div>
@@ -50,7 +53,6 @@ const event: EventT[] = [
   .md :global(img) {
     max-width: 300px;
   }
-
 
   .md :global(a) {
     color: rgb(var(--main-color));
@@ -73,5 +75,4 @@ const event: EventT[] = [
   /*.md :global(p) {
     text-indent: 1em;
   } */
-
 </style>
