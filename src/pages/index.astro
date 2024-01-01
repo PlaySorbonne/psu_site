@@ -17,10 +17,6 @@ const navBar = [
   { name: "programme", link: "#programme" },
 ];
 
-// TODO don't need that anymore
-const posts = await Astro.glob<{ title: string; image: string }>(
-  "../content/accueil/programme/*.md"
-);
 // import all the carrousel images
 const carrousel = await Astro.glob<MDnXInstance<EventT>>("./**/*{.md,.mdx}");
 
