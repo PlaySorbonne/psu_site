@@ -8,7 +8,7 @@ import LuxLudi from "@/assets/logos/luxludi.png";
 import LeDLC from "@/assets/logos/dlc.png";
 
 import { Content as Association } from "@/content/accueil/association.md";
-import { rawMDtoSortedArray, type MDnXInstance, type Slide } from "@/helpers";
+import { rawMDtoSortedArray, type MDnXInstance, type EventT } from "@/helpers";
 import ColorLigne from "@/components/global/ColorLigne.astro";
 
 const navBar = [
@@ -21,18 +21,17 @@ const posts = await Astro.glob<{ title: string; image: string }>(
   "../content/accueil/programme/*.md"
 );
 // import all the carrousel images
-const carrousel = await Astro.glob<MDnXInstance<Slide>>("./**/*{.md,.mdx}");
+const carrousel = await Astro.glob<MDnXInstance<EventT>>("./**/*{.md,.mdx}");
 
 // importing the carrousel images for PSU
-const psuCar = await Astro.glob<MDnXInstance<Slide>>("./*{.md,.mdx}");
+const psuCar = await Astro.glob<MDnXInstance<EventT>>("./*{.md,.mdx}");
 
-const slides = rawMDtoSortedArray([...psuCar, ...carrousel]);
+const events = rawMDtoSortedArray([...psuCar, ...carrousel]);
 ---
 
 <FrontPage
   title="Play Sorbonne Université"
-  prefetchs={[slides[0].src]}
-  slides={slides}
+  events={events}
   nav={navBar}
 >
   <section class="association" id="association">

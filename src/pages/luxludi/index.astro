@@ -1,12 +1,12 @@
 ---
-import { rawMDtoSortedArray, type Slide } from "@/helpers";
+import { rawMDtoSortedArray, type EventT } from "@/helpers";
 import FrontPage from "@/layouts/FrontPage.astro";
 import type { MarkdownInstance } from "astro";
 
-const slides = rawMDtoSortedArray(await Astro.glob<MarkdownInstance<Slide>>("./*{.md,.mdx}"));
+const events = rawMDtoSortedArray(await Astro.glob<MarkdownInstance<EventT>>("./*{.md,.mdx}"));
 ---
 
-<FrontPage title="LuxLudi" logo="luxludi" slides={slides}>
+<FrontPage title="LuxLudi" logo="luxludi" events={events}>
   <center>
     <h1>En Construction</h1>
   </center>

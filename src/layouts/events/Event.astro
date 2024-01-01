@@ -3,7 +3,7 @@
 
 import type { MarkdownLayoutProps } from "astro";
 import FrontPage from "../FrontPage.astro";
-import type { ClubName, Slide } from "@/helpers";
+import type { ClubName, EventT } from "@/helpers";
 import type { NavItem } from "@/components/global/Header.astro";
 
 type Props = { logo?: ClubName } & MarkdownLayoutProps<{
@@ -20,7 +20,7 @@ const {
   logo,
 } = Astro.props;
 
-const slide: Slide[] = [
+const event: EventT[] = [
   {
     title,
     subtitle,
@@ -30,7 +30,7 @@ const slide: Slide[] = [
 ];
 ---
 
-<FrontPage title={title} slides={slide} logo={logo} nav={nav}>
+<FrontPage title={title} events={event} logo={logo} nav={nav}>
   <div class="md">
     <slot />
   </div>

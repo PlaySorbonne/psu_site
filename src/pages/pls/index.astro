@@ -1,11 +1,11 @@
 ---
-import { rawMDtoSortedArray, type Slide } from "@/helpers";
+import { rawMDtoSortedArray, type EventT } from "@/helpers";
 import FrontPage from "@/layouts/FrontPage.astro";
 
-const slides = rawMDtoSortedArray(await Astro.glob<Slide>("./*.md"));
+const events = rawMDtoSortedArray(await Astro.glob<EventT>("./*.md"));
 ---
 
-<FrontPage title="Play and Learn Society" logo="pls" slides={slides}>
+<FrontPage title="Play and Learn Society" logo="pls" events={events}>
   <center>
     <h1>En Construction</h1>
   </center>
