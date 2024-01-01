@@ -32,7 +32,7 @@ export function rawMDtoSlide(e: MDnXInstance<EventT>): EventT {
     priority: e.frontmatter.priority ?? false,
     link: e.url,
     noLink: e.frontmatter.noLink ?? false,
-    description: e.frontmatter.description,
+    description: e.frontmatter.description ?? "",
     icon: e.frontmatter.icon ?? "",
   };
 }
@@ -50,11 +50,11 @@ export interface EventT {
   subtitle?: string;
   src: string;
   alt: string;
-  link?: string;
+  link: string;
   noLink?: boolean;
   priority?: boolean;
   inCarrousel?: boolean;
-  description?: string;
+  description: string;
   icon?: string;
 }
 
