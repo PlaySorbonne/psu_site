@@ -1,0 +1,43 @@
+---
+import { miscIcons } from "@/assets/misc";
+import Icon from "@/components/index/Icon.astro";
+---
+
+<div class="icons">
+  <Icon
+    img={miscIcons.tetris.src}
+    title="Rétro-gaming"
+    subtitle="pour les nostalgiques"
+  />
+  <Icon
+    img={miscIcons.penRuler.src}
+    title="Jeux indés"
+    subtitle="pour les pionners"
+  />
+  <Icon
+    img={miscIcons.trophy.src}
+    title="E-sport"
+    subtitle="pour les try-hardeurs"
+  />
+  <Icon
+    img={miscIcons.mic.src}
+    title="Conférences"
+    subtitle="pour les intellectuels"
+  />
+  <Icon
+    img={miscIcons.dices.src}
+    title="Jeux de plateau"
+    subtitle="pour les IRL"
+  />
+  <Icon img={miscIcons.proj.src} title="Expos" subtitle="pour les curieux" />
+</div>
+
+<style>
+  .icons {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+</style>
