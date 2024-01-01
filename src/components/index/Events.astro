@@ -1,0 +1,86 @@
+---
+import { getEventIcon } from "@/assets/events";
+import ColorLigne from "../global/ColorLigne.astro";
+import type { EventT } from "@/helpers";
+
+interface Props {
+  events: EventT[];
+  title: string;
+}
+
+const { events, title } = Astro.props;
+---
+
+<div class="content">
+  <h1 class="title">{title}</h1>
+  <ColorLigne />
+
+  <div class="content__programme">
+    {
+      events.map((event, i) => (
+        <a class="element" href={event.noLink ? undefined : event.link}>
+          <p class="title__element">{event.title}</p>
+          <div class={`content__element ${i % 2 && "content_left"}`}>
+            <img
+              loading="lazy"
+              src={getEventIcon(event.icon).src}
+              alt=""
+              class="img__element"
+            />
+            <div>
+              <p>{event.description}</p>
+            </div>
+          </div>
+        </a>
+      ))
+    }
+  </div>
+</div>
+<style>
+  .content__programme {
+    padding-top: 20px;
+  }
+
+  .img__element {
+    max-width: 40%;
+    max-height: 200px;
+    height: 100%;
+    /* box-shadow: 8px 8px 2px 1px rgba(var(--main-color), 0.4); */
+    margin: 0 20px;
+  }
+
+  .content__element {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .content_left {
+    flex-direction: row-reverse;
+  }
+
+  @media (max-width: 768px) {
+    .content__element {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .content_left {
+      flex-direction: column;
+    }
+  }
+
+  .title__element {
+    font-weight: bold;
+    text-decoration: underline;
+  }
+
+  .title__element::first-letter {
+    text-transform: uppercase;
+  }
+
+  .element {
+    padding: 5px 0;
+  }
+</style>

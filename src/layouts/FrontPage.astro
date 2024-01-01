@@ -4,6 +4,7 @@ import DefaultPage from "./DefaultPage.astro";
 import Carrousel from "@/components/index/Carrousel/Carrousel";
 import { filterNonCarrousel, type ClubName, type EventT } from "@/helpers";
 import ColorLigne from "@/components/global/ColorLigne.astro";
+import Events from "@/components/index/Events.astro";
 
 interface Props {
   logo?: ClubName;
@@ -11,9 +12,17 @@ interface Props {
   title: string;
   prefetchs?: string[];
   events?: EventT[];
+  noEvents?: boolean;
 }
 
-const { logo, nav = [], title, prefetchs = [], events = [] } = Astro.props;
+const {
+  logo,
+  nav = [],
+  title,
+  prefetchs = [],
+  events = [],
+  noEvents = false,
+} = Astro.props;
 
 const navs = [
   {
@@ -30,22 +39,21 @@ const navs = [
   nav={[...navs, ...nav]}
 >
   <main>
-    <div class="color_ligne"></div>
-
     <ColorLigne />
     <section class="titre" id="accueil">
       <Carrousel client:load slides={filterNonCarrousel(events)} />
     </section>
     <ColorLigne />
 
-    <div class="color_ligne"></div>
-
-    <!-- <section class="events" id="events">
-      <h1 class="titre_event">
-      </h1>
-    </section> -->
-
     <slot />
+
+    {
+      !noEvents && (
+        <section class="events" id="events">
+          <Events events={events} title="Nos événements" />
+        </section>
+      )
+    }
   </main>
 </DefaultPage>
 
