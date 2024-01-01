@@ -1,0 +1,67 @@
+---
+// à utiliser sur un MDX <!>
+
+import type { MarkdownLayoutProps } from "astro";
+import FrontPage from "../FrontPage.astro";
+import {
+  rawMDtoSortedArray,
+  type EventT,
+  type MDnXInstance,
+  type ClubName,
+  type NavItem,
+} from "@/helpers";
+
+type Props = { logo?: ClubName } & MarkdownLayoutProps<{
+  title: string;
+  nav?: NavItem[];
+  description?: string;
+  path: string;
+}>;
+
+let {
+  frontmatter: {
+    title,
+    nav,
+    path,
+  },
+  logo,
+} = Astro.props;
+
+let imported = (
+  await Astro.glob<MDnXInstance<EventT>>("../../pages/**/*{.md,.mdx}")
+).filter((e) => e.file.includes(path));
+
+let events = rawMDtoSortedArray(imported);
+---
+
+<FrontPage title={title} events={events} logo={logo} nav={nav}>
+  <div class="md">
+    <slot />
+  </div>
+</FrontPage>
+
+<style>
+  .md {
+    width: 100%;
+  }
+
+  :global(h1) {
+    font-size: 2rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .md :global(img) {
+    max-width: 300px;
+  }
+
+  .md :global(a) {
+    color: rgb(var(--main-color));
+    font-weight: bold;
+  }
+
+  .md :global(a:hover) {
+    color: rgb(var(--secondary-color));
+    text-decoration: underline;
+  }
+</style>

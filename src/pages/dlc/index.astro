@@ -1,8 +1,0 @@
----
-import { rawMDtoSortedArray, type EventT } from "@/helpers";
-import FrontPage from "@/layouts/FrontPage.astro";
-
-const events = rawMDtoSortedArray(await Astro.glob<EventT>("./*.md"));
----
-
-<FrontPage title="Play Sorbonne le DLC" logo="dlc" events={events} />
