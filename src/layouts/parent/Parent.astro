@@ -10,6 +10,8 @@ import {
   type ClubName,
   type NavItem,
 } from "@/helpers";
+import ColorLigne from "@/components/global/ColorLigne.astro";
+import Section from "@/components/markdown/Section.astro";
 
 type Props = { logo?: ClubName } & MarkdownLayoutProps<{
   title: string;
@@ -19,11 +21,7 @@ type Props = { logo?: ClubName } & MarkdownLayoutProps<{
 }>;
 
 let {
-  frontmatter: {
-    title,
-    nav,
-    path,
-  },
+  frontmatter: { title, nav, path, description },
   logo,
 } = Astro.props;
 
@@ -35,6 +33,14 @@ let events = rawMDtoSortedArray(imported);
 ---
 
 <FrontPage title={title} events={events} logo={logo} nav={nav}>
+  <Section>
+    <h1 class="title">{title}</h1>
+    <ColorLigne />
+    <p>
+      {description}
+    </p>
+  </Section>
+
   <div class="md">
     <slot />
   </div>
