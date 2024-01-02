@@ -39,10 +39,6 @@
     font-weight: 500;
   }
 
-  p {
-    padding-top: 20px;
-  }
-
   .clubs {
     background-color: rgb(var(--dark-color));
     color: white;
