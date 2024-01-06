@@ -38,6 +38,7 @@ export function rawMDtoSlide(e: MDnXInstance<EventT>): EventT {
     description: e.frontmatter.description ?? "",
     icon: e.frontmatter.icon ?? "",
     isClub: e.frontmatter.isClub ?? false,
+    inCarrousel: e.frontmatter.inCarrousel ?? true,
   };
 }
 
