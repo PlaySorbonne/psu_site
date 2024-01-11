@@ -2,11 +2,17 @@
 import { getEventIcon } from "@/assets/events";
 import ColorLigne from "../global/ColorLigne.astro";
 import type { EventT } from "@/helpers";
+import { sliceText } from "@/helpers";
+import Club from "./Club.astro";
 
 interface Props {
   events: EventT[];
   title: string;
 }
+
+const MaxShortDescription = 200;
+const MaxLongDescription = 400;
+const MaxEvents = 4;
 
 const { events, title } = Astro.props;
 ---
@@ -15,72 +21,48 @@ const { events, title } = Astro.props;
   <h1 class="title">{title}</h1>
   <ColorLigne />
 
-  <div class="content__programme">
+  <div class="icons__clubs">
     {
       events.map((event, i) => (
-        <a class="element" href={event.noLink ? undefined : event.link}>
-          <p class="title__element">{event.title}</p>
-          <div class={`content__element ${i % 2 && "content_left"}`}>
-            <img
-              loading="lazy"
-              src={getEventIcon(event.icon).src}
-              alt=""
-              class="img__element"
-            />
-            <div>
-              <p>{event.description}</p>
-            </div>
+        <Club
+          img={getEventIcon(event.icon).src}
+          link={!event.noLink ? event.link : undefined}
+          horizontal={events.length > MaxEvents}
+        >
+          <div class="event_content">
+            <p class="event_title">{event.title}</p>
+            <p>
+              {sliceText(
+                event.description,
+                events.length > MaxEvents
+                  ? MaxLongDescription
+                  : MaxShortDescription
+              )}
+            </p>
           </div>
-        </a>
+        </Club>
       ))
     }
   </div>
 </div>
 <style>
-  .content__programme {
-    padding-top: 20px;
+  .content {
+    width: 100%;
   }
 
-  .img__element {
-    max-width: 40%;
-    max-height: 200px;
-    height: 100%;
-    /* box-shadow: 8px 8px 2px 1px rgba(var(--main-color), 0.4); */
-    margin: 0 20px;
-  }
-
-  .content__element {
+  .icons__clubs {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 20px 0;
+    width: 100%;
   }
 
-  .content_left {
-    flex-direction: row-reverse;
-  }
-
-  @media (max-width: 768px) {
-    .content__element {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .content_left {
-      flex-direction: column;
-    }
-  }
-
-  .title__element {
+  .event_title {
+    font-size: 1.4rem;
     font-weight: bold;
-    text-decoration: underline;
-  }
-
-  .title__element::first-letter {
-    text-transform: uppercase;
-  }
-
-  .element {
-    padding: 5px 0;
+    color: rgb(var(--black-title));
   }
 </style>

@@ -9,7 +9,7 @@ export function sortSlides(slides: EventT[]): EventT[] {
   let priority: EventT[] = [];
   let other: EventT[] = [];
   slides.forEach((slide) => {
-    // if (slide.inCarrousel === false) return;
+    if (slide.inCarrousel === false) return;
     if (slide.priority) priority.push(slide);
     else other.push(slide);
   });
@@ -44,6 +44,11 @@ export function rawMDtoSlide(e: MDnXInstance<EventT>): EventT {
 
 export function rawMDtoSortedArray(e: MDnXInstance<EventT>[]): EventT[] {
   return sortSlides(e.map(rawMDtoSlide));
+}
+
+export function sliceText(text: string, length: number): string {
+  if (text.length <= length) return text;
+  return text.slice(0, length) + "...";
 }
 
 export type ClubName = "dlc" | "luxludi" | "psu" | "pls" | "champsu";

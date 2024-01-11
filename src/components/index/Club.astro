@@ -3,17 +3,39 @@ interface Props {
   img: string;
   alt?: string;
   link?: string;
+  horizontal?: boolean;
+  title?: string;
+  left?: boolean;
 }
 
-const { img, alt, link } = Astro.props;
+const { img, alt, link, horizontal, title, left=false } = Astro.props;
 ---
 
-<a class="wrapper" href={link}>
-  <img src={img} alt={alt ?? "logo"} class="img" />
+<a class=`wrapper ${horizontal? "wrapper_hor" : ""} ${link ? "animate" : ""}` href={link}>
+  {!left && <img
+    src={img}
+    alt={alt ?? "logo"}
+    class=`img ${horizontal ? "img_hor" : ""}`
+  />}
   <slot />
+
+  {left && <img
+    src={img}
+    alt={alt ?? "logo"}
+    class=`img ${horizontal ? "img_hor" : ""}`
+  />}
 </a>
 
 <style>
+  .animate {
+    transform: scale(1);
+    transition: all 0.5s ease-in-out;
+  }
+  .animate:hover {
+    transform: scale(1.1);
+    transition: all 0.5s ease-in-out;
+  }
+
   .wrapper {
     background-color: rgb(var(--main-color));
     max-width: 200px;
@@ -26,30 +48,35 @@ const { img, alt, link } = Astro.props;
     font-weight: bold;
     text-justify: auto;
     margin: 0 20px;
-
-    transform: scale(1);
-    transition: all 0.5s ease-in-out;
-  }
-
-  .wrapper:hover {
-    transform: scale(1.1);
-    transition: all 0.5s ease-in-out;
   }
 
   .img {
     width: 100%;
+    padding: 20px;
   }
 
   @media (max-width: 768px) {
     .wrapper {
       flex-direction: row;
       width: 100%;
-      margin: 20px 0;
-      padding: 10px 5px;
+      margin: 10px 0;
       max-width: 100%;
     }
     .img {
-      width: 20%;
+      max-width: 20%;
+      max-height: 200px;
     }
+  }
+
+  .wrapper_hor {
+    flex-direction: row;
+    width: 100%;
+    margin: 5px 0;
+    max-width: 100%;
+  }
+
+  .img_hor {
+    max-width: 20%;
+    max-height: 200px;
   }
 </style>
