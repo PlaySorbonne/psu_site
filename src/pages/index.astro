@@ -1,6 +1,4 @@
 ---
-import "./index.css";
-
 import FrontPage from "@/layouts/FrontPage.astro";
 
 import { rawMDtoSortedArray, type MDnXInstance, type EventT } from "@/helpers";
@@ -76,3 +74,49 @@ const events = rawMDtoSortedArray([...psuCar, ...carrousel]);
     </div>
   </section>
 </FrontPage>
+
+<style>
+  .content {
+    width: 100%;
+  }
+
+  .title {
+    font-size: 3rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 768px) {
+    .title {
+      font-size: 2rem;
+    }
+  }
+
+
+  strong {
+    font-weight: 500;
+  }
+
+  .clubs {
+    background-color: rgb(var(--dark-color));
+    color: white;
+  }
+
+  .icons__clubs {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 20px 0;
+    width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .icons__clubs {
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+    }
+  }
+</style>
