@@ -7,6 +7,7 @@ import type { MarkdownInstance, MDXInstance } from "astro";
  */
 export function sortSlides(events: EventT[], maxDepth = 2): EventT[] {
   return events
+    .filter((e) => !e.dontList) // On filtre les événements à ne pas lister
     .filter((e) => !e.isClub) // On filtre les clubs
     .filter((e) => e.link.split("/").length <= maxDepth + 1) // on retire les pages trop profondes
     .reduce((acc, cur) => {
@@ -16,9 +17,6 @@ export function sortSlides(events: EventT[], maxDepth = 2): EventT[] {
     .sort((a, b) => b.priority - a.priority); // on trie par priorité
 }
 
-export function filterNonCarrousel(slides: EventT[]): EventT[] {
-  return slides.filter((e) => e.inCarrousel !== false);
-}
 
 export function rawMDtoSlide(e: MDnXInstance<EventT>): EventT {
   return {
@@ -32,7 +30,7 @@ export function rawMDtoSlide(e: MDnXInstance<EventT>): EventT {
     description: e.frontmatter.description ?? "",
     icon: e.frontmatter.icon ?? "",
     isClub: e.frontmatter.isClub ?? false,
-    inCarrousel: e.frontmatter.inCarrousel ?? true,
+    dontList: e.frontmatter.dontList ?? false,
   };
 }
 
@@ -72,7 +70,7 @@ export interface EventT {
   link: string;
   noLink?: boolean;
   priority?: number;
-  inCarrousel?: boolean;
+  dontList?: boolean;
   description: string;
   icon?: string;
   isClub?: boolean;
