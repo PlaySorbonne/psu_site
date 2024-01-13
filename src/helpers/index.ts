@@ -1,25 +1,19 @@
 import type { MarkdownInstance, MDXInstance } from "astro";
 
 /*
- * Sort slides by priority, remove duplicates and filter out clubs
+ * Sort events by priority, remove duplicates and filter out clubs
  * @param slides Array of slides
  * @returns Sorted array of slides
  */
-export function sortSlides(slides: EventT[]): EventT[] {
-  let priority: EventT[] = [];
-  let other: EventT[] = [];
-  slides.forEach((slide) => {
-    if (slide.inCarrousel === false) return;
-    if (slide.priority) priority.push(slide);
-    else other.push(slide);
-  });
-  return priority
-    .concat(other)
+export function sortSlides(events: EventT[], maxDepth = 2): EventT[] {
+  return events
+    .filter((e) => !e.isClub) // On filtre les clubs
+    .filter((e) => e.link.split("/").length <= maxDepth + 1) // on retire les pages trop profondes
     .reduce((acc, cur) => {
-      if (acc.find((e) => e.src === cur.src)) return acc;
+      if (acc.find((e) => e.link === cur.link)) return acc;
       return acc.concat(cur);
-    }, [] as EventT[])
-    .filter((e) => !e.isClub);
+    }, [] as EventT[]) // on retire les doublons
+    .sort((a, b) => b.priority - a.priority); // on trie par priorité
 }
 
 export function filterNonCarrousel(slides: EventT[]): EventT[] {
@@ -32,7 +26,7 @@ export function rawMDtoSlide(e: MDnXInstance<EventT>): EventT {
     subtitle: e.frontmatter.subtitle,
     src: e.frontmatter.src,
     alt: e.frontmatter.alt ?? "",
-    priority: e.frontmatter.priority ?? false,
+    priority: e.frontmatter.priority ?? 0,
     link: e.url,
     noLink: e.frontmatter.noLink ?? false,
     description: e.frontmatter.description ?? "",
@@ -42,13 +36,16 @@ export function rawMDtoSlide(e: MDnXInstance<EventT>): EventT {
   };
 }
 
-export function rawMDtoSortedArray(e: MDnXInstance<EventT>[]): EventT[] {
-  return sortSlides(e.map(rawMDtoSlide));
+export function rawMDtoSortedArray(
+  e: MDnXInstance<EventT>[],
+  maxDepth?: number
+): EventT[] {
+  return sortSlides(e.map(rawMDtoSlide), maxDepth);
 }
 
 export function sliceText(text: string, length: number): string {
   if (text.length <= length) return text;
-  return text.slice(0, length) + "...";
+  return text.slice(0, length) + " ...";
 }
 
 export type ClubName = "dlc" | "luxludi" | "psu" | "pls" | "champsu";
@@ -74,7 +71,7 @@ export interface EventT {
   alt: string;
   link: string;
   noLink?: boolean;
-  priority?: boolean;
+  priority?: number;
   inCarrousel?: boolean;
   description: string;
   icon?: string;
