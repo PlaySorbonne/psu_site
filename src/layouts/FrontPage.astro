@@ -1,7 +1,12 @@
 ---
 import DefaultPage from "./DefaultPage.astro";
 import Carrousel from "@/components/index/Carrousel/Carrousel";
-import { filterNonCarrousel, type ClubName, type EventT, type NavItem } from "@/helpers";
+import {
+  filterNonCarrousel,
+  type ClubName,
+  type EventT,
+  type NavItem,
+} from "@/helpers";
 import ColorLigne from "@/components/global/ColorLigne.astro";
 import Events from "@/components/index/Events.astro";
 
@@ -12,6 +17,8 @@ interface Props {
   prefetchs?: string[];
   events?: EventT[];
   noEvents?: boolean;
+  eventTitle?: string;
+  eventDescription?: string;
 }
 
 const {
@@ -21,6 +28,8 @@ const {
   prefetchs = [],
   events = [],
   noEvents = false,
+  eventTitle = "Nos événements",
+  eventDescription,
 } = Astro.props;
 
 const navs = [
@@ -49,7 +58,11 @@ const navs = [
     {
       !noEvents && (
         <section class="events" id="events">
-          <Events events={events} title="Nos événements" />
+          <Events
+            events={events}
+            title={eventTitle}
+            description={eventDescription}
+          />
         </section>
       )
     }

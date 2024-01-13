@@ -17,29 +17,51 @@ type Props = { logo?: ClubName } & MarkdownLayoutProps<{
   title: string;
   nav?: NavItem[];
   description?: string;
-  path: string;
+  showDescription?: boolean;
+  eventTitle?: string;
+  eventDescription?: string;
 }>;
 
 let {
-  frontmatter: { title, nav, path, description },
+  frontmatter: {
+    title,
+    nav,
+    description,
+    showDescription = false,
+    eventDescription,
+    eventTitle,
+  },
   logo,
+  url,
+  file,
 } = Astro.props;
 
 let imported = (
   await Astro.glob<MDnXInstance<EventT>>("../../pages/**/*{.md,.mdx}")
-).filter((e) => e.file.includes(path));
+)
+  .filter((e) => e.file.includes(url.split("/").at(-1))) // on garde que ceux qui ont le nom de parent // TODO peut-être faire tout le path pour être sûr
+  .filter((e) => e.file !== file); // on enlève celui qui est traité ici
 
-let events = rawMDtoSortedArray(imported);
+let events = rawMDtoSortedArray(imported, url.split("/").length);
 ---
 
-<FrontPage title={title} events={events} logo={logo} nav={nav}>
-  <Section>
-    <h1 class="title">{title}</h1>
-    <ColorLigne />
-    <p>
-      {description}
-    </p>
-  </Section>
+<FrontPage
+  title={title}
+  events={events}
+  logo={logo}
+  nav={nav}
+  eventDescription={eventDescription}
+  eventTitle={eventTitle}
+>
+  {
+    showDescription && (
+      <Section>
+        <h1 class="title">{title}</h1>
+        <ColorLigne />
+        <p>{description}</p>
+      </Section>
+    )
+  }
 
   <div class="md">
     <slot />
