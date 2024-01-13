@@ -1,5 +1,4 @@
 ---
-import { getEventIcon } from "@/assets/events";
 import ColorLigne from "../global/ColorLigne.astro";
 import type { EventT } from "@/helpers";
 import { sliceText } from "@/helpers";
@@ -8,19 +7,21 @@ import Club from "./Club.astro";
 interface Props {
   events: EventT[];
   title: string;
+  description?: string;
 }
 
 const MaxShortDescription = 200;
 const MaxLongDescription = 400;
 const MaxEvents = 4;
 
-const { events, title } = Astro.props;
+const { events, title, description } = Astro.props;
 ---
 
 <div class="content">
   <h1 class="title">{title}</h1>
   <ColorLigne />
 
+  {description && <p>{description}</p>}
   <div class="icons__clubs">
     {
       events.map((event, i) => (
