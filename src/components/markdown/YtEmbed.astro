@@ -1,0 +1,26 @@
+---
+interface Props {
+  ytLink: string;
+  title?: string;
+}
+
+const { ytLink, title = "Youtube embed" } = Astro.props;
+
+// https://www.youtube.com/embed/2mECSMDtlog
+---
+
+<iframe
+  src=`${ytLink}?rel=0&modestbranding=1`
+  title={title}
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen
+  class="frame"
+  />
+
+<style>
+  .frame {
+    width: 25vw;
+    height: calc(25vw * 9 / 16);
+    margin: 10px 0;
+  }
+</style>

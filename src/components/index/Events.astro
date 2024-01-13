@@ -25,7 +25,7 @@ const { events, title } = Astro.props;
     {
       events.map((event, i) => (
         <Club
-          img={getEventIcon(event.icon).src}
+          img={event.src}
           link={!event.noLink ? event.link : undefined}
           horizontal={events.length > MaxEvents}
         >
