@@ -17,7 +17,6 @@ export function sortSlides(events: EventT[], maxDepth = 2): EventT[] {
     .sort((a, b) => b.priority - a.priority); // on trie par priorité
 }
 
-
 export function rawMDtoSlide(e: MDnXInstance<EventT>): EventT {
   return {
     title: e.frontmatter.title,
@@ -63,18 +62,18 @@ export interface ParentT {
 
 // TODO is support for nav universal?
 export interface EventT {
-  title: string;
-  subtitle?: string;
-  cover: string;
-  alt: string;
-  link: string;
-  noLink?: boolean;
-  priority?: number;
-  dontList?: boolean;
-  description: string;
-  icon?: string;
-  isClub?: boolean;
-  nav?: NavItem[];
+  title: string; // title of the event, used in the carousel and listing of events
+  subtitle?: string; // subtitle, same as title
+  cover: string; // cover image used in the carousel
+  alt?: string; // alt text for the cover image, defaults to the title
+  link: string; // link to the page of the event
+  noLink?: boolean; // if true, the event will not be linked
+  priority?: number; // priority of the event, used to sort the carousel and listing
+  dontList?: boolean; // if true, the event will not be listed
+  description: string; // description of the event, used in the listing and may be used in the event page
+  icon?: string; // icon of the event, used in the listing (probably ? (TODO))
+  isClub?: boolean; // if true, the event is a club
+  nav?: NavItem[]; // nav items of the event, used in the header in the event page (probably ? (TODO))
 }
 
 interface Page {
@@ -83,6 +82,7 @@ interface Page {
   children?: Page[];
 }
 
+// TODO
 export const pages: Page[] = [
   {
     title: "clubs",
