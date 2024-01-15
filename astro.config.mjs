@@ -14,9 +14,6 @@ export default defineConfig({
     // compress(),
     mdx(),
   ],
-  experimental: {
-    devOverlay: false,
-  },
   markdown: {
     remarkPlugins: [remarkDirective],
   },
