@@ -4,6 +4,7 @@ import Carrousel from "@/components/index/Carrousel/Carrousel";
 import { type ClubName, type EventT, type NavItem } from "@/helpers";
 import ColorLigne from "@/components/global/ColorLigne.astro";
 import Events from "@/components/index/Events.astro";
+import Events2 from "@/components/index/Events2.astro";
 
 interface Props {
   logo?: ClubName;
@@ -53,7 +54,7 @@ const navs = [
     {
       !noEvents && events.length > 0 && (
         <section class="events" id="events">
-          <Events
+          <Events2
             events={events}
             title={eventTitle}
             description={eventDescription}
