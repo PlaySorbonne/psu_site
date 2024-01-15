@@ -28,7 +28,7 @@ export default function Carrousel(props: { slides: EventT[] }) {
         <SwiperSlide
           key={index}
           className={styles.slide}
-          style={{ backgroundImage: `url(${slide.src})` }}
+          style={{ backgroundImage: `url(${slide.cover})` }}
         >
           <div className={styles.content}>
             <a

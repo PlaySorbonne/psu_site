@@ -10,7 +10,7 @@ import ColorLigne from "@/components/global/ColorLigne.astro";
 type Props = { logo?: ClubName } & MarkdownLayoutProps<{
   title: string;
   subtitle?: string;
-  src?: string;
+  cover?: string;
   nav?: NavItem[];
   description?: string;
   showDescription?: boolean;
@@ -22,7 +22,7 @@ const {
   frontmatter: {
     title,
     subtitle,
-    src,
+    cover,
     nav,
     description,
     showDescription,
@@ -37,7 +37,7 @@ const event: EventT[] = [
     title,
     subtitle,
     alt: title,
-    src,
+    cover,
     description: description ?? "",
     link: "",
   },

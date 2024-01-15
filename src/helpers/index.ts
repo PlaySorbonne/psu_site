@@ -22,7 +22,7 @@ export function rawMDtoSlide(e: MDnXInstance<EventT>): EventT {
   return {
     title: e.frontmatter.title,
     subtitle: e.frontmatter.subtitle,
-    src: e.frontmatter.src,
+    cover: e.frontmatter.cover,
     alt: e.frontmatter.alt ?? "",
     priority: e.frontmatter.priority ?? 0,
     link: e.url,
@@ -65,7 +65,7 @@ export interface ParentT {
 export interface EventT {
   title: string;
   subtitle?: string;
-  src: string;
+  cover: string;
   alt: string;
   link: string;
   noLink?: boolean;
