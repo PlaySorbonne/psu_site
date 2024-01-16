@@ -18,6 +18,8 @@ export function sortSlides(events: EventT[], maxDepth = 2): EventT[] {
 }
 
 export function rawMDtoSlide(e: MDnXInstance<EventT>): EventT {
+  if (!e.frontmatter.description && !e.frontmatter.dontList)
+    console.warn(`<!> No description for ${e.url} !!`);
   return {
     title: e.frontmatter.title,
     subtitle: e.frontmatter.subtitle,
@@ -26,7 +28,9 @@ export function rawMDtoSlide(e: MDnXInstance<EventT>): EventT {
     priority: e.frontmatter.priority ?? 0,
     link: e.url,
     noLink: e.frontmatter.noLink ?? false,
-    description: e.frontmatter.description ?? "",
+    description:
+      e.frontmatter.description ??
+      "lorem ipsum dolor sit amet, consectetur adipiscing elit. sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     icon: e.frontmatter.icon ?? "",
     isClub: e.frontmatter.isClub ?? false,
     dontList: e.frontmatter.dontList ?? false,
