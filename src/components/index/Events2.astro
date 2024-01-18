@@ -26,7 +26,7 @@ const { events, title, description } = Astro.props;
             <img
               loading="lazy"
               src={event.icon || getEventIcon(event.icon).src}
-              alt=""
+              alt={event.title}
               class="img__element"
             />
             <div>
