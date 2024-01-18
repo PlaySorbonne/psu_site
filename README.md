@@ -12,7 +12,7 @@ Il faut [nodeJs et npm](https://nodejs.org/en/download/) d'installé sur votre m
 npm install -g yarn
 ```
 
-Ensuite, il faut installer les dépendances du projet, pour cela, tapez dans le terminal à la racine du projet :
+Ensuite, il faut installer les dépendances du projet, pour cela, tapez dans le terminal **à la racine du projet** :
 
 ```bash
 yarn
@@ -36,39 +36,7 @@ Cela va créer un dossier /dist qui contient le site web compilé.
 
 (<!> La branch main est automatisé, n'importe quel commit est envoyé compilé et mis à jour sur https://playsorbonne.fr <!>)
 
-## description de l'arborescence
-
-### Les branch du projet
-
-Il y a 2 branchs principales :
-
-- **/main** : la branch principale², c'est celle qui est compilé et mise en ligne sur https://playsorbonne.fr
-
-- **/features** : la branch de développement, une fois une fonctionnalité terminé, elle est mergé dans main, elle aussi est compilé et mise en ligne sur https://demo.playsorbonne.fr
-
-### Les dossiers du projet
-
-- **/src** : contient tout les fichiers sources du projet
-
-- **/src/pages** : les pages de l'application, c'est ici que se trouve le contenu des pages. Tout ici est modifiable même sans connaitre du code !
-
-- **/src/assets** : contient les fichiers statiques (images, etc..) utilisé dans le code
-
-- **/public** : contient les fichiers statiques référencés dans les mds
-
-- **/src/components** : les composants "réutilisable" de l'application
-
-- **/src/layouts** : les layouts de l'application, cad tout ce qui est commun à plusieurs pages et le code expliquant comment traiter les markdowns
-
-#### pages
-
-Les pages sont des fichiers markdowns (.md) ou MDX (.mdx) qui sont traités par le code pour générer les pages du site web (ignorez les .astro, c'est juste des pages que j'ai pas encore convertie en MD par flemme). La syntaxe et subtilités sont expliqués plus bas.
-
-Le chemin des pages est important, il détermine l'url de la page, par exemple, le fichier `src/pages/luxludi/gamejam.md sera accessible à l'url https://playsorbonne.fr/luxludi/gamejam`
-
-Petite subtilité, les fichiers index.md(x) sont traités comme le fichier source du dossier, par exemple, le fichier `src/pages/luxludi/index.md(x)` sera accessible à l'url https://playsorbonne.fr/luxludi/
-
-### Syntaxe des markdowns / markdowns avancés
+## Syntaxe des markdowns / markdowns avancés
 
 Tout les markdowns respectent la syntaxe de base du markdown (à peu près la même que celle sur discord ! Je vous laisse vous renseigner des bases [ici](https://www.markdownguide.org/basic-syntax/) et une bonne partie de syntaxe basique html), mais il y a quelques subtilités :
 
@@ -106,7 +74,7 @@ Noyus verrons plus bas les différents composants custom, et comment les utilise
 
 (TODO j'aimerais dégager à terme les "import")
 
-#### Les variables du frontmatter
+### Les variables du frontmatter
 
 - **layout** : le layout utilisé pour générer la page, c'est le code qui va déterminer comment traiter le markdown, il est possible de créer des layouts personnalisés, mais il y en a déjà quelques uns de prêt à l'emploi dans le dossier `/src/layouts`. Petite subtilité, le chemin du layout est relatif au dossier `/src/layouts`, par exemple, le layout utilisé dans le fichier `src/pages/luxludi/gamejam.md` est `../../layouts/events/LuxLudiE.astro`, il est donc situé dans le dossier `/src/layouts/events/LuxLudiE.astro`. Nous verrons plus bas les différents layouts.
 
@@ -154,11 +122,37 @@ nav:
 
 Avec link le lien, ça peut être n'importe quoi. (Souvent utilisé avec #id pour les liens vers des éléments de la page qui ont un id). L'indentation est importante btw.
 
-#### Les composants
+## description de l'arborescence
 
-##### markdowns
+### Les branch du projet
 
-TODO
+Il y a 2 branchs principales :
+
+- **/main** : la branch principale², c'est celle qui est compilé et mise en ligne sur https://playsorbonne.fr
+
+- **/features** : la branch de développement, une fois une fonctionnalité terminé, elle est mergé dans main, elle aussi est compilé et mise en ligne sur https://demo.playsorbonne.fr
+
+### Les dossiers du projet
+
+- **/src** : contient tout les fichiers sources du projet
+
+- **/src/pages** : les pages de l'application, c'est ici que se trouve le contenu des pages. Tout ici est modifiable même sans connaitre du code !
+
+- **/src/assets** : contient les fichiers statiques (images, etc..) utilisé dans le code
+
+- **/public** : contient les fichiers statiques référencés dans les mds
+
+- **/src/components** : les composants "réutilisable" de l'application
+
+- **/src/layouts** : les layouts de l'application, cad tout ce qui est commun à plusieurs pages et le code expliquant comment traiter les markdowns
+
+#### pages
+
+Les pages sont des fichiers markdowns (.md) ou MDX (.mdx) qui sont traités par le code pour générer les pages du site web (ignorez les .astro, c'est juste des pages que j'ai pas encore convertie en MD par flemme). La syntaxe et subtilités sont expliqués plus bas.
+
+Le chemin des pages est important, il détermine l'url de la page, par exemple, le fichier `src/pages/luxludi/gamejam.md sera accessible à l'url https://playsorbonne.fr/luxludi/gamejam`
+
+Petite subtilité, les fichiers index.md(x) sont traités comme le fichier source du dossier, par exemple, le fichier `src/pages/luxludi/index.md(x)` sera accessible à l'url https://playsorbonne.fr/luxludi/
 
 #### Les layouts
 
