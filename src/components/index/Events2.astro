@@ -85,12 +85,12 @@ const { events, title, description } = Astro.props;
   }
 
   .clickable .title__element {
-    box-shadow: inset 0 0 red;
-    transition: 1.5s;
+    box-shadow: inset 0 0 rgb(var(--main-color));
+    transition: 1s;
   }
 
   .clickable .title__element:hover {
-    box-shadow: inset 60em 0 red;
+    box-shadow: inset 60em 0 rgb(var(--main-color));
     color: white;
   }
 
