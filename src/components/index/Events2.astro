@@ -20,7 +20,7 @@ const { events, title, description } = Astro.props;
     {description && <p>{description}</p>}
     {
       events.map((event, i) => (
-        <a class="element" href={event.noLink ? undefined : event.link}>
+        <a class={`element ${event.link && !event.noLink ? "clickable" : ""}`} href={event.noLink ? undefined : event.link}>
           <p class="title__element">{event.title}</p>
           <div class={`content__element ${i % 2 && "content_left"}`}>
             <img
@@ -73,6 +73,9 @@ const { events, title, description } = Astro.props;
   }
 
   .title__element {
+    padding: 5px;
+    margin: 10px 0px;
+
     font-weight: bold;
     text-decoration: underline;
   }
@@ -81,7 +84,18 @@ const { events, title, description } = Astro.props;
     text-transform: uppercase;
   }
 
+  .clickable .title__element {
+    box-shadow: inset 0 0 red;
+    transition: 1.5s;
+  }
+
+  .clickable .title__element:hover {
+    box-shadow: inset 60em 0 red;
+    color: white;
+  }
+
   .element {
     padding: 10px 0;
+    transition: 1.5s;
   }
 </style>
