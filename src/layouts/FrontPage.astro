@@ -7,14 +7,14 @@ import Events from "@/components/index/Events.astro";
 import Events2 from "@/components/index/Events2.astro";
 
 interface Props {
-  logo?: ClubName;
-  nav?: NavItem[];
-  title: string;
-  prefetchs?: string[];
-  events?: EventT[];
-  noEvents?: boolean;
-  eventTitle?: string;
-  eventDescription?: string;
+  logo?: ClubName; // le logo du club, est utilisé dans le header
+  nav?: NavItem[]; // les liens de la navbar (à yeet)
+  title: string; // titre de la page
+  prefetchs?: string[]; // les liens à prefetch
+  events?: EventT[]; // les événements à afficher dans le carrousel & la section "nos événements"
+  noEvents?: boolean; // si true, n'affiche pas la section "nos événements"
+  eventTitle?: string; // le titre de la section "nos événements"
+  eventDescription?: string; // la description de la section "nos événements"
 }
 
 const {

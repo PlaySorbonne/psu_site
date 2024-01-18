@@ -2,8 +2,9 @@
 import { ViewTransitions } from "astro:transitions";
 
 interface Props {
-  title: string;
-  prefetchs?: string[];
+  title: string; // title de la page
+  prefetchs?: string[]; // liste des liens à prefetch
+  // description?: string; // TODO description de la page 
 }
 
 const { title, prefetchs } = Astro.props;
