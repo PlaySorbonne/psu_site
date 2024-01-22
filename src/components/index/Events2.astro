@@ -9,7 +9,11 @@ interface Props {
   description?: string;
 }
 
-const { events, title, description } = Astro.props;
+let { events, title, description } = Astro.props;
+
+events = events.filter(
+  (event) => !event.description || !event.description.startsWith("lorem")
+); // do not list empty descriptions
 ---
 
 <div class="content">
@@ -20,7 +24,10 @@ const { events, title, description } = Astro.props;
     {description && <p>{description}</p>}
     {
       events.map((event, i) => (
-        <a class={`element ${event.link && !event.noLink ? "clickable" : ""}`} href={event.noLink ? undefined : event.link}>
+        <a
+          class={`element ${event.link && !event.noLink ? "clickable" : ""}`}
+          href={event.noLink ? undefined : event.link}
+        >
           <p class="title__element">{event.title}</p>
           <div class={`content__element ${i % 2 && "content_left"}`}>
             <img
