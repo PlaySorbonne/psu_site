@@ -3,11 +3,13 @@ layout: ../../../layouts/parent/LuxLudiP.astro
 title: Jeux originaux
 cover: /assets/events/cover/jeux-org.webp
 eventTitle: Nos Jeux
+description: Un des objectifs du club Luxludi est de produire et diffuser des jeux inventés par les étudiants des universités de Paris avec l'objectif de produire un jeu de société et un jeu vidéo par an. Un jeu de plateau qu'on appelle le projet pion, et un jeu vidéo qu'on appelle le projet pixel. Ces jeux sont ensuite diffusés dans les bibliothèques universitaires et municipales de Paris et lors de nos événements.
 ---
-
-import Section from "@/components/markdown/Section.astro";
-import SectionB from "@/components/markdown/SectionB.astro";
-import ColorLigne from "@/components/markdown/ColorLigne.astro";
+import {
+  Section,
+  SectionB,
+  ColorLigne,
+} from "@/components/markdown";
 
 <Section>
 
@@ -15,8 +17,7 @@ import ColorLigne from "@/components/markdown/ColorLigne.astro";
 
 <ColorLigne />
 
-uwuuwuiofajziodjzaiodkaziodkzaodkza jiodfazjiodzajkdaz
-daziodfjiazodkjazopdkzapkdaopzdkazpk odpazkopdkazopdkazopdkazop jdfioazjdkzioakdopazkdopazkdopaz
+{frontmatter.description}
 
 </Section>
 
