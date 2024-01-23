@@ -52,7 +52,6 @@ const { img, alt, link, horizontal, title, left=false } = Astro.props;
 
   .img {
     width: 100%;
-    padding-right: 10px;
   }
 
   @media (max-width: 768px) {
@@ -65,6 +64,7 @@ const { img, alt, link, horizontal, title, left=false } = Astro.props;
     .img {
       max-width: 20%;
       max-height: 200px;
+      padding-right: 10px;
     }
   }
 
@@ -78,5 +78,6 @@ const { img, alt, link, horizontal, title, left=false } = Astro.props;
   .img_hor {
     max-width: 20%;
     max-height: 200px;
+    padding-right: 10px;
   }
 </style>
