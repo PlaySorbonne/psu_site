@@ -146,9 +146,11 @@ Il y a 2 branchs principales :
 
 - **/src/layouts** : les layouts de l'application, cad tout ce qui est commun à plusieurs pages et le code expliquant comment traiter les markdowns
 
+- **/src/plugins** : les plugins custom du markdown (WIP)
+
 #### pages
 
-Les pages sont des fichiers markdowns (.md) ou MDX (.mdx) qui sont traités par le code pour générer les pages du site web (ignorez les .astro, c'est juste des pages que j'ai pas encore convertie en MD par flemme). La syntaxe et subtilités sont expliqués plus bas.
+Les pages sont des fichiers markdowns (.md) ou MDX (.mdx) qui sont traités par le code pour générer les pages du site web. La syntaxe et subtilités sont expliqués plus bas.
 
 Le chemin des pages est important, il détermine l'url de la page, par exemple, le fichier `src/pages/luxludi/gamejam.md sera accessible à l'url https://playsorbonne.fr/luxludi/gamejam`
 
@@ -192,7 +194,7 @@ tout les autres événements sont des layouts qui dérivent de celui là, ils on
 
 partials parce que c'est censé et conçu pour être utilisé par un autre layout, ces des layouts qui ne peuvent pas existé tout seul. C'est pas super important, y en a un seul et c'est :
 
-- /src/layouts/partials/HeaderL.astro : le head de la page, il contient les meta tags, les liens vers les font custom, etc...
+- `/src/layouts/partials/HeaderL.astro` : le head de la page, il contient les meta tags, les liens vers les font custom, etc...
 
 la descritpion des variables est dans le fichier.
 
