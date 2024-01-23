@@ -5,6 +5,7 @@ interface Props {
 }
 
 const { right = false, img } = Astro.props;
+// FIXME utiliser components/index/Club.astro en fait, c'est fait pour ça
 ---
 
 <div
@@ -13,9 +14,7 @@ const { right = false, img } = Astro.props;
     flexDirection: right ? "row-reverse" : "row",
   }}
 >
-  <div class="img">
-    <img src={img} alt="" />
-  </div>
+  <img src={img} alt="" />
   <div class="content">
     <slot />
   </div>
@@ -28,8 +27,10 @@ const { right = false, img } = Astro.props;
     justify-content: center;
     width: 100%;
   }
-  .img {
+  img {
     padding: 10px;
+    max-width: 300px;
+    width: 30%;
   }
   .content {
     padding: 10px;
