@@ -42,7 +42,7 @@ let imported = (
   .filter((e) => e.file.includes(url.split("/").at(-1))) // on garde que ceux qui ont le nom de parent // TODO peut-être faire tout le path pour être sûr
   .filter((e) => e.file !== file); // on enlève celui qui est traité ici
 
-let events = rawMDtoSortedArray(imported, url.split("/").length);
+let events = rawMDtoSortedArray(imported, Math.max(url.split("/").length,2));
 ---
 
 <FrontPage
@@ -79,10 +79,6 @@ let events = rawMDtoSortedArray(imported, url.split("/").length);
     text-transform: uppercase;
   }
 
-  .md :global(img) {
-    max-width: 300px;
-  }
-
   .md :global(a) {
     color: rgb(var(--main-color));
     font-weight: bold;
@@ -90,6 +86,5 @@ let events = rawMDtoSortedArray(imported, url.split("/").length);
 
   .md :global(a:hover) {
     color: rgb(var(--secondary-color));
-    text-decoration: underline;
   }
 </style>
