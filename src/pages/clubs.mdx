@@ -1,0 +1,25 @@
+---
+layout: ../layouts/parent/PsuP.astro
+title: Les clubs de PSU
+isClub: true
+noLink: true
+dontList: true
+---
+
+import {
+  Section,
+  SectionB,
+  ColorLigne,
+  EnTravaux
+} from "@/components/markdown";
+
+import Clubs from "@/components/index/Clubs.astro";
+
+<Section>
+
+# Les clubs
+<ColorLigne />
+
+<Clubs />
+
+</Section>

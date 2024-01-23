@@ -1,3 +1,26 @@
+---
+layout: ../layouts/parent/PsuP.astro
+title: Play Sorbonne Université
+isClub: true
+noLink: true
+dontList: true
+---
+
+import {
+  Section,
+  SectionB,
+  ColorLigne,
+  EnTravaux
+} from "@/components/markdown";
+
+import Clubs from "@/components/index/Clubs.astro";
+
+<Section>
+
+# L'association
+
+<ColorLigne />
+
 **Nous sommes convaincus que le jeu, sous toutes ses formes, nous est essentiel.**
 
 
@@ -11,3 +34,15 @@ C'est une culture qui rassemble, un puissant vecteur d'émotions, une nouvelle f
 
 
 C'est de cette volonté qu'est née l'association Play Sorbonne Université.
+
+</Section>
+
+<SectionB>
+
+# Les clubs
+
+<ColorLigne />
+
+<Clubs />
+
+</SectionB>
