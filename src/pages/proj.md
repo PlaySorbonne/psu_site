@@ -1,6 +1,6 @@
 ---
 layout: ../layouts/parent/PsuP.astro
-title: Les événements de PSU
+title: Les projets de PSU
 isClub: true
 noLink: true
 dontList: true
