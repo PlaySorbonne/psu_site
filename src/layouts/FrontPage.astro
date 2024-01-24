@@ -44,7 +44,7 @@ const navs = [
 >
   <main>
     <ColorLigne />
-    <section class="titre" id="accueil">
+    <section class="titre">
       <Carrousel client:load slides={events} />
     </section>
     <ColorLigne />
@@ -53,7 +53,7 @@ const navs = [
 
     {
       !noEvents && events.length > 0 && (
-        <section class="events" id="events">
+        <section class="events">
           <Events2
             events={events}
             title={eventTitle}
