@@ -38,6 +38,25 @@ events = events.filter(
             />
             <div>
               <p>{event.description}</p>
+              {event.noLink ? (
+                <p
+                  class="more"
+                  style={{
+                    textAlign: !(i % 2) ? "right" : "left",
+                  }}
+                >
+                  Plus d'information à venir
+                </p>
+              ) : (
+                <p
+                  class="fakelink"
+                  style={{
+                    textAlign: !(i % 2) ? "right" : "left",
+                  }}
+                >
+                  En savoir plus
+                </p>
+              )}
             </div>
           </div>
         </a>
@@ -46,6 +65,17 @@ events = events.filter(
   </div>
 </div>
 <style>
+  .more,
+  .fakelink {
+    color: rgb(var(--main-color));
+    font-weight: bold;
+    width: 100%;
+  }
+
+  .fakelink:hover {
+    color: rgba(var(--secondary-color), 0.8);
+  }
+
   .content__programme {
     padding-top: 20px;
   }
@@ -96,7 +126,7 @@ events = events.filter(
     transition: 1s;
   }
 
-  .clickable .title__element:hover {
+  .clickable:hover .title__element {
     box-shadow: inset 60em 0 rgb(var(--main-color));
     color: white;
   }
