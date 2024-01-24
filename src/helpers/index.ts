@@ -56,13 +56,6 @@ export type NavItem = {
   link: string;
 };
 
-// TODO not used
-export interface ParentT {
-  title: string;
-  nav?: NavItem[];
-}
-
-// TODO is support for nav universal?
 export interface EventT {
   title: string; // title of the event, used in the carousel and listing of events
   subtitle?: string; // subtitle, same as title
@@ -75,7 +68,6 @@ export interface EventT {
   description: string; // description of the event, used in the listing and may be used in the event page
   icon?: string; // icon of the event, used in the listing (probably ? (TODO))
   isClub?: boolean; // if true, the event is a club
-  nav?: NavItem[]; // nav items of the event, used in the header in the event page (probably ? (TODO))
 }
 
 const LoremText =
