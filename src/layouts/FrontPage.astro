@@ -1,14 +1,13 @@
 ---
 import DefaultPage from "./DefaultPage.astro";
 import Carrousel from "@/components/index/Carrousel/Carrousel";
-import { type ClubName, type EventT, type NavItem } from "@/helpers";
+import { type ClubName, type EventT } from "@/helpers";
 import ColorLigne from "@/components/global/ColorLigne.astro";
 import Events from "@/components/index/Events.astro";
 import Events2 from "@/components/index/Events2.astro";
 
 interface Props {
   logo?: ClubName; // le logo du club, est utilisé dans le header
-  nav?: NavItem[]; // les liens de la navbar (à yeet)
   title: string; // titre de la page
   prefetchs?: string[]; // les liens à prefetch
   events?: EventT[]; // les événements à afficher dans le carrousel & la section "nos événements"
@@ -19,7 +18,6 @@ interface Props {
 
 const {
   logo,
-  nav = [],
   title,
   prefetchs = [],
   events = [],
@@ -27,21 +25,9 @@ const {
   eventTitle = "Nos événements",
   eventDescription,
 } = Astro.props;
-
-const navs = [
-  {
-    name: "accueil",
-    link: "#accueil",
-  },
-];
 ---
 
-<DefaultPage
-  title={title}
-  prefetchs={prefetchs}
-  logo={logo}
-  nav={[...navs, ...nav]}
->
+<DefaultPage title={title} prefetchs={prefetchs} logo={logo}>
   <main>
     <ColorLigne />
     <section class="titre">

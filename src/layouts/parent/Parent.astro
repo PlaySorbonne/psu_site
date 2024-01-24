@@ -8,14 +8,12 @@ import {
   type EventT,
   type MDnXInstance,
   type ClubName,
-  type NavItem,
 } from "@/helpers";
 import ColorLigne from "@/components/global/ColorLigne.astro";
 import Section from "@/components/markdown/Section.astro";
 
 type Props = { logo?: ClubName } & MarkdownLayoutProps<{
   title: string;
-  nav?: NavItem[];
   description?: string;
   showDescription?: boolean;
   eventTitle?: string;
@@ -25,7 +23,6 @@ type Props = { logo?: ClubName } & MarkdownLayoutProps<{
 let {
   frontmatter: {
     title,
-    nav,
     description,
     showDescription = false,
     eventDescription,
@@ -38,24 +35,23 @@ let {
 
 const indexLike = ["clubs", "events"]; // liste des pages à considérer comme index dans la recherche des events
 
-const isLikeIndex = indexLike.some(e => url.includes(e));
+const isLikeIndex = indexLike.some((e) => url.includes(e));
 
 let imported = (
   await Astro.glob<MDnXInstance<EventT>>("../../pages/**/*{.md,.mdx}")
 )
-  .filter((e) => isLikeIndex || e.url.includes(url.split("/").splice(-1, 1).join("/"))) // on garde ceux qui sont plus profonds que nous ou tout
+  .filter(
+    (e) => isLikeIndex || e.url.includes(url.split("/").splice(-1, 1).join("/"))
+  ) // on garde ceux qui sont plus profonds que nous ou tout
   .filter((e) => e.file !== file); // on enlève celui qui est traité ici
 
 let events = rawMDtoSortedArray(imported, Math.max(url.split("/").length, 2));
-
-console.log(events, url.split("/").length);
 ---
 
 <FrontPage
   title={title}
   events={events}
   logo={logo}
-  nav={nav}
   eventDescription={eventDescription}
   eventTitle={eventTitle}
 >

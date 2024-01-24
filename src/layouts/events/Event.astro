@@ -3,7 +3,7 @@
 
 import type { MarkdownLayoutProps } from "astro";
 import FrontPage from "../FrontPage.astro";
-import type { ClubName, EventT, NavItem } from "@/helpers";
+import type { ClubName, EventT } from "@/helpers";
 import Section from "@/components/markdown/Section.astro";
 import ColorLigne from "@/components/global/ColorLigne.astro";
 
@@ -11,7 +11,6 @@ type Props = { logo?: ClubName } & MarkdownLayoutProps<{
   title: string;
   subtitle?: string;
   cover?: string;
-  nav?: NavItem[];
   description?: string;
   showDescription?: boolean;
   eventTitle?: string;
@@ -23,7 +22,6 @@ const {
     title,
     subtitle,
     cover,
-    nav,
     description,
     showDescription,
     eventDescription,
@@ -48,7 +46,6 @@ const event: EventT[] = [
   title={title}
   events={event}
   logo={logo}
-  nav={nav}
   noEvents={true}
   eventDescription={eventDescription}
   eventTitle={eventTitle}

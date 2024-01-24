@@ -1,21 +1,12 @@
 ---
 import { getClubLogo } from "@/assets/logos";
-import type { ClubName, NavItem } from "@/helpers";
+import type { ClubName } from "@/helpers";
 import NavBar from "./NavBar.astro";
-
-const defaultNav = [
-  { name: "acceuil", link: "#acceuil" },
-  { name: "le festival", link: "#festival" },
-  { name: "association", link: "#association" },
-  { name: "clubs", link: "#clubs" },
-  { name: "programme", link: "#programme" },
-];
 
 interface Props {
   logo?: ClubName;
-  nav?: NavItem[];
 }
-const { logo = "psu", nav = defaultNav } = Astro.props;
+const { logo = "psu" } = Astro.props;
 
 const imgLogo = getClubLogo(logo);
 const isClub = logo && logo !== "psu";

@@ -51,11 +51,6 @@ export type ClubName = "dlc" | "luxludi" | "psu" | "pls" | "champsu";
 
 export type MDnXInstance<T> = MarkdownInstance<T> | MDXInstance<T>;
 
-export type NavItem = {
-  name: string;
-  link: string;
-};
-
 export interface EventT {
   title: string; // title of the event, used in the carousel and listing of events
   subtitle?: string; // subtitle, same as title
