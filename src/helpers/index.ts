@@ -28,9 +28,7 @@ export function rawMDtoSlide(e: MDnXInstance<EventT>): EventT {
     priority: e.frontmatter.priority ?? 0,
     link: e.url,
     noLink: e.frontmatter.noLink ?? false,
-    description:
-      e.frontmatter.description ??
-      "lorem ipsum dolor sit amet, consectetur adipiscing elit. sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    description: e.frontmatter.description ?? LoremText,
     icon: e.frontmatter.icon ?? "",
     isClub: e.frontmatter.isClub ?? false,
     dontList: e.frontmatter.dontList ?? false,
@@ -80,40 +78,5 @@ export interface EventT {
   nav?: NavItem[]; // nav items of the event, used in the header in the event page (probably ? (TODO))
 }
 
-interface Page {
-  title: string;
-  link?: string;
-  children?: Page[];
-}
-
-// TODO
-export const pages: Page[] = [
-  {
-    title: "clubs",
-    children: [
-      { title: "dlc", link: "/dlc" },
-      { title: "luxludi", link: "/luxludi" },
-      { title: "pls", link: "/pls" },
-    ],
-  },
-  {
-    title: "évenements",
-    children: [
-      { title: "Festival de Jeu", link: "/festival" },
-      { title: "Soirée jeuxdi", link: "/jeux" },
-      { title: "Tournois Smash", link: "/dlc/smash" },
-      { title: "Game Jam", link: "/luxludi/gamjam" },
-      { title: "Jeux Originaux", link: "/luxludi/jeux-org" },
-      { title: "Appel à prototypes", link: "/luxludi/proto" },
-      { title: "Conférences", link: "/pls/conferences" },
-      // { title: "Serveur Minecraft", link: "/minecraft" },
-    ],
-  },
-  /* {
-    title: "Jeux Réalisés",
-    children: [
-      { title: "MemoCombo", link: "/luxludi/memocombo" },
-      { title: "Tribunaze", link: "/luxludi/tribunaze" },
-    ],
-  }, */
-];
+const LoremText =
+  "lorem ipsum dolor sit amet, consectetur adipiscing elit. sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";

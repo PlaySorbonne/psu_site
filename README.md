@@ -104,24 +104,6 @@ Noyus verrons plus bas les différents composants custom, et comment les utilise
 
 - priority : (optionnel) La priorité de la page, elle est utilisé pour trier les pages dans les listes d'événements, par défaut, elle est à 0, plus elle est grande, plus la page sera en haut de la liste. (nombre)
 
-- nav : (optionnel) truc un peu moche qui va pas durer longtemps, il va dégager. C'est pour indiquer quoi afficher dans la barre de navigation. Si vous avez la fois la syntaxe ressemble à ça :
-
-```yaml
-nav:
-  - name: projet pixel
-    link: "#pixel"
-  - name: modalités
-    link: "#modalites"
-  - name: participation
-    link: "#participation"
-  - name: contact
-    link: "#contact"
-  - name: évaluation
-    link: "#evaluation"
-```
-
-Avec link le lien, ça peut être n'importe quoi. (Souvent utilisé avec #id pour les liens vers des éléments de la page qui ont un id). L'indentation est importante btw.
-
 ## description de l'arborescence
 
 ### Les branch du projet

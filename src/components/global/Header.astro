@@ -1,7 +1,7 @@
 ---
 import { getClubLogo } from "@/assets/logos";
 import type { ClubName, NavItem } from "@/helpers";
-
+import NavBar from "./NavBar.astro";
 
 const defaultNav = [
   { name: "acceuil", link: "#acceuil" },
@@ -36,8 +36,8 @@ const psuLogo = getClubLogo("champsu");
         <img class="logo" src={imgLogo.src} alt="logo" />
       </a>
     </div>
-    <div class="links">
-      {nav?.map(({ name, link }) => <a href={link}>{name}</a>)}
+    <div class="nav">
+      <NavBar />
     </div>
   </div>
 
@@ -86,9 +86,10 @@ const psuLogo = getClubLogo("champsu");
     text-decoration: underline;
   }
 
-  .links {
+  .nav {
     padding: 5px 20px;
     font-size: 1.3rem;
+    width: 100%;
   }
   .logo_wrapper {
     position: relative;
