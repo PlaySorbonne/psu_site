@@ -9,6 +9,11 @@ interface Props {
 }
 
 const { content, closeable = true } = Astro.props;
+
+marked.use({
+  breaks: true,
+})
+
 const html = marked.parse(content);
 ---
 

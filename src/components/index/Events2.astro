@@ -3,17 +3,24 @@ import { getEventIcon } from "@/assets/events";
 import ColorLigne from "../global/ColorLigne.astro";
 import type { EventT } from "@/helpers";
 
+import { marked } from "marked";
+
 interface Props {
   events: EventT[];
   title: string;
   description?: string;
 }
 
+marked.use({
+  breaks: true,
+})
+
 let { events, title, description } = Astro.props;
 
 events = events.filter(
   (event) => !event.description || !event.description.startsWith("lorem")
 ); // do not list empty descriptions
+
 ---
 
 <div class="content">
@@ -21,7 +28,7 @@ events = events.filter(
   <ColorLigne />
 
   <div class="content__programme">
-    {description && <p>{description}</p>}
+    {description && <div set:html={marked.parse(description)} />}
     {
       events.map((event, i) => (
         <a
@@ -37,7 +44,7 @@ events = events.filter(
               class="img__element"
             />
             <div>
-              <p>{event.description}</p>
+              <div set:html={marked.parse(event.description)} />
               {event.noLink ? (
                 <p
                   class="more"
