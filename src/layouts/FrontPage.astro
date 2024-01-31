@@ -5,6 +5,7 @@ import { type ClubName, type EventT } from "@/helpers";
 import ColorLigne from "@/components/global/ColorLigne.astro";
 import Events from "@/components/index/Events.astro";
 import Events2 from "@/components/index/Events2.astro";
+import FloatingBar from "@/components/popups/FloatingBar.astro";
 
 interface Props {
   logo?: ClubName; // le logo du club, est utilisé dans le header
@@ -28,6 +29,7 @@ const {
 ---
 
 <DefaultPage title={title} prefetchs={prefetchs} logo={logo}>
+  <!-- <FloatingBar content="uwu" /> -->
   <main>
     <ColorLigne />
     <section class="titre">

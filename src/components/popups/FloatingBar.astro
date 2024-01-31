@@ -1,3 +1,66 @@
 ---
+// Must be used client side
 
+import { marked } from "marked";
+
+interface Props {
+  content: string;
+  closeable?: boolean;
+}
+
+const { content, closeable = true } = Astro.props;
+const html = marked.parse(content);
 ---
+
+<div class="floatingBar" set:html={html}>
+  {closeable && <button class="close">X</button>}
+</div>
+
+<style>
+  .floatingBar {
+    position: fixed;
+    top: 0;
+    right: 50%;
+    padding: 1rem;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+    box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+
+  .floatingBar :global(p) {
+    margin: 0;
+  }
+
+  .floatingBar button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.5rem;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .floatingBar button:hover {
+    color: #f00;
+  }
+
+  .floatingBar button:focus {
+    outline: none;
+  }
+
+</style>
+
+<script>
+  //const floatingBars = document.querySelectorAll(".floatingBar");
+  const closeBtn = document.querySelectorAll("button.close");
+
+  closeBtn.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      btn.parentElement.remove();
+    });
+  });
+</script>
