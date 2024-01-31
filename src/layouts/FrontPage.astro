@@ -1,46 +1,55 @@
 ---
-import type { NavItem } from "@/components/global/Header.astro";
 import DefaultPage from "./DefaultPage.astro";
 import Carrousel from "@/components/index/Carrousel/Carrousel";
-import type { ClubName, Slide } from "@/helpers";
+import { type ClubName, type EventT } from "@/helpers";
 import ColorLigne from "@/components/global/ColorLigne.astro";
+import Events from "@/components/index/Events.astro";
+import Events2 from "@/components/index/Events2.astro";
+import FloatingBar from "@/components/popups/FloatingBar.astro";
 
 interface Props {
-  logo?: ClubName;
-  nav?: NavItem[];
-  title: string;
-  prefetchs?: string[];
-  slides?: Slide[];
+  logo?: ClubName; // le logo du club, est utilisé dans le header
+  title: string; // titre de la page
+  prefetchs?: string[]; // les liens à prefetch
+  events?: EventT[]; // les événements à afficher dans le carrousel & la section "nos événements"
+  noEvents?: boolean; // si true, n'affiche pas la section "nos événements"
+  eventTitle?: string; // le titre de la section "nos événements"
+  eventDescription?: string; // la description de la section "nos événements"
 }
 
-const { logo, nav = [], title, prefetchs, slides } = Astro.props;
-
-const navs = [
-  {
-    name: "accueil",
-    link: "#accueil",
-  },
-];
+const {
+  logo,
+  title,
+  prefetchs = [],
+  events = [],
+  noEvents = false,
+  eventTitle = "Nos projets",
+  eventDescription,
+} = Astro.props;
 ---
 
-<DefaultPage
-  title={title}
-  prefetchs={prefetchs}
-  logo={logo}
-  nav={[...navs, ...nav]}
->
+<DefaultPage title={title} prefetchs={prefetchs} logo={logo}>
+  <!-- <FloatingBar content="uwu" /> -->
   <main>
-    <div class="color_ligne"></div>
-
     <ColorLigne />
-    <section class="titre" id="accueil">
-      <Carrousel client:load slides={slides} />
+    <section class="titre">
+      <Carrousel client:load slides={events} />
     </section>
     <ColorLigne />
 
-    <div class="color_ligne"></div>
-
     <slot />
+
+    {
+      !noEvents && events.length > 0 && (
+        <section class="events">
+          <Events2
+            events={events}
+            title={eventTitle}
+            description={eventDescription}
+          />
+        </section>
+      )
+    }
   </main>
 </DefaultPage>
 
@@ -59,6 +68,7 @@ const navs = [
 
   :global(section) > :global(.content) {
     max-width: 900px;
+    width: 100%;
   }
   .titre {
     display: block;

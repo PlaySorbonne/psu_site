@@ -3,34 +3,62 @@
 
 import type { MarkdownLayoutProps } from "astro";
 import FrontPage from "../FrontPage.astro";
-import type { ClubName, Slide } from "@/helpers";
-import type { NavItem } from "@/components/global/Header.astro";
+import type { ClubName, EventT } from "@/helpers";
+import Section from "@/components/markdown/Section.astro";
+import ColorLigne from "@/components/global/ColorLigne.astro";
 
 type Props = { logo?: ClubName } & MarkdownLayoutProps<{
   title: string;
   subtitle?: string;
-  src?: string;
-  priority?: boolean;
-  inCarrousel?: boolean;
-  nav?: NavItem[];
+  cover?: string;
+  description?: string;
+  showDescription?: boolean;
+  eventTitle?: string;
+  eventDescription?: string;
 }>;
 
 const {
-  frontmatter: { title, subtitle, src, nav },
+  frontmatter: {
+    title,
+    subtitle,
+    cover,
+    description,
+    showDescription,
+    eventDescription,
+    eventTitle,
+  },
   logo,
 } = Astro.props;
 
-const slide: Slide[] = [
+const event: EventT[] = [
   {
     title,
     subtitle,
     alt: title,
-    src,
+    cover,
+    description: description ?? "",
+    link: "",
   },
 ];
 ---
 
-<FrontPage title={title} slides={slide} logo={logo} nav={nav}>
+<FrontPage
+  title={title}
+  events={event}
+  logo={logo}
+  noEvents={true}
+  eventDescription={eventDescription}
+  eventTitle={eventTitle}
+>
+  {
+    showDescription && (
+      <Section>
+        <h1 class="title">{title}</h1>
+        <ColorLigne />
+        <p>{description}</p>
+      </Section>
+    )
+  }
   <div class="md">
     <slot />
   </div>
@@ -47,11 +75,6 @@ const slide: Slide[] = [
     text-transform: uppercase;
   }
 
-  .md :global(img) {
-    max-width: 300px;
-  }
-
-
   .md :global(a) {
     color: rgb(var(--main-color));
     font-weight: bold;
@@ -59,19 +82,5 @@ const slide: Slide[] = [
 
   .md :global(a:hover) {
     color: rgb(var(--secondary-color));
-    text-decoration: underline;
   }
-
-  .md :global(.icons) {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  /*.md :global(p) {
-    text-indent: 1em;
-  } */
-
 </style>

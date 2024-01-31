@@ -1,0 +1,21 @@
+---
+import type { ClubName } from "@/helpers";
+import type { MarkdownLayoutProps } from "astro";
+import Parent from "./Parent.astro";
+
+type Props = { logo?: ClubName } & MarkdownLayoutProps<{
+  title: string;
+  description?: string;
+}>;
+---
+
+<Parent {...Astro.props}>
+  <slot />
+</Parent>
+
+<style is:inline>
+  :root {
+    --main-color: 232, 101, 173;
+    --secondary-color: 41, 200, 255;
+  }
+</style>

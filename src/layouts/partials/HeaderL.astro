@@ -2,8 +2,9 @@
 import { ViewTransitions } from "astro:transitions";
 
 interface Props {
-  title: string;
-  prefetchs?: string[];
+  title: string; // title de la page
+  prefetchs?: string[]; // liste des liens à prefetch
+  // description?: string; // TODO description de la page
 }
 
 const { title, prefetchs } = Astro.props;
@@ -31,34 +32,33 @@ const { title, prefetchs } = Astro.props;
   </head>
   <body>
     <slot />
-  </body>
+  </body><style is:global>
+    :root {
+      --black-text: 61, 61, 111;
+      --black-title: 0, 32, 51;
+    }
+    html {
+      background-color: #f6f6f6;
+      font-family: "Titillium Web", sans-serif;
+      scroll-behavior: smooth;
+    }
+    body {
+      color: rgb(var(--black-text));
+      font-size: 1.1rem;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+    }
 
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    p {
+      padding: 5px 0;
+      text-align: justify;
+    }
+  </style>
 </html>
-<style is:global>
-  :root {
-    --black-text: 61, 61, 111;
-    --black-title: 0, 32, 51;
-  }
-  html {
-    background-color: #f6f6f6;
-    font-family: "Titillium Web", sans-serif;
-    scroll-behavior: smooth;
-  }
-  body {
-    color: rgb(var(--black-text));
-  }
-  * {
-    box-sizing: border-box;
-    margin: 0;
-  }
-
-  a {
-    text-decoration: none;
-    color: inherit;
-  }
-
-  p {
-    padding: 5px 0;
-    text-align: justify;
-  }
-</style>

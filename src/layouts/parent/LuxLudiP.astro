@@ -1,0 +1,28 @@
+---
+import type { ClubName } from "@/helpers";
+import type { MarkdownLayoutProps } from "astro";
+import Parent from "./Parent.astro";
+
+type Props = { logo?: ClubName } & MarkdownLayoutProps<{
+  title: string;
+}>;
+---
+
+<Parent {...Astro.props} logo="luxludi">
+  <slot />
+</Parent>
+
+<style is:inline>
+  :root {
+    --main-color: 174, 126, 209;
+    --secondary-color: 255, 230, 60;
+  }
+
+  div.color_ligne {
+    background: linear-gradient(
+      0.25turn,
+      rgb(var(--main-color)),
+      rgb(var(--secondary-color))
+    );
+  }
+</style>

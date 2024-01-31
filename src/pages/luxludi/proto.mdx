@@ -2,32 +2,14 @@
 layout: ../../layouts/events/LuxLudiE.astro
 title: Appel à prototype
 subtitle: Du 25 novembre au 25 décembre
-src: /accueil/carrousel/proto.webp
-inCarrousel: false
+cover: /assets/events/cover/proto.webp
+dontList: true
 noLink: true
-nav:
-  - name: projet pixel
-    link: "#pixel"
-  - name: modalités
-    link: "#modalites"
-  - name: participation
-    link: "#participation"
-  - name: contact
-    link: "#contact"
-  - name: évaluation
-    link: "#evaluation"
-  - name: formulaire
-    link: "https://docs.google.com/forms/d/e/1FAIpQLSdt9w6KsUy8O9MUFRL_fMB930OxsCBi7YLjBlATiU5pihKSmw/viewform?usp=sf_link"
 ---
 
-{/* FIXME y a probablement un moyen d'automatiser le nav et de pas le mettre héhé */}
+import { Section, SectionB, ColorLigne, Button } from "@/components/markdown";
 
-import Section from "@/components/markdown/Section.astro";
-import SectionB from "@/components/markdown/SectionB.astro";
-import Button from "@/components/markdown/Button.astro";
-import ColorLigne from "@/components/global/ColorLigne.astro";
-
-<Section id="pixel">
+<Section>
 
 # Projet Pixel 2024 de Lux Ludi !
 
@@ -47,7 +29,7 @@ Cet appel à prototypes est lancé dans le cadre d'un projet de création de jeu
 
 </Section>
 
-<SectionB id="participation">
+<SectionB>
 # Critères de participation :
 
 <ColorLigne />
@@ -64,7 +46,7 @@ Cet appel à prototypes est lancé dans le cadre d'un projet de création de jeu
 
 </SectionB>
 
-<Section id="modalites">
+<Section>
 
 # Modalités de rendu :
 
@@ -90,7 +72,7 @@ Les participants sont encouragés à venir nous faire essayer les prototypes pen
 
 </Section>
 
-<SectionB id="evaluation">
+<SectionB>
 # Critères d'évaluation :
 
 <ColorLigne />
@@ -103,14 +85,14 @@ Nous évaluerons toutes les propositions, et le meilleur prototype sera sélecti
 
 </SectionB>
 
-<Section id="et_apres">
+<Section>
 # Et après ?
 
 <ColorLigne />
 
 Après le concours, le jeu sera développé et publié par la branche Lux Ludi de l'association Play Sorbonne, entre janvier et août 2024. Les membres de l'équipe de développement ne sont pas encore fixés et seront choisis sur la base du volontariat.
 
-- L'investissement des auteur.e.s du prototype dans le développement du projet ne sera pas obligatoire mais apprécié. Les gagnant.e.s du concours garderont le statut de coauteur.e.s du projet quelque soit leur investissement dans le développement. 
+- L'investissement des auteur.e.s du prototype dans le développement du projet ne sera pas obligatoire mais apprécié. Les gagnant.e.s du concours garderont le statut de coauteur.e.s du projet quelque soit leur investissement dans le développement.
 - Le jeu sera distribué gratuitement en ligne via des services comme Steam et itch.io, aucune personne physique ne touchera de revenus à travers ce projet.
 - Le jeu sera présenté à la Game Cup 5 (juin 2024) et au Festival PSU 2024 (septembre 2024).
 
@@ -122,7 +104,7 @@ Après le concours, le jeu sera développé et publié par la branche Lux Ludi d
   paddingBottom="30px"
 />
 
-<SectionB id="contact">
+<SectionB>
 
 # Nous contacter :
 
@@ -149,10 +131,8 @@ _Point départ à l'entrée place Jussieu, MVE à l'étoile !_
 
 </center>
 
-
 ## Bonne chance et à bientôt !
 
 </SectionB>
-
 
 [formulaire]: https://docs.google.com/forms/d/e/1FAIpQLSdt9w6KsUy8O9MUFRL_fMB930OxsCBi7YLjBlATiU5pihKSmw/viewform?usp=sf_link

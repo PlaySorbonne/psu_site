@@ -1,0 +1,60 @@
+---
+import { clubLogos } from "@/assets/logos";
+import Club from "./Club.astro";
+---
+
+<p>
+  <strong
+    >L'association Play Sorbonne Université (PSU) a pour projet d'étendre ses
+    actions pour partager la passion du jeu au plus grand nombre au sein de
+    l'université. Pour mieux nous organiser dans cette entreprise, nous avons
+    choisi de diviser nos principaux objectifs en plusieurs équipes : Lux Ludi,
+    le DLC, Loading Games et Play & Learn Society.</strong
+  >
+</p>
+
+<div class="icons__clubs">
+  <Club img={clubLogos.pls.src} link="/pls">
+    <p>
+      Vulgariser, dévoiler, transmettre. Nous avons pour but de donner de la
+      légitimité au domaine du jeu vidéo, en traitant avec rigueur les thèmes
+      associés, dont la recherche axée sur ce domaine.
+    </p>
+  </Club>
+  <Club img={clubLogos.dlc.src} link="/dlc">
+    <p>
+      Le club le DLC a pour objectif d'animer la vie du campus, de fidéliser les
+      étudiants et de créer des liens avec d'autres associations.
+    </p>
+  </Club>
+  <Club img={clubLogos.luxludi.src} link="/luxludi">
+    <p>
+      Le club Lux Ludi a pour but de trouver, produire et diffuser des jeux de
+      société ainsi que des jeux vidéos inventés par les étudiants de Sorbonne
+      Université.
+    </p>
+  </Club>
+</div>
+<style>
+  .icons__clubs {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 20px 0;
+    width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .icons__clubs {
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+    }
+  }
+  p {
+    color: white;
+    text-decoration: none;
+  }
+</style>

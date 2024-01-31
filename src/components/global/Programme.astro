@@ -1,3 +1,7 @@
 ---
-interface Props {}
+import type { EventT } from "@/helpers";
+interface Props {
+  events: EventT[];
+}
+const { events } = Astro.props;
 ---

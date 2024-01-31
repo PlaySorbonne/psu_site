@@ -1,0 +1,38 @@
+---
+interface Props {
+  right?: boolean;
+  img: string;
+}
+
+const { right = false, img } = Astro.props;
+// FIXME utiliser components/index/Club.astro en fait, c'est fait pour ça
+---
+
+<div
+  class="wrapper"
+  style={{
+    flexDirection: right ? "row-reverse" : "row",
+  }}
+>
+  <img src={img} alt="" />
+  <div class="content">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  img {
+    padding: 10px;
+    max-width: 300px;
+    width: 30%;
+  }
+  .content {
+    padding: 10px;
+  }
+</style>

@@ -1,0 +1,115 @@
+---
+import { rawMDtoSortedArray } from "@/helpers";
+import type { MDnXInstance, EventT } from "@/helpers";
+
+const allMds = (
+  await Astro.glob<MDnXInstance<EventT>>("../../pages/**/*{.md,.mdx}")
+).filter((md) => md.url.split("/").length > 1); // on retire les pages à la racine
+
+const events = rawMDtoSortedArray(allMds);
+
+const jeux = rawMDtoSortedArray(
+  (
+    await Astro.glob<MDnXInstance<EventT>>(
+      "../../pages/luxludi/jeux-org/*{.md,.mdx}"
+    )
+  ).filter((md) => !md.file.includes("index")), // on retire la page jeux-org
+  99
+);
+
+const pages = [
+  {
+    title: "Accueil",
+    link: "/",
+  },
+  {
+    title: "Clubs",
+    link: "/clubs",
+    children: [
+      { title: "DLC", link: "/dlc" },
+      { title: "LuxLudi", link: "/luxludi" },
+      { title: "PLS", link: "/pls" },
+    ],
+  },
+  {
+    title: "Projets",
+    link: "/proj",
+    children: events
+      .filter((event) => !(event.noLink || event.dontList))
+      .map((event) => ({
+        title: event.title,
+        link: event.link,
+      })),
+  },
+  {
+    title: "Formation civique",
+    link: "/formation",
+  },
+  {
+    title: "Jeux originaux",
+    link: "/luxludi/jeux-org",
+    children: jeux
+      .filter((jeu) => !(jeu.noLink || jeu.dontList))
+      .map((jeu) => ({
+        title: jeu.title,
+        link: jeu.link,
+      })),
+  },
+];
+---
+
+<nav class="wrapper">
+  {
+    pages?.map((category) => (
+      <div class="dropdown">
+        <a href={category.link} class="link">
+          {category.title}
+        </a>
+        <div class="dropdown-content">
+          {category.children?.map((child) => (
+            <a href={child.link} class="link">
+              {child.title}
+            </a>
+          ))}
+        </div>
+      </div>
+    ))
+  }
+</nav>
+
+<style>
+  .wrapper {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    padding: 1rem;
+    background-color: #f9f9f9;
+  }
+
+  .link {
+    padding: 10px;
+  }
+
+  .link:hover {
+    color: rgb(var(--main-color));
+    text-decoration: underline;
+  }
+
+  .dropdown {
+    display: relative;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 99;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: flex;
+  }
+</style>

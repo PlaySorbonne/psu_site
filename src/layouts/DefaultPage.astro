@@ -1,22 +1,21 @@
 ---
 // You can override --main-color --dark-color and --secondary-color
-import Header, { type NavItem } from "@/components/global/Header.astro";
+import Header from "@/components/global/Header.astro";
 import Footer from "@/components/global/Footer.astro";
 import HeaderL from "./partials/HeaderL.astro";
 import type { ClubName } from "@/helpers";
 
 interface Props {
   logo?: ClubName;
-  nav?: NavItem[];
   title: string;
   prefetchs?: string[];
 }
 
-const { logo, nav, title, prefetchs } = Astro.props;
+const { logo, title, prefetchs } = Astro.props;
 ---
 
 <HeaderL title={title} prefetchs={prefetchs}>
-  <Header logo={logo} nav={nav} />
+  <Header logo={logo} />
   <slot />
   <Footer />
 </HeaderL>

@@ -1,0 +1,30 @@
+---
+interface Props {
+  ytLink: string;
+  title?: string;
+}
+
+const { ytLink, title = "Youtube embed" } = Astro.props;
+---
+
+<iframe
+  src=`${ytLink}?rel=0&modestbranding=1`
+  title={title}
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen
+  class="frame"></iframe>
+
+<style>
+  .frame {
+    width: 50vw;
+    height: calc(50vw * 9 / 16);
+    margin: 10px 0;
+  }
+
+  @media (max-width: 900px) {
+    .frame {
+      width: 90vw;
+      height: calc(90vw * 9 / 16);
+    }
+  }
+</style>
