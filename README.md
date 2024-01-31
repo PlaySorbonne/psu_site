@@ -84,7 +84,7 @@ Noyus verrons plus bas les différents composants custom, et comment les utilise
 
 - **cover** : lien de l'image de couverture de la page, elle est utilisé dans le carrousel. Elle doit être mise dans le dossier **public**, et le lien indiqué est le lien sans "/public/" au début. (C'est le lien final aussi de l'image en production).
 
-- **description** : la description de la page, elle est utilisé dans les listes d'événements _et dans les meta tags de la page (TODO)_. (meta tags = les informations qui sont utilisés par les moteurs de recherche pour référencer le site & liens sur les réseaux sociaux)
+- **description** : la description de la page, elle est utilisé dans les listes d'événements _et dans les meta tags de la page (TODO)_. (meta tags = les informations qui sont utilisés par les moteurs de recherche pour référencer le site & liens sur les réseaux sociaux). Supporte la syntaxe markdown ! Insérez un `\n` pour faire un retour à la ligne.
 
 - **icon** : L'icone de la page, elle est utilisé dans les listes d'événements. De même que cover, il faut indiquer le lien de l'image à partir du dossier /public.
 
@@ -92,7 +92,7 @@ Noyus verrons plus bas les différents composants custom, et comment les utilise
 
 - eventTitle (optionnel) : Change le titre de la liste des événements. (par défaut : "nos événements")
 
-- eventDescription (optionnel) : ajoute le texte à la description de la liste des événements.
+- eventDescription (optionnel) : ajoute le texte à la description de la liste des événements. Supporte aussi la syntaxe markdown.
 
 - isClub : (optionnel) si la page est un club, elle sera pas affiché dans les listes d'événements, _et elle sera affiché dans la liste des clubs (TODO)._ (true/false)
 
