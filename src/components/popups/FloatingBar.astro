@@ -12,7 +12,7 @@ const { content, closeable = true } = Astro.props;
 
 marked.use({
   breaks: true,
-})
+});
 
 const html = marked.parse(content);
 ---
@@ -23,6 +23,7 @@ const html = marked.parse(content);
 
 <style>
   .floatingBar {
+    display: none;
     position: fixed;
     top: 0;
     right: 50%;
@@ -56,16 +57,33 @@ const html = marked.parse(content);
   .floatingBar button:focus {
     outline: none;
   }
-
 </style>
 
-<script>
-  //const floatingBars = document.querySelectorAll(".floatingBar");
-  const closeBtn = document.querySelectorAll("button.close");
+<script is:inline>
+  function getCookie(name) {
+    let nameEQ = name + "=";
+    let ca = document.cookie.split(";");
+    for (var i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == " ") c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+  }
 
-  closeBtn.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      btn.parentElement.remove();
+  if (!getCookie("floatingBar")) {
+    document
+      .querySelectorAll(".floatingBar")
+      .forEach((e) => (e.style.display = "flex"));
+  } else {
+
+    const closeBtn = document.querySelectorAll("button.close");
+
+    closeBtn.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        btn.parentElement.remove();
+        document.cookie = "floatingBar=1;";
+      });
     });
-  });
+  }
 </script>
