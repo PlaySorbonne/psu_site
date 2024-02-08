@@ -32,33 +32,34 @@ const { title, prefetchs } = Astro.props;
   </head>
   <body>
     <slot />
-  </body><style is:global>
-    :root {
-      --black-text: 61, 61, 111;
-      --black-title: 0, 32, 51;
-    }
-    html {
-      background-color: #f6f6f6;
-      font-family: "Titillium Web", sans-serif;
-      scroll-behavior: smooth;
-    }
-    body {
-      color: rgb(var(--black-text));
-      font-size: 1.1rem;
-    }
-    * {
-      box-sizing: border-box;
-      margin: 0;
-    }
+    <style is:global>
+      :root {
+        --black-text: 61, 61, 111;
+        --black-title: 0, 32, 51;
+      }
+      html {
+        background-color: #f6f6f6;
+        font-family: "Titillium Web", sans-serif;
+        scroll-behavior: smooth;
+      }
+      body {
+        color: rgb(var(--black-text));
+        font-size: 1.1rem;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
 
-    p {
-      padding: 5px 0;
-      text-align: justify;
-    }
-  </style>
+      p {
+        padding: 5px 0;
+        text-align: justify;
+      }
+    </style>
+  </body>
 </html>
