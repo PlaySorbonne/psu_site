@@ -3,6 +3,7 @@ import { getClubLogo } from "@/assets/logos";
 import type { ClubName } from "@/helpers";
 import NavBar from "./NavBar.astro";
 import MobileNav from "./MobileNav.astro";
+import ColorLigne from "./ColorLigne.astro";
 
 interface Props {
   logo?: ClubName;
@@ -13,6 +14,42 @@ const imgLogo = getClubLogo(logo);
 const isClub = logo && logo !== "psu";
 const psuLogo = getClubLogo("champsu");
 ---
+
+<header class="sticky">
+  <div class="desktop">
+    <div class="logo_wrapper">
+      {
+        isClub && (
+          <a href="/" style="height:100%;">
+            <img class="logo" src={psuLogo.src} alt="logo" />
+          </a>
+        )
+      }
+      <a href={`/${logo === "psu" ? "" : logo}`} style="height:100%;">
+        <img class="logo" src={imgLogo.src} alt="logo" />
+      </a>
+    </div>
+    <div class="nav">
+      <NavBar />
+    </div>
+  </div>
+
+  <div class="mobile">
+    {
+      isClub && (
+        <a href="/" style="height:100%;">
+          <img class="logo_mobile" src={psuLogo.src} alt="logo" />
+        </a>
+      )
+    }
+    <a href={`/${logo === "psu" ? "" : logo}`} style="height:100%;">
+      <img class="logo" src={imgLogo.src} alt="logo" />
+    </a>
+
+    <MobileNav />
+  </div>
+  <ColorLigne />
+</header>
 
 <header>
   <div class="desktop">
@@ -49,7 +86,42 @@ const psuLogo = getClubLogo("champsu");
   </div>
 </header>
 
+<script>
+  document.addEventListener("astro:page-load", () => {
+    // keep track of previous scroll position
+    let prevScrollPos = window.scrollY;
+
+    window.addEventListener("scroll", function () {
+      // current scroll position
+      const currentScrollPos = window.scrollY;
+
+      if (prevScrollPos > currentScrollPos) {
+        // user has scrolled up
+        document.querySelector<HTMLElement>(".sticky").style.top = "0";
+      } else {
+        // user has scrolled down
+        document.querySelector<HTMLElement>(".sticky").style.top = "-200px";
+      }
+
+      // update previous scroll position
+      prevScrollPos = currentScrollPos;
+    });
+  });
+</script>
+
 <style>
+  .space {
+    height: 80px;
+  }
+
+  .sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1001;
+    transition: top 0.3s;
+  }
+
   .mobile {
     display: none;
     height: 80px;
