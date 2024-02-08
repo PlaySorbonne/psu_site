@@ -1,0 +1,196 @@
+---
+import { type MDnXInstance, type EventT, rawMDtoSortedArray } from "@/helpers";
+
+// FIXME Duplicate from @/components/global/NavBar
+const allMds = (
+  await Astro.glob<MDnXInstance<EventT>>("../../pages/**/*{.md,.mdx}")
+).filter((md) => md.url.split("/").length > 1); // on retire les pages à la racine
+
+const events = rawMDtoSortedArray(allMds);
+
+const jeux = rawMDtoSortedArray(
+  (
+    await Astro.glob<MDnXInstance<EventT>>(
+      "../../pages/luxludi/jeux-org/*{.md,.mdx}"
+    )
+  ).filter((md) => !md.file.includes("index")), // on retire la page jeux-org
+  99
+);
+
+const pages = [
+  {
+    title: "Accueil",
+    link: "/",
+  },
+  {
+    title: "Clubs",
+    link: "/clubs",
+    children: [
+      { title: "DLC", link: "/dlc" },
+      { title: "LuxLudi", link: "/luxludi" },
+      { title: "PLS", link: "/pls" },
+    ],
+  },
+  {
+    title: "Projets",
+    link: "/proj",
+    children: events
+      .filter((event) => !(event.noLink || event.dontList))
+      .map((event) => ({
+        title: event.title,
+        link: event.link,
+      })),
+  },
+  {
+    title: "Formation civique",
+    link: "/formation",
+  },
+  {
+    title: "Jeux originaux",
+    link: "/luxludi/jeux-org",
+    children: jeux
+      .filter((jeu) => !(jeu.noLink || jeu.dontList))
+      .map((jeu) => ({
+        title: jeu.title,
+        link: jeu.link,
+      })),
+  },
+];
+---
+
+<button class="nav-toggle">
+  <span class="hamburger"></span>
+</button>
+
+<div class="navuwu">
+  <ul class="nav__list">
+    {
+      pages.map((page) => (
+        <li class="nav__item">
+          <a href={page.link} class="nav__link">
+            {page.title}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const navToggles = document.querySelectorAll(".nav-toggle");
+    const navLinks = document.querySelectorAll(".nav__link");
+
+    navToggles.forEach((navToggle) => {
+      navToggle.addEventListener("click", () => {
+        document.body.classList.toggle("nav-open");
+      });
+    });
+
+    navLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        document.body.classList.remove("nav-open");
+      });
+    });
+  });
+</script>
+
+<style>
+  .navuwu {
+    position: fixed;
+    background: rgb(var(--dark-color));
+    color: rgb(var(--main-color));
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+
+    transform: translateX(100%);
+    transition: transform 250ms cubic-bezier(0.5, 0, 0.5, 1);
+  }
+  .nav-toggle {
+    padding: 0.5em;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    position: absolute;
+    right: 1em;
+    top: 30px;
+    z-index: 1000;
+  }
+
+  .nav__list {
+    list-style: none;
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav__link {
+    color: rgb(var(--main-color));
+    font-weight: bolder;
+    text-decoration: none;
+    font-size: 1.5em;
+    transition: color 250ms ease-in-out;
+  }
+
+  .nav__link:hover {
+    color: rgb(var(--secondary-color));
+  }
+
+  .hamburger {
+    display: block;
+    position: relative;
+  }
+
+  .hamburger,
+  .hamburger::before,
+  .hamburger::after {
+    background: rgb(var(--secondary-color));
+    width: 3em;
+    height: 4px;
+    border-radius: 1em;
+  }
+
+  .hamburger::before,
+  .hamburger::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    transition: transform 250ms ease-in-out;
+  }
+
+  .hamburger::before {
+    top: 12px;
+  }
+  .hamburger::after {
+    bottom: 12px;
+  }
+
+  :global(.nav-open) .navuwu {
+    transform: translateX(0%);
+  }
+
+  :global(.nav-open) .nav-toggle {
+    position: fixed;
+  }
+
+  :global(.nav-open) .hamburger {
+    transform: rotate(0.625turn);
+  }
+
+  :global(.nav-open) .hamburger::before {
+    transform: rotate(90deg) translateX(-12px);
+  }
+
+  :global(.nav-open) .hamburger::after {
+    opacity: 0;
+  }
+</style>
