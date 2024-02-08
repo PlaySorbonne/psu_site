@@ -18,21 +18,42 @@ const html = marked.parse(content);
 ---
 
 <div class="floatingBar" set:html={html}>
-  {closeable && <button class="close">X</button>}
+  {closeable && <button class="close">✕</button>}
 </div>
 
 <style>
   .floatingBar {
     display: none;
     position: fixed;
-    top: 0;
-    right: 50%;
-    padding: 1rem;
+    bottom: 1rem;
+    right: 1rem;
+    padding: 1.5rem;
+    font-size: 1.2rem;
     background-color: #fff;
     border-top: 1px solid #ddd;
     box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+    z-index: 99;
   }
+
+  .floatingBar :global(a) {
+    color: rgb(var(--main-color));
+  }
+
+  .floatingBar :global(a:hover) {
+    color: rgb(var(--secondary-color));
+  }
+
+  @media (max-width: 768px) {
+    .floatingBar {
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem;
+      border-top: none;
+      border-bottom: 1px solid #ddd;
+    }
+  }
+
 
   .floatingBar :global(p) {
     margin: 0;
@@ -45,7 +66,7 @@ const html = marked.parse(content);
     padding: 0.5rem;
     background: transparent;
     border: none;
-    font-size: 1.5rem;
+    font-size: 2rem;
     line-height: 1;
     cursor: pointer;
   }
@@ -71,12 +92,7 @@ const html = marked.parse(content);
     return null;
   }
 
-  if (!getCookie("floatingBar")) {
-    document
-      .querySelectorAll(".floatingBar")
-      .forEach((e) => (e.style.display = "flex"));
-  } else {
-
+  document.addEventListener("astro:page-load", () => {
     const closeBtn = document.querySelectorAll("button.close");
 
     closeBtn.forEach((btn) => {
@@ -85,5 +101,11 @@ const html = marked.parse(content);
         document.cookie = "floatingBar=1;";
       });
     });
-  }
+
+    if (!getCookie("floatingBar")) {
+      document
+        .querySelectorAll(".floatingBar")
+        .forEach((e) => (e.style.display = "flex"));
+    }
+  });
 </script>
