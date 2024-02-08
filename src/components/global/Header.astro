@@ -2,6 +2,7 @@
 import { getClubLogo } from "@/assets/logos";
 import type { ClubName } from "@/helpers";
 import NavBar from "./NavBar.astro";
+import MobileNav from "./MobileNav.astro";
 
 interface Props {
   logo?: ClubName;
@@ -43,6 +44,8 @@ const psuLogo = getClubLogo("champsu");
     <a href={`/${logo === "psu" ? "" : logo}`} style="height:100%;">
       <img class="logo" src={imgLogo.src} alt="logo" />
     </a>
+
+    <MobileNav />
   </div>
 </header>
 
