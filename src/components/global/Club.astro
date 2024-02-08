@@ -61,10 +61,27 @@ const { img, alt, link, horizontal, title, left=false } = Astro.props;
       margin: 10px 0;
       max-width: 100%;
     }
+
+    .wrapper .img {
+      max-width: 30%;
+      max-height: 30%;
+    }
+
     .img {
       max-width: 20%;
       max-height: 200px;
       padding-right: 10px;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .wrapper {
+      flex-direction: column;
+    }
+
+    .wrapper .img {
+      max-width: 50%;
+      max-height: 50%;
     }
   }
 
