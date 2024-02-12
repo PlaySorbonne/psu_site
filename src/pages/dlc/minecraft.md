@@ -1,5 +1,5 @@
 ---
-layout: ../layouts/events/PsuE.astro
+layout: ../../layouts/events/DlcE.astro
 title: Serveur Minecraft Survie
 subtitle: mc.playsorbonne.fr en 1.20.x
 cover: /accueil/carrousel/jeux.webp
