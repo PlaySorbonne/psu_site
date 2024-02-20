@@ -17,9 +17,9 @@ marked.use({
 
 let { events, title, description } = Astro.props;
 
-/* events = events.filter(
+events = events.filter(
   (event) => !event.description || !event.description.startsWith("lorem")
-); // do not list empty descriptions */
+); // do not list empty descriptions
 
 ---
 
