@@ -16,14 +16,14 @@ const { ytLink, title = "Youtube embed" } = Astro.props;
 
 <style>
   .frame {
-    width: 50vw;
-    height: calc(50vw * 9 / 16);
+    width: 100%;
+    max-width: 800px;
+    height: calc(800px * 9 / 16);
     margin: 10px 0;
   }
 
   @media (max-width: 900px) {
     .frame {
-      width: 90vw;
       height: calc(90vw * 9 / 16);
     }
   }
