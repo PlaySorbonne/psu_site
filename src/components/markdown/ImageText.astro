@@ -8,29 +8,40 @@ const { right = false, img } = Astro.props;
 // FIXME utiliser components/index/Club.astro en fait, c'est fait pour ça
 ---
 
-<div
-  class="wrapper"
-  style={{
-    flexDirection: right ? "row-reverse" : "row",
-  }}
->
-  <img src={img} alt="" />
+<div class="wrapper">
+  {!right && <img class="img" src={img} alt="" />}
   <div class="content">
     <slot />
   </div>
+  {right && <img class="img" src={img} alt="" />}
 </div>
 
 <style>
   .wrapper {
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
     width: 100%;
   }
-  img {
+  .img {
     padding: 10px;
     max-width: 300px;
     width: 30%;
+  }
+  @media (max-width: 768px) {
+    .wrapper {
+      flex-direction: column-reverse;
+      width: 100%;
+      margin: 10px 0;
+      max-width: 100%;
+    }
+
+    .img {
+      width: 90%;
+      /* max-height: 200px; */
+      padding-right: 10px;
+    }
   }
   .content {
     padding: 10px;
