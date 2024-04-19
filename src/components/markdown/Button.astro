@@ -5,13 +5,14 @@ interface Props {
   paddingTop?: string;
   paddingBottom?: string;
   color?: string;
+  track?: string
 }
 
-const { link, text, paddingBottom, paddingTop, color } = Astro.props;
+const { link, text, paddingBottom, paddingTop, color, track } = Astro.props;
 ---
 
 <div class="wrapper" style={{ paddingTop, paddingBottom }}>
-  <a href={link} target="_blank" class="link">
+  <a href={link} target="_blank" class="link" data-umami-event={track || "button-clicked"}>
     <div class="contentwrapper">
       {text}
       <slot />
