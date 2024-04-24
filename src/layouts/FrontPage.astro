@@ -7,7 +7,7 @@ import Events2 from "@/components/global/Events.astro";
 import FloatingBar from "@/components/popups/FloatingBar.astro";
 
 import popups from "@/components/popups";
-import { default as PopupsData } from "@/helpers/popups";
+import {default as PopupsData} from "@/helpers/popups"
 
 interface Props {
   logo?: ClubName; // le logo du club, est utilisé dans le header
@@ -31,12 +31,12 @@ const {
 ---
 
 <DefaultPage title={title} prefetchs={prefetchs} logo={logo}>
-  {
-    PopupsData.map((popup) => {
-      const Popup = popups[popup.type];
-      return <Popup {...popup} />;
-    })
-  }
+    {
+      PopupsData.map((popup) => {
+        const Popup = popups[popup.type];
+        return <Popup {...popup} />;
+      })
+    }
   <main>
     <ColorLigne />
     <section class="titre">
