@@ -17,13 +17,18 @@ marked.use({
 const html = marked.parse(content);
 ---
 
-<div class="floatingBar" set:html={html}>
+<div
+  class="floatingBar"
+  set:html={html}
+  style={{
+    display: closeable ? "none" : "flex",
+  }}
+>
   {closeable && <button class="close">✕</button>}
 </div>
 
 <style>
   .floatingBar {
-    display: none;
     position: fixed;
     bottom: 1rem;
     right: 1rem;
@@ -53,7 +58,6 @@ const html = marked.parse(content);
       border-bottom: 1px solid #ddd;
     }
   }
-
 
   .floatingBar :global(p) {
     margin: 0;
