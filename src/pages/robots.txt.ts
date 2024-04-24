@@ -1,8 +1,10 @@
 import type { APIRoute } from 'astro';
 
+const devMode: boolean = !!import.meta.env.PUBLIC_DEV_MODE;
+
 const robotsTxt = `
 User-agent: *
-Allow: /
+${devMode ? "Disallow" : "Allow"}: /
 
 Sitemap:  https://playsorbonne.fr/sitemap-index.xml`.trim();
 

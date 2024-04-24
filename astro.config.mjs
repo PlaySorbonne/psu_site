@@ -7,10 +7,12 @@ import { externalLink } from "./src/plugins";
 
 import sitemap from "@astrojs/sitemap";
 
+const devMode = !!import.meta.env.PUBLIC_DEV_MODE;
+
 // https://astro.build/config
 export default defineConfig({
   scopedStyleStrategy: "attribute",
-  site: "https://playsorbonne.fr/",
+  site: devMode ? "https://demo.playsorbonne.fr" : "https://playsorbonne.fr/",
   integrations: [react(),
   // compress(),
   mdx(), sitemap()],
