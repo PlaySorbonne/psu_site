@@ -14,7 +14,7 @@ export default defineConfig({
   scopedStyleStrategy: "attribute",
   site: devMode ? "https://demo.playsorbonne.fr" : "https://playsorbonne.fr/",
   integrations: [react(),
-  // compress(),
+  compress(),
   mdx(), sitemap()],
   markdown: {
     remarkPlugins: [remarkDirective],
