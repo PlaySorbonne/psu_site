@@ -5,11 +5,16 @@ import type { MarkdownInstance, MDXInstance } from "astro";
  * @param slides Array of slides
  * @returns Sorted array of slides
  */
-export function sortSlides(events: EventT[], maxDepth = 2): EventT[] {
+export function sortSlides(
+  events: EventT[],
+  maxDepth = 2,
+  isMain = false
+): EventT[] {
   return events
     .filter((e) => !e.dontList) // On filtre les événements à ne pas lister
     .filter((e) => !e.isClub) // On filtre les clubs
     .filter((e) => e.link.split("/").length <= maxDepth + 1) // on retire les pages trop profondes
+    .filter((e) => !e.noMainCarrousel || !isMain) // on retire les événements à ne pas afficher dans le carrousel principal
     .reduce((acc, cur) => {
       if (acc.find((e) => e.link === cur.link)) return acc;
       return acc.concat(cur);
@@ -32,14 +37,18 @@ export function rawMDtoSlide(e: MDnXInstance<EventT>): EventT {
     icon: e.frontmatter.icon ?? "",
     isClub: e.frontmatter.isClub ?? false,
     dontList: e.frontmatter.dontList ?? false,
+    noMainCarrousel: e.frontmatter.noMainCarrousel ?? false,
+    notInListing: e.frontmatter.notInListing ?? false,
+    noEvents: e.frontmatter.noEvents ?? false,
   };
 }
 
 export function rawMDtoSortedArray(
   e: MDnXInstance<EventT>[],
-  maxDepth?: number
+  maxDepth?: number,
+  isMain = false
 ): EventT[] {
-  return sortSlides(e.map(rawMDtoSlide), maxDepth);
+  return sortSlides(e.map(rawMDtoSlide), maxDepth, isMain);
 }
 
 export function sliceText(text: string, length: number): string {
@@ -61,8 +70,11 @@ export interface EventT {
   priority?: number; // priority of the event, used to sort the carousel and listing
   dontList?: boolean; // if true, the event will not be listed
   description: string; // description of the event, used in the listing and may be used in the event page
-  icon?: string; // icon of the event, used in the listing (probably ? (TODO))
+  icon?: string; // icon of the event, used in the listing
   isClub?: boolean; // if true, the event is a club
+  noMainCarrousel?: boolean; // if true, the event will not be in the main carrousel
+  notInListing?: boolean; // if true, the event will not be in the listing
+  noEvents?: boolean; // if true, the page will not have an events section
 }
 
 const LoremText =

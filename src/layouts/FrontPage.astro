@@ -28,6 +28,9 @@ const {
   eventTitle = "Nos projets",
   eventDescription,
 } = Astro.props;
+
+
+let eventsListing = [... events].filter((e) => !e.notInListing);
 ---
 
 <DefaultPage title={title} prefetchs={prefetchs} logo={logo}>
@@ -47,10 +50,10 @@ const {
     <slot />
 
     {
-      !noEvents && events.length > 0 && (
+      !noEvents && eventsListing.length > 0 && (
         <section class="events">
           <Events2
-            events={events}
+            events={eventsListing}
             title={eventTitle}
             description={eventDescription}
           />
