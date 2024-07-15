@@ -45,13 +45,12 @@ let imported = (
   ) // on garde ceux qui sont plus profonds que nous ou tout si index-like
   .filter((e) => e.file !== file); // on enlève celui qui est traité ici
 
-console.log(imported);
 let events = rawMDtoSortedArray(
   imported,
   Math.max(url.split("/").length, 2),
-  isLikeIndex || url === "/"
+  isLikeIndex || url === "/" || url === ""
 );
-console.log(events);
+
 ---
 
 <FrontPage
