@@ -1,0 +1,56 @@
+---
+import HeaderL from "@/layouts/partials/HeaderL.astro";
+---
+
+<HeaderL title="Festival PSU">
+  <header>uwu</header>
+
+  <main>
+    <section class="hero">
+      <div class="info__hero">
+      <h1 class="title__hero">Play Sorbonne Festival 2024</h1>
+      <span class="subtitle__hero">le 28 septembre à Paris, campus Jussieu !</span>
+      </div>
+    </section>
+  </main>
+
+  <style>
+    body {
+      background: rgb(2, 0, 36);
+      background: linear-gradient(
+        190deg,
+        rgba(2, 0, 36, 1) 0%,
+        rgb(56, 27, 114) 55%,
+        #301766 80%,
+        rgb(94, 23, 61) 100%
+      );
+      height: 100vh;
+      color: white;
+    }
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%
+    }
+    .info__hero {
+      padding: 2rem;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .title__hero {
+      color: white;
+      font-size: 3rem;
+      text-align: center;
+    }
+    .subtitle__hero {
+      color: rgb(121, 157, 255);
+      font-size: 1.5rem;
+      text-align: center;
+    }
+  </style>
+</HeaderL>
