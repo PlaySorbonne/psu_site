@@ -8,12 +8,6 @@ const out = [
     position: "top",
     closeable: false,
   },
-  {
-    content:
-      "Les inscriptions pour [**la formation civique et citoyenne**](/formation) sont ouvertes !",
-    type: "floating",
-    position: "top",
-  },
 ];
 
 export default out.filter((e) => e);
