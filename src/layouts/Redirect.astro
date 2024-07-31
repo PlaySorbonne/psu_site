@@ -1,9 +1,13 @@
 ---
-interface Props {
-  link: string;
-}
+import type { MarkdownLayoutProps } from "astro";
 
-let { link } = Astro.props;
+type Props = MarkdownLayoutProps<{
+  link: string;
+}>;
+
+let {
+  frontmatter: { link },
+} = Astro.props;
 ---
 
 <!doctype html>
