@@ -27,32 +27,20 @@ const { logo, title, prefetchs } = Astro.props;
   </header>
 
   <section class="hero" id="bg">
-    <div class="smoke1"></div>
-    <div class="smoke2"></div>
-    <div class="smoke3"></div>
-    <div class="smoke4"></div>
-    <div class="smoke1"></div>
-    <div class="smoke2"></div>
-    <div class="smoke3"></div>
-    <div class="smoke4"></div>
-    <div class="smoke1"></div>
-    <div class="smoke2"></div>
-    <div class="smoke3"></div>
-    <div class="smoke4"></div>
     <div class="content__hero">
       <div class="info__hero">
         <!-- <img class="psu__hero" src=`${clubLogos.champsuOnly.src}` alt=""> -->
         <h1 class="title__hero">Play Sorbonne Festival</h1>
         <h2 class="subtitle__hero">Le 28 septembre 2024</h2>
         <div class="buttons__hero">
-          <a href="/festival" class="button__hero">En savoir plus</a>
+          <a href="#prog" class="button__hero">En savoir plus</a>
           <a href="/festival" class="button__hero">S'inscrire</a>
         </div>
       </div>
       <Image src={Logo} alt="" class="logo__hero" width="600" />
     </div>
   </section>
-  <section class="prog">
+  <section class="prog" id="prog">
     <div class="content">
       <div class="info__prog">
         <h1 class="title__prog">Programme</h1>
@@ -108,19 +96,19 @@ const { logo, title, prefetchs } = Astro.props;
     --dark-color: 61, 61, 111;
     --main-bg: linear-gradient(
       190deg,
-      rgb(2, 0, 36) 0%,
-      rgb(56, 27, 114) 55%,
-      #301766 80%,
-      rgb(94, 23, 61) 100%
+      rgba(2, 0, 36, 1) 0%,
+      rgb(41, 13, 97) 55%,
+      #29105e 80%,
+      rgb(75, 9, 44) 100%
     );
   }
   body {
     background: linear-gradient(
       190deg,
       rgba(2, 0, 36, 1) 0%,
-      rgb(56, 27, 114) 55%,
-      #301766 80%,
-      rgb(94, 23, 61) 100%
+      rgb(41, 13, 97) 55%,
+      #29105e 80%,
+      rgb(75, 9, 44) 100%
     );
     overflow-x: hidden;
   }
@@ -172,11 +160,33 @@ const { logo, title, prefetchs } = Astro.props;
   .logo__hero {
     border-radius: 10px;
     opacity: 0;
+    max-width: 30%;
+  }
+
+  @media (max-width: 768px) {
+    .logo__hero {
+      opacity: 1;
+      max-width: 100%;
+    }
+    .hero {
+      background: linear-gradient(
+        90deg,
+        rgba(2, 0, 36, 1) 0%,
+        rgba(2, 0, 36, 1) 90%,
+        rgba(2, 0, 36, 1) 100%
+      );
+    }
+    .content__hero {
+      flex-direction: column;
+      padding-top: 100px;
+    }
   }
 
   .buttons__hero {
     display: flex;
     gap: 1rem;
+    justify-content: space-around;
+    width: 100%;
   }
 
   .button__hero {
@@ -187,6 +197,13 @@ const { logo, title, prefetchs } = Astro.props;
     border-radius: 5px;
     font-weight: bold;
     text-decoration: none;
+  }
+  
+  .info__hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .title__hero {
@@ -208,7 +225,7 @@ const { logo, title, prefetchs } = Astro.props;
     height: 100vh;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1000px) {
     .title__hero {
       font-size: 2rem;
     }
@@ -271,7 +288,6 @@ const { logo, title, prefetchs } = Astro.props;
     window.addEventListener("scroll", function () {
       // current scroll position
       const currentScrollPos = window.scrollY;
-      console.log(currentScrollPos)
 
       if (prevScrollPos > currentScrollPos || currentScrollPos < 80) {
         // user has scrolled up
