@@ -24,15 +24,17 @@ const { logo, title, prefetchs } = Astro.props;
 
   <section class="hero">
     <div class="content">
-      <div class="info__hero">
-        <!-- <img class="psu__hero" src=`${clubLogos.champsuOnly.src}` alt=""> -->
-        <h1 class="title__hero">Play Sorbonne Festival</h1>
-        <h2 class="subtitle__hero">Le 28 septembre 2024</h2>
-        <div class="buttons__hero">
-          <a href="/festival" class="button__hero">En savoir plus</a>
-          <a href="/festival" class="button__hero">S'inscrire</a>
+      <div class="content__hero">
+        <div class="info__hero">
+          <!-- <img class="psu__hero" src=`${clubLogos.champsuOnly.src}` alt=""> -->
+          <h1 class="title__hero">Play Sorbonne Festival</h1>
+          <h2 class="subtitle__hero">Le 28 septembre 2024</h2>
+          <div class="buttons__hero">
+            <a href="/festival" class="button__hero">En savoir plus</a>
+            <a href="/festival" class="button__hero">S'inscrire</a>
+          </div>
         </div>
-        <Image src={Logo} alt="" class="logo__hero" />
+        <Image src={Logo} alt="" class="logo__hero" width="600" />
       </div>
     </div>
   </section>
@@ -119,12 +121,19 @@ const { logo, title, prefetchs } = Astro.props;
 
   .header {
     height: 100px;
-    background-color: rgba(0, 0, 0, 0.5);
+    /* background-color: rgba(0, 0, 0, 0.5); */
+  }
+  
+  .hero {
+    background: url(/assets/festival/bg_hero.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: left bottom;
   }
 
-  .info__hero {
+  .content__hero {
     display: flex;
-    flex-direction: column;
+    /* flex-direction: column; */
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
