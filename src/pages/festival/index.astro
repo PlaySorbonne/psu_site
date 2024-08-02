@@ -1,56 +1,220 @@
 ---
+// You can override --main-color --dark-color and --secondary-color
+import Header from "@/components/global/Header.astro";
+import Footer from "@/components/global/Footer.astro";
 import HeaderL from "@/layouts/partials/HeaderL.astro";
+import type { ClubName } from "@/helpers";
+
+import { miscIcons } from "@/assets/misc";
+import { Image } from "astro:assets";
+import Logo from "@/assets/logo_festival.png";
+
+interface Props {
+  logo?: ClubName;
+  title: string;
+  prefetchs?: string[];
+}
+
+const { logo, title, prefetchs } = Astro.props;
 ---
 
-<HeaderL title="Festival PSU">
-  <header>uwu</header>
+<HeaderL title={title} prefetchs={prefetchs}>
+  <!-- <Header logo={logo} /> -->
+  <header class="header"></header>
 
-  <main>
-    <section class="hero">
+  <section class="hero">
+    <div class="content">
       <div class="info__hero">
-      <h1 class="title__hero">Play Sorbonne Festival 2024</h1>
-      <span class="subtitle__hero">le 28 septembre à Paris, campus Jussieu !</span>
+        <!-- <img class="psu__hero" src=`${clubLogos.champsuOnly.src}` alt=""> -->
+        <h1 class="title__hero">Play Sorbonne Festival</h1>
+        <h2 class="subtitle__hero">Le 28 septembre 2024</h2>
+        <div class="buttons__hero">
+          <a href="/festival" class="button__hero">En savoir plus</a>
+          <a href="/festival" class="button__hero">S'inscrire</a>
+        </div>
+        <Image src={Logo} alt="" class="logo__hero" />
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
+  <section class="prog">
+    <div class="content">
+      <div class="info__prog">
+        <h1 class="title__prog">Programme</h1>
+        <p class="desc-fest__prog">
+          Play Sorbonne Université est le festival étudiant du jeu. Organisé par
+          des passionnés, il ambitionne de célébrer et faire découvrir la
+          culture du jeu sous toutes ses formes : jeux vidéos et jeux de plateau
+          sont réunis pour cette manifestation. Le festival rassemble joueurs,
+          développeurs, éditeurs, associations et tous ceux qui font vivre les
+          jeux. L'événement s'adresse aux pro-gamers comme aux non-joueurs qui
+          souhaitent découvrir cet univers.
+        </p>
+      </div>
 
-  <style>
-    body {
-      background: rgb(2, 0, 36);
-      background: linear-gradient(
-        190deg,
-        rgba(2, 0, 36, 1) 0%,
-        rgb(56, 27, 114) 55%,
-        #301766 80%,
-        rgb(94, 23, 61) 100%
-      );
-      height: 100vh;
-      color: white;
-    }
-    main {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%
-    }
-    .info__hero {
-      padding: 2rem;
-      background-color: rgba(0, 0, 0, 0.5);
-      border-radius: 10px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    .title__hero {
-      color: white;
-      font-size: 3rem;
-      text-align: center;
-    }
-    .subtitle__hero {
-      color: rgb(121, 157, 255);
-      font-size: 1.5rem;
-      text-align: center;
-    }
-  </style>
+      <div class="content__prog">
+        <div class="item__prog">
+          <Image
+            src={miscIcons.dices}
+            alt="icon"
+            class="icon__prog"
+            width="50"
+          />
+          <p class="desc__prog">Ouverture des portes</p>
+        </div>
+        <div class="item__prog">
+          <Image src={miscIcons.mic} alt="" class="icon__prog" width="50" />
+          <p class="desc__prog">Conférences</p>
+        </div>
+        <div class="item__prog">
+          <Image
+            src={miscIcons.penRuler}
+            alt=""
+            class="icon__prog"
+            width="50"
+          />
+          <p class="desc__prog">Rétro-gaming</p>
+        </div>
+        <div class="item__prog">
+          <Image src={miscIcons.proj} alt="" class="icon__prog" width="50" />
+          <p class="desc__prog">Expositions</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
 </HeaderL>
+
+<style>
+  :root {
+    --main-color: 232, 101, 173;
+    --secondary-color: 41, 200, 255;
+    --dark-color: 61, 61, 111;
+    --main-bg: linear-gradient(
+      190deg,
+      rgb(2, 0, 36) 0%,
+      rgb(56, 27, 114) 55%,
+      #301766 80%,
+      rgb(94, 23, 61) 100%
+    );
+  }
+  body {
+    background: linear-gradient(
+      190deg,
+      rgba(2, 0, 36, 1) 0%,
+      rgb(56, 27, 114) 55%,
+      #301766 80%,
+      rgb(94, 23, 61) 100%
+    );
+  }
+
+  section {
+    width: 100%;
+  }
+
+  section .content {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .header {
+    height: 100px;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .info__hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .buttons__hero {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .button__hero {
+    padding: 0.5rem 1rem;
+    background-color: rgb(var(--main-color));
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  .title__hero {
+    color: white;
+    font-size: 3rem;
+    font-weight: bold;
+  }
+
+  .subtitle__hero {
+    color: var(--secondary-color);
+  }
+
+  .psu__hero {
+    width: 100px;
+    height: 100px;
+  }
+
+  .temp {
+    height: 100vh;
+  }
+
+  @media (max-width: 768px) {
+    .title__hero {
+      font-size: 2rem;
+    }
+  }
+
+  .prog {
+    /* background-color: var(--main-color); */
+    color: white;
+    padding: 2rem;
+  }
+
+  .info__prog {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .title__prog {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  .content__prog {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .item__prog {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: rgba(var(--main-color), 0.5);
+    margin: 1rem;
+    padding: 0 10px;
+    border-radius: 10px;
+    transition: all 0.5s ease-in-out;
+  }
+
+  .item__prog:hover {
+    background-color: rgba(var(--main-color), 0.8);
+    transform: scale(1.1);
+    transition: all 0.5s ease-in-out;
+  }
+
+  .desc__prog {
+    font-weight: bold;
+  }
+</style>
