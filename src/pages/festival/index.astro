@@ -271,8 +271,9 @@ const { logo, title, prefetchs } = Astro.props;
     window.addEventListener("scroll", function () {
       // current scroll position
       const currentScrollPos = window.scrollY;
+      console.log(currentScrollPos)
 
-      if (prevScrollPos > currentScrollPos) {
+      if (prevScrollPos > currentScrollPos || currentScrollPos < 80) {
         // user has scrolled up
         document.querySelector<HTMLElement>(".header").style.top = "0";
       } else {
