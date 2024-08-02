@@ -158,6 +158,7 @@ const { logo, title, prefetchs } = Astro.props;
   }
 
   .logo__hero {
+    height: auto;
     border-radius: 10px;
     opacity: 0;
     max-width: 30%;
@@ -167,6 +168,7 @@ const { logo, title, prefetchs } = Astro.props;
     .logo__hero {
       opacity: 1;
       max-width: 100%;
+      width: 90%;
     }
     .hero {
       background: linear-gradient(
@@ -198,7 +200,7 @@ const { logo, title, prefetchs } = Astro.props;
     font-weight: bold;
     text-decoration: none;
   }
-  
+
   .info__hero {
     display: flex;
     flex-direction: column;
@@ -256,6 +258,13 @@ const { logo, title, prefetchs } = Astro.props;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+  }
+  
+  @media (max-width: 768px) {
+    .content__prog {
+      gap: 0;
+    }
+    
   }
 
   .item__prog {
