@@ -5,10 +5,11 @@ import Footer from "@/components/global/Footer.astro";
 import HeaderL from "@/layouts/partials/HeaderL.astro";
 import type { ClubName } from "@/helpers";
 
-import { clubLogos } from "@/assets/logos";
+import { clubLogos } from "@/assets/logos/psu";
 import { miscIcons } from "@/assets/misc";
 import { Image } from "astro:assets";
 import Logo from "@/assets/logo_festival.png";
+import { Logos } from "@/assets/logos"
 
 interface Props {
   logo?: ClubName;
@@ -102,7 +103,13 @@ const programme = [
 
         <h2 class="subtitle subtitle__part">Institution</h2>
 
-        <div class="content__part"></div>
+        <div class="content__part">
+          {
+            Object.values(Logos.ext).reverse().map((logo) => (
+              <Image src={logo} alt={""} width="200" />
+            ))
+          }
+        </div>
 
         <h2 class="subtitle subtitle__part">Associations & stands</h2>
 
