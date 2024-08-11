@@ -9,7 +9,8 @@ import { clubLogos } from "@/assets/logos/psu";
 import { miscIcons } from "@/assets/misc";
 import { Image } from "astro:assets";
 import Logo from "@/assets/logo_festival.png";
-import { Logos } from "@/assets/logos"
+import { Logos } from "@/assets/logos";
+import ColorLigne from "@/components/global/ColorLigne.astro";
 
 interface Props {
   logo?: ClubName;
@@ -22,7 +23,7 @@ const { logo, title, prefetchs } = Astro.props;
 const programme = [
   {
     icon: miscIcons.dices,
-    desc: "Jeux de plateau",
+    desc: "Jeux de rôles",
   },
   {
     icon: miscIcons.mic,
@@ -42,7 +43,7 @@ const programme = [
   },
   {
     icon: miscIcons.trophy,
-    desc: "E-Sport",
+    desc: "Tournoi",
   },
 ];
 ---
@@ -58,20 +59,23 @@ const programme = [
     <div class="content__hero">
       <div class="info__hero">
         <!-- <img class="psu__hero" src=`${clubLogos.champsuOnly.src}` alt=""> -->
-        <h1 class="title__hero">Play Sorbonne Festival</h1>
+        <h1 class="title title__hero">Play Sorbonne Festival</h1>
         <h2 class="subtitle__hero">Le 28 septembre 2024</h2>
         <div class="buttons__hero">
           <a href="#prog" class="button__hero">En savoir plus</a>
           <a href="/festival" class="button__hero">S'inscrire</a>
         </div>
       </div>
-      <Image src={Logo} alt="" class="logo__hero" width="600" />
+      <div class="img_container__hero">
+        <Image src={Logo} alt="" class="logo__hero" width="600" />
+      </div>
     </div>
   </section>
   <section class="prog" id="prog">
     <div class="content">
       <div class="info__prog">
         <h1 class="title title__prog">Programme</h1>
+        <ColorLigne />
         <p class="desc-fest__prog">
           Play Sorbonne Université est le festival étudiant du jeu. Organisé par
           des passionnés, il ambitionne de célébrer et faire découvrir la
@@ -96,7 +100,7 @@ const programme = [
     </div>
   </section>
 
-  <section class="part" id="part">
+  <section class="dark" id="part">
     <div class="content">
       <div class="main__part">
         <h1 class="title title__part">Nos partenaires (?)</h1>
@@ -105,9 +109,9 @@ const programme = [
 
         <div class="content__part">
           {
-            Object.values(Logos.ext).reverse().map((logo) => (
-              <Image src={logo} alt={""} width="200" />
-            ))
+            Object.values(Logos.ext)
+              .reverse()
+              .map((logo) => <Image src={logo} alt={""} width="200" />)
           }
         </div>
 
@@ -130,22 +134,10 @@ const programme = [
     --main-color: 232, 101, 173;
     --secondary-color: 41, 200, 255;
     --dark-color: 61, 61, 111;
-    --main-bg: linear-gradient(
-      190deg,
-      rgba(2, 0, 36, 1) 0%,
-      rgb(41, 13, 97) 55%,
-      #29105e 80%,
-      rgb(75, 9, 44) 100%
-    );
+    --main-bg: #f6f6f6;
   }
+
   body {
-    background: linear-gradient(
-      190deg,
-      rgba(2, 0, 36, 1) 0%,
-      rgb(41, 13, 97) 55%,
-      #29105e 80%,
-      rgb(75, 9, 44) 100%
-    );
     overflow-x: hidden;
   }
 
@@ -156,6 +148,16 @@ const programme = [
   section .content {
     max-width: 1000px;
     margin: 0 auto;
+  }
+
+  .title {
+    font-size: 2rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .color_ligne {
+    width: 100%;
   }
 
   .header {
@@ -182,15 +184,15 @@ const programme = [
     background-size: cover;
     background-position: left bottom;
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
   }
 
   .content__hero {
     display: flex;
     flex-direction: row-reverse;
-    align-items: center;
     justify-content: space-evenly;
     height: 100%;
+    min-height: 100vh;
   }
 
   .logo__hero {
@@ -209,15 +211,16 @@ const programme = [
     }
     .hero {
       background: linear-gradient(
-        90deg,
+        190deg,
         rgba(2, 0, 36, 1) 0%,
-        rgba(2, 0, 36, 1) 90%,
-        rgba(2, 0, 36, 1) 100%
+        rgb(41, 13, 97) 55%,
+        #29105e 80%,
+        rgb(75, 9, 44) 100%
       );
     }
     .content__hero {
       flex-direction: column;
-      padding-top: 100px;
+      padding-top: 130px;
     }
   }
 
@@ -231,7 +234,6 @@ const programme = [
   .button__hero {
     padding: 0.5rem 1rem;
     background-color: rgb(var(--main-color));
-    color: white;
     border: none;
     border-radius: 5px;
     font-weight: bold;
@@ -243,12 +245,30 @@ const programme = [
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
+    margin-top: calc(100vh / 4);
+  }
+
+  @media (max-width: 768px) {
+    .info__hero {
+      margin-top: 0;
+    }
+    .img_container__hero {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .img_container__hero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .title__hero {
     color: white;
     font-size: 3rem;
-    font-weight: bold;
+    letter-spacing: 2px;
+    text-align: center;
   }
 
   .subtitle__hero {
@@ -260,11 +280,8 @@ const programme = [
     height: 100px;
   }
 
-  .temp {
-    height: 100vh;
-  }
-
   @media (max-width: 1000px) {
+     
     .title__hero {
       font-size: 2rem;
     }
@@ -272,7 +289,6 @@ const programme = [
 
   .prog {
     /* background-color: var(--main-color); */
-    color: white;
     padding: 2rem;
   }
 
@@ -280,14 +296,7 @@ const programme = [
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
     gap: 1rem;
-  }
-
-  .title {
-    color: white;
-    font-size: 2rem;
-    font-weight: bold;
   }
 
   .content__prog {
@@ -326,11 +335,10 @@ const programme = [
   }
 
   .subtitle {
-    color: white;
     font-size: 1.5rem;
     font-weight: bold;
   }
-  
+
   .main__part {
     display: flex;
     flex-direction: column;
@@ -338,13 +346,18 @@ const programme = [
     justify-content: center;
     align-items: center;
   }
-  
+
   .content__part {
     display: flex;
     gap: 1rem;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+  }
+
+  .dark {
+    background-color: rgb(var(--dark-color));
+    color: white;
   }
 </style>
 
@@ -453,7 +466,6 @@ const programme = [
       opacity: 0;
     }
   }
-
 </style>
 
 <script>
