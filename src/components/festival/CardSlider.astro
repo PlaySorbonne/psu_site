@@ -1,0 +1,13 @@
+---
+import Card, { type CardInfo } from "./Card.astro";
+
+type Props = {
+  cards: CardInfo[];
+};
+
+let { cards } = Astro.props;
+---
+
+<div class="wrapper">
+  {cards.map((card) => <Card {...card} />)}
+</div>

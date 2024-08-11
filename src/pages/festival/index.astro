@@ -9,8 +9,9 @@ import { clubLogos } from "@/assets/logos/psu";
 import { miscIcons } from "@/assets/misc";
 import { Image } from "astro:assets";
 import Logo from "@/assets/logo_festival.png";
-import { Logos } from "@/assets/logos";
+import logos, { Logos } from "@/assets/logos";
 import ColorLigne from "@/components/global/ColorLigne.astro";
+import CardSlider from "@/components/festival/CardSlider.astro";
 
 interface Props {
   logo?: ClubName;
@@ -71,7 +72,7 @@ const programme = [
       </div>
     </div>
   </section>
-  <section class="prog" id="prog">
+  <section class="section" id="prog">
     <div class="content">
       <div class="info__prog">
         <h1 class="title title__prog">Programme</h1>
@@ -100,6 +101,61 @@ const programme = [
     </div>
   </section>
 
+  <section class="section" id="dev">
+    <div class="content">
+      <div class="main__dev">
+        <h1 class="title title__dev">Développeurs Indépendants</h1>
+        <ColorLigne />
+
+        <div class="content__assoc">
+          {}
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="section" id="assoc">
+    <div class="content">
+      <div class="main__assoc">
+        <h1 class="title title__assoc">Associations</h1>
+        <ColorLigne />
+
+        <div class="content__assoc">
+          {}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="assoc">
+    <div class="content">
+      <div class="main__assoc">
+        <h1 class="title title__assoc">Évenements</h1>
+        <ColorLigne />
+
+        <div class="content__assoc">
+          {}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="assoc">
+    <div class="content">
+      <div class="main__assoc">
+        <h1 class="title title__assoc">Conférences</h1>
+        <ColorLigne />
+
+        <div class="content__assoc">
+          {<CardSlider cards={[{image: logos.psu.champsu, title:"Play Sorbonne Université", description: "lorem lorem lorem"}]}/>}
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
   <section class="dark" id="part">
     <div class="content">
       <div class="main__part">
@@ -114,14 +170,6 @@ const programme = [
               .map((logo) => <Image src={logo} alt={""} width="200" />)
           }
         </div>
-
-        <h2 class="subtitle subtitle__part">Associations & stands</h2>
-
-        <div class="content__part"></div>
-
-        <h2 class="subtitle subtitle__part">Developpeurs</h2>
-
-        <div class="content__part"></div>
       </div>
     </div>
   </section>
@@ -202,7 +250,7 @@ const programme = [
     max-width: 30%;
   }
 
-  @media (max-width: 768px) {
+  @media screen and ((max-width: 768px) or (max-aspect-ratio: 12/16)) {
     .logo__hero {
       opacity: 1;
       max-width: 100%;
@@ -248,7 +296,7 @@ const programme = [
     margin-top: calc(100vh / 4);
   }
 
-  @media (max-width: 768px) {
+  @media screen and ((max-width: 768px) or (max-aspect-ratio: 12/16)) {
     .info__hero {
       margin-top: 0;
     }
@@ -280,14 +328,13 @@ const programme = [
     height: 100px;
   }
 
-  @media (max-width: 1000px) {
-     
+  @media screen and (max-width: 1000px) {
     .title__hero {
       font-size: 2rem;
     }
   }
 
-  .prog {
+  .section {
     /* background-color: var(--main-color); */
     padding: 2rem;
   }
@@ -307,7 +354,7 @@ const programme = [
     flex-wrap: wrap;
   }
 
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px or min-aspect-ratio: 10/16) {
     .content__prog {
       gap: 0;
     }
@@ -362,16 +409,24 @@ const programme = [
 </style>
 
 <script>
+  window.ar = function getAspectRatio() {
+    console.log(window.screen.availWidth / window.screen.availHeight);
+    console.log(window.screen.width / window.screen.height);
+    console.log("9/16", 9 / 16);
+    console.log("10/16", 10 / 16);
+    console.log("12/16", 12 / 16);
+    return window.screen.availWidth / window.screen.availHeight;
+  };
+</script>
+
+<script>
   document.addEventListener("astro:page-load", () => {
-    // keep track of previous scroll position
     let prevScrollPos = window.scrollY;
 
     window.addEventListener("scroll", function () {
-      // current scroll position
       const currentScrollPos = window.scrollY;
 
       if (prevScrollPos > currentScrollPos || currentScrollPos < 80) {
-        // user has scrolled up
         document.querySelector<HTMLElement>(".header").style.top = "0";
       } else {
         // user has scrolled down
