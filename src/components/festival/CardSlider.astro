@@ -6,8 +6,86 @@ type Props = {
 };
 
 let { cards } = Astro.props;
+
 ---
 
-<div class="wrapper">
-  {cards.map((card) => <Card {...card} />)}
+<div>
+  <!-- <div class="shade"></div> -->
+  <div class="wrapper animate">
+    {
+      cards.map((card) => (
+        <div class="element">
+          <Card {...card} />
+        </div>
+      ))
+    }
+  </div>
 </div>
+
+<style define:vars={{ dur: `${cards.length * 0.2}s` }}>
+  .wrapper {
+    display: inline-flex;
+    overflow: hidden;
+    padding: 20px;
+    margin-top: 20px;
+  }
+
+  .animate {
+    /* animation-name: slide; */
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+    animation-duration: var(--dur);
+    
+    transform: translateX(calc(-50%));
+  }
+
+  .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  @keyframes slide {
+    0% {
+      transform: translateX(calc(50% + 50vw));
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  .element {
+    margin: 0 10px;
+  }
+
+  .shade {
+    position: absolute;
+    z-index: 1;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 1) 30%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<script>
+  function animation() {
+    const wrapper = document.querySelector(".wrapper");
+
+    if (wrapper.scrollWidth < window.innerWidth - 64) {
+      wrapper.classList.remove("animate");
+      wrapper.classList.add("center");
+    } else {
+      wrapper.classList.add("animate");
+      wrapper.classList.remove("center");
+    }
+  }
+
+  addEventListener("load", animation);
+  addEventListener("resize", animation);
+</script>

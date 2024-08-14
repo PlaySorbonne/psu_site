@@ -14,32 +14,59 @@ let { image, title, description } = Astro.props;
 ---
 
 <div class="card">
-  <Image src={image} alt={title} class="img" width={250}/>
+  <Image src={image} alt={title} class="img" width={250} />
   <div class="info">
-    <h2>{title}</h2>
-    <p>{description}</p>
+    <h2 class="title">{title}</h2>
+    <p class="description">{description}</p>
   </div>
 </div>
-
 
 <style>
   .img {
     object-fit: cover;
     /* to background */
     position: absolute;
-    z-index: -1;
+    z-index: 0;
   }
   .card {
+    position: relative;
     overflow: hidden;
-    width: 250px;
+    width: 400px;
     height: 200px;
+    
+    background-color: rgba(255, 255, 255, 0.4);
   }
-  
+
+  @media screen and (max-width: 768px) {
+    .card {
+      width: 300px;
+      height: 200px;
+    }
+  }
+
+  .info {
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 1) 30%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
   .card .info {
-    display: none;
+    top: 70%;
+    transition: all 0.5s;
   }
-  
+
   .card:hover .info {
-    display: block;
+    transition: all 0.5s;
+    top: 0;
   }
 </style>
