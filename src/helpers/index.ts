@@ -31,7 +31,7 @@ export function rawMDtoSlide(e: MDnXInstance<EventT>): EventT {
     cover: e.frontmatter.cover,
     alt: e.frontmatter.alt ?? "",
     priority: e.frontmatter.priority ?? 0,
-    link: e.url,
+    link: e.frontmatter.link ?? e.url,
     noLink: e.frontmatter.noLink ?? false,
     description: e.frontmatter.description ?? LoremText,
     icon: e.frontmatter.icon ?? "",
@@ -65,7 +65,7 @@ export interface EventT {
   subtitle?: string; // subtitle, same as title
   cover: string; // cover image used in the carousel
   alt?: string; // alt text for the cover image, defaults to the title
-  link: string; // link to the page of the event
+  link: string; // link to the page of the event. If no link is provided, will use the page url
   noLink?: boolean; // if true, the event will not be linked
   priority?: number; // priority of the event, used to sort the carousel and listing
   dontList?: boolean; // if true, the event will not be listed
