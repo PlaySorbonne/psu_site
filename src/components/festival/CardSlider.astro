@@ -22,7 +22,7 @@ let { cards } = Astro.props;
   </div>
 </div>
 
-<style define:vars={{ dur: `${cards.length * 0.2}s` }}>
+<style define:vars={{ dur: `${cards.length * 2}s` }}>
   .wrapper {
     display: inline-flex;
     overflow: hidden;
@@ -31,13 +31,11 @@ let { cards } = Astro.props;
   }
 
   .animate {
-    /* animation-name: slide; */
+    animation-name: slide;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
     animation-direction: normal;
     animation-duration: var(--dur);
-    
-    transform: translateX(calc(-50%));
   }
 
   .center {
@@ -51,7 +49,7 @@ let { cards } = Astro.props;
       transform: translateX(calc(50% + 50vw));
     }
     100% {
-      transform: translateX(-100%);
+    transform: translateX(calc(-50% - 50vw));
     }
   }
 
@@ -62,12 +60,8 @@ let { cards } = Astro.props;
   .shade {
     position: absolute;
     z-index: 1;
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 1) 0%,
-      rgba(255, 255, 255, 1) 30%,
-      rgba(0, 0, 0, 0) 100%
-    );
+    background: rgba(0, 0, 0, 1);
+
     width: 100%;
     height: 100%;
   }
