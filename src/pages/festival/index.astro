@@ -2,7 +2,7 @@
 // You can override --main-color --dark-color and --secondary-color
 import Footer from "@/components/global/Footer.astro";
 import HeaderL from "@/layouts/partials/HeaderL.astro";
-import type { ClubName } from "@/helpers";
+import { csvJSON, type ClubName } from "@/helpers";
 
 import { clubLogos } from "@/assets/logos/psu";
 import { miscIcons } from "@/assets/misc";
@@ -11,6 +11,20 @@ import Logo from "@/assets/logo_festival.png";
 import logos, { Logos } from "@/assets/logos";
 import ColorLigne from "@/components/global/ColorLigne.astro";
 import CardSlider from "@/components/festival/CardSlider.astro";
+
+import { Button } from "@/components/markdown";
+
+import fs from "node:fs";
+
+let infos = csvJSON(
+  fs.readFileSync("./src/pages/festival/_infos.csv", "utf-8")
+);
+
+infos.forEach((info) => {
+  info.image = logos[info.type][info.img];
+});
+
+console.log(infos);
 
 interface Props {
   logo?: ClubName;
@@ -100,7 +114,7 @@ const programme = [
       </div>
     </section>
 
-    <section class="section dark" id="dev">
+    <!-- <section class="section dark" id="dev">
       <div class="content">
         <div class="main__dev">
           <div class="title__slide">
@@ -158,72 +172,36 @@ const programme = [
             {
               (
                 <CardSlider
-                  cards={[
-                    {
-                      image: logos.psu.champsu,
-                      title: "le premier",
-                      description: "lorem lorem lorem",
-                    },
-                    {
-                      image: logos.psu.champsu,
-                      title: "Deux",
-                      description: "lorem lorem lorem",
-                    },
-                    {
-                      image: logos.psu.champsu,
-                      title: "Trois",
-                      description: "lorem lorem lorem",
-                    },
-                    {
-                      image: logos.psu.champsu,
-                      title: "Play Sorbonne Université",
-                      description: "lorem lorem lorem",
-                    },
-                    {
-                      image: logos.psu.champsu,
-                      title: "Play Sorbonne Université",
-                      description: "lorem lorem lorem",
-                    },
-                    {
-                      image: logos.psu.champsu,
-                      title: "Play Sorbonne Université",
-                      description: "lorem lorem lorem",
-                    },
-                    {
-                      image: logos.psu.champsu,
-                      title: "Play Sorbonne Université",
-                      description: "lorem lorem lorem",
-                    },
-                    {
-                      image: logos.psu.champsu,
-                      title: "Play Sorbonne Université",
-                      description: "lorem lorem lorem",
-                    },
-                    {
-                      image: logos.psu.champsu,
-                      title: "Play Sorbonne Université",
-                      description: "lorem lorem lorem",
-                    },
-                  ]}
+                  cards={infos}
                 />
               )
             }
           </div>
         </div>
       </div>
-    </section>
-    
-    <section class="section">
-      <!-- Nous rejoindre  -->
+    </section> -->
+
+    <section class="section" id="join">
+      <div class="content">
+        <div class="info__prog">
+          <h1 class="title title__prog">Rejoignez-nous</h1>
+          <ColorLigne />
+          <p class="desc-fest__prog">
+            Vous êtes un <b>développeur indépendant</b>, une <b>association</b>,
+            un <b>éditeur</b> ou une <b>entreprise</b> ? Vous souhaitez participer
+            à l'événement ou devenir partenaire ? Remplissez le formulaire ci-dessous
+            pour nous rejoindre.
+          </p>
+        </div>
+
+        <Button link="#"> Nous rejoindre </Button>
+      </div>
     </section>
 
     <section class="section dark" id="part">
       <div class="content">
         <div class="main__part">
-          <h1 class="title title__part">Nos partenaires (?)</h1>
-
-          <h2 class="subtitle subtitle__part">Institution</h2>
-
+          <h1 class="title title__part">Nos partenaires</h1>
           <div class="content__part">
             {
               Object.values(Logos.ext)
@@ -479,8 +457,6 @@ const programme = [
     justify-content: center;
     align-items: center;
   }
-
-
 </style>
 
 <script>

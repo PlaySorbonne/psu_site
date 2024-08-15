@@ -3,20 +3,20 @@ import type { ImageMetadata } from "astro";
 import { Image } from "astro:assets";
 
 export interface CardInfo {
-  title: string;
+  titre: string;
   description: string;
   image: ImageMetadata;
 }
 
 type Props = CardInfo;
 
-let { image, title, description } = Astro.props;
+let { image, titre, description } = Astro.props;
 ---
 
 <div class="card">
-  <Image src={image} alt={title} class="img" width={250} />
+  <Image src={image} alt={titre} class="img" width={250} />
   <div class="info">
-    <h2 class="title">{title}</h2>
+    <h2 class="title">{titre}</h2>
     <p class="description">{description}</p>
   </div>
 </div>

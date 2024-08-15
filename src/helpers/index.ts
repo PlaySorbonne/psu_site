@@ -79,3 +79,23 @@ export interface EventT {
 
 const LoremText =
   "lorem ipsum dolor sit amet, consectetur adipiscing elit. sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+
+export function csvJSON(csv:string) {
+  const separator = csv.includes(";") ? ";" : ",";
+  const lines = csv.split("\n");
+  const result = [];
+  const headers = lines[0].trim().split(separator);
+  
+
+  for (let i = 1; i < lines.length; i++) {
+    if (!lines[i]) continue;
+    const obj = {};
+    const currentline = lines[i].trim().split(separator).map((e) => e.trim());
+
+    for (let j = 0; j < headers.length; j++) {
+      obj[headers[j]] = currentline[j];
+    }
+    result.push(obj);
+  }
+  return result;
+}
