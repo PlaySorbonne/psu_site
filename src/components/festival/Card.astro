@@ -14,7 +14,7 @@ let { image, titre, description } = Astro.props;
 ---
 
 <div class="card">
-  <Image src={image} alt={titre} class="img" width={250} />
+  <Image src={image} alt={titre} class="img" width={300}/>
   <div class="info">
     <h2 class="title">{titre}</h2>
     <p class="description">{description}</p>
@@ -23,14 +23,15 @@ let { image, titre, description } = Astro.props;
 
 <style>
   .img {
-    object-fit: cover;
     /* to background */
     position: absolute;
     z-index: 0;
+    width: 100%;
+    min-height: 100%;
   }
   .card {
     position: relative;
-    overflow: hidden;
+    overflow: show;
     width: 400px;
     height: 200px;
     
