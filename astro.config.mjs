@@ -13,20 +13,28 @@ const devMode = !!import.meta.env.PUBLIC_DEV_MODE;
 export default defineConfig({
   scopedStyleStrategy: "attribute",
   site: devMode ? "https://demo.playsorbonne.fr" : "https://playsorbonne.fr/",
-  integrations: [react(),
-  compress({
-    HTML: {
-      minifyCSS: true,
-      minifyJS: true,
-      minifyURLs: true,
-      removeComments: true,
-    }
-  }),
-  mdx(), sitemap()],
+  integrations: [
+    react(),
+    compress({
+      HTML: {
+        minifyCSS: true,
+        minifyJS: true,
+        minifyURLs: true,
+        removeComments: true,
+      },
+    }),
+    mdx(),
+    sitemap(),
+  ],
   markdown: {
     remarkPlugins: [remarkDirective],
-    rehypePlugins: [[externalLink, {
-      domain: "playsorbonne.fr"
-    }]]
-  }
+    rehypePlugins: [
+      [
+        externalLink,
+        {
+          domain: "playsorbonne.fr",
+        },
+      ],
+    ],
+  },
 });
