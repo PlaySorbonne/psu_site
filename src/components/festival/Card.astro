@@ -50,8 +50,8 @@ let { image, titre, description } = Astro.props;
     z-index: 1;
     background: linear-gradient(
       0deg,
-      rgba(255, 255, 255, 1) 0%,
-      rgba(255, 255, 255, 1) 30%,
+      rgba(var(--main-color), 1) 0%,
+      rgba(var(--main-color), 0.8) 30%,
       rgba(0, 0, 0, 0) 100%
     );
     padding: 20px;
@@ -59,6 +59,7 @@ let { image, titre, description } = Astro.props;
     height: 100%;
     display: flex;
     flex-direction: column;
+    color: white;
   }
 
   .card .info {
