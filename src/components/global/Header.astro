@@ -94,13 +94,16 @@ const psuLogo = getClubLogo("champsu");
     window.addEventListener("scroll", function () {
       // current scroll position
       const currentScrollPos = window.scrollY;
+      
+      let sticky = document.querySelector<HTMLElement>(".sticky");
+      if (!sticky) return;
 
       if (prevScrollPos > currentScrollPos && currentScrollPos > 80) {
         // user has scrolled up
-        document.querySelector<HTMLElement>(".sticky").style.top = "0";
+        sticky.style.top = "0";
       } else {
         // user has scrolled down
-        document.querySelector<HTMLElement>(".sticky").style.top = "-200px";
+        sticky.style.top = "-200px";
       }
 
       // update previous scroll position
