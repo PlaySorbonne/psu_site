@@ -37,16 +37,20 @@ const { logo, title, prefetchs } = Astro.props;
 
 const programme = [
   {
-    icon: miscIcons.dices,
-    desc: "Jeux de rôles",
+    icon: miscIcons.penRuler,
+    desc: "Jeux indés",
+  },
+  {
+    icon: miscIcons.trophy,
+    desc: "Tournoi",
   },
   {
     icon: miscIcons.mic,
     desc: "Conférences",
   },
   {
-    icon: miscIcons.penRuler,
-    desc: "Jeux indés",
+    icon: miscIcons.dices,
+    desc: "Jeux de rôles",
   },
   {
     icon: miscIcons.proj,
@@ -55,10 +59,6 @@ const programme = [
   {
     icon: miscIcons.tetris,
     desc: "Rétro-gaming",
-  },
-  {
-    icon: miscIcons.trophy,
-    desc: "Tournoi",
   },
 ];
 ---
@@ -382,7 +382,8 @@ const programme = [
   }
 
   .subtitle__hero {
-    color: var(--secondary-color);
+    color: rgb(var(--secondary-color));
+    margin-bottom: 16px;
   }
 
   .psu__hero {
