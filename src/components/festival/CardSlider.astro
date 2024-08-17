@@ -6,12 +6,11 @@ type Props = {
 };
 
 let { cards } = Astro.props;
-
 ---
 
 <div>
   <!-- <div class="shade"></div> -->
-  <div class="wrapper animate">
+  <div class="wrapperC animate">
     {
       cards.map((card) => (
         <div class="element">
@@ -23,11 +22,12 @@ let { cards } = Astro.props;
 </div>
 
 <style define:vars={{ dur: `${cards.length * 2}s` }}>
-  .wrapper {
+  .wrapperC {
     display: inline-flex;
     overflow: hidden;
     padding: 20px;
     margin-top: 20px;
+    
   }
 
   .animate {
@@ -46,10 +46,11 @@ let { cards } = Astro.props;
 
   @keyframes slide {
     0% {
-      transform: translateX(calc(50% + 50vw));
+      transform: translateX(100vw);
     }
     100% {
-    transform: translateX(calc(-50% - 50vw));
+      /* transform: translateX(calc(-50% - 50vw)); */
+      transform: translateX(calc(-100% - 40vw));
     }
   }
 
@@ -69,15 +70,21 @@ let { cards } = Astro.props;
 
 <script>
   function animation() {
-    const wrapper = document.querySelector(".wrapper");
+    const wrappers = document.querySelectorAll(".wrapperC");
 
-    if (wrapper.scrollWidth < window.innerWidth - 64) {
-      wrapper.classList.remove("animate");
-      wrapper.classList.add("center");
-    } else {
-      wrapper.classList.add("animate");
-      wrapper.classList.remove("center");
-    }
+    wrappers.forEach((wrapper, i) => {
+      console.log(i, wrapper.scrollWidth, window.innerWidth);
+      if (
+        wrapper.scrollWidth > window.innerWidth - 64 ||
+        (window.innerWidth > 1000 && wrapper.scrollWidth > 1000)
+      ) {
+        wrapper.classList.add("animate");
+        wrapper.classList.remove("center");
+      } else {
+        wrapper.classList.remove("animate");
+        wrapper.classList.add("center");
+      }
+    });
   }
 
   addEventListener("load", animation);
