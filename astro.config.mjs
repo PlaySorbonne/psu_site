@@ -15,6 +15,8 @@ export default defineConfig({
   site: devMode ? "https://demo.playsorbonne.fr" : "https://playsorbonne.fr/",
   integrations: [
     react(),
+    mdx(),
+    sitemap(),
     compress({
       HTML: {
         minifyCSS: true,
@@ -22,9 +24,7 @@ export default defineConfig({
         minifyURLs: true,
         removeComments: true,
       },
-    }),
-    mdx(),
-    sitemap(),
+    })
   ],
   markdown: {
     remarkPlugins: [remarkDirective],
