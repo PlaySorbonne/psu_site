@@ -3,6 +3,8 @@ import eternal_quest2 from './eternal_quest2.png';
 import kagoun from './kagoun.jpeg';
 import kagoun2 from './kagoun2.jpeg';
 import hunting_grounds from './hunting_grounds.jpg';
+import memocombo from './memocombo.png';
+import tribunazes from './tribunazes.png';
 
 export default {
   eternal_quest,
@@ -10,4 +12,6 @@ export default {
   kagoun,
   kagoun2,
   hunting_grounds,
+  memocombo,
+  tribunazes
 };

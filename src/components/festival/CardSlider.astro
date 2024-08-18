@@ -1,22 +1,33 @@
 ---
+import { Image } from "astro:assets";
 import Card, { type CardInfo } from "./Card.astro";
 
 type Props = {
   cards: CardInfo[];
+  imgOnly?: boolean;
 };
 
-let { cards } = Astro.props;
+let { cards, imgOnly } = Astro.props;
 ---
 
 <div>
   <!-- <div class="shade"></div> -->
   <div class="wrapperC animate">
     {
-      cards.map((card) => (
-        <div class="element">
-          <Card {...card} />
-        </div>
-      ))
+      !imgOnly &&
+        cards.map((card) => (
+          <div class="element">
+            <Card {...card} />
+          </div>
+        ))
+    }
+    {
+      imgOnly &&
+        cards.map((card) => (
+          <div class="element">
+            <Image src={card.image} alt={card.titre} height={200} loading="eager"/>
+          </div>
+        ))
     }
   </div>
 </div>
@@ -27,7 +38,6 @@ let { cards } = Astro.props;
     overflow: hidden;
     padding: 20px;
     margin-top: 20px;
-    
   }
 
   .animate {

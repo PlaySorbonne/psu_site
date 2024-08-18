@@ -16,7 +16,6 @@ import festival from "@/assets/festival";
 import { Button } from "@/components/markdown";
 
 import fs from "node:fs";
-import { info } from "node_modules/astro/dist/core/logger/core";
 
 let infos = csvJSON(
   fs.readFileSync("./src/pages/festival/_infos.csv", "utf-8")
@@ -25,7 +24,6 @@ let infos = csvJSON(
 infos.forEach((info) => {
   info.image = festival[info.type][info.img] ?? logos.psu.champsu;
 });
-
 
 interface Props {
   logo?: ClubName;
@@ -78,7 +76,11 @@ const programme = [
           <h2 class="subtitle__hero">Le 28 septembre 2024</h2>
           <div class="buttons__hero">
             <a href="#prog" class="button__hero">En savoir plus</a>
-            <a href="/festival" class="button__hero">S'inscrire</a>
+            <a
+              href="https://www.helloasso.com/associations/play-sorbonne-universite/evenements/play-sorbonne-festival-2024-2"
+              target="_blank"
+              class="button__hero">S'inscrire</a
+            >
           </div>
         </div>
         <div class="img_container__hero">
@@ -119,15 +121,12 @@ const programme = [
       <div class="content">
         <div class="main__dev">
           <div class="title__slide">
-          <h1 class="title title__dev">Développeurs Jeu de Plateau</h1>
-          <ColorLigne />
+            <h1 class="title title__dev">Développeurs Jeu de Plateau</h1>
+            <ColorLigne />
           </div>
-        
 
           <div class="content__assoc">
-            <CardSlider
-              cards={infos.filter((info) => info.type === "j2s")}
-            />
+            <CardSlider cards={infos.filter((info) => info.type === "j2s")} />
           </div>
         </div>
       </div>
@@ -136,37 +135,33 @@ const programme = [
       <div class="content">
         <div class="main__dev">
           <div class="title__slide">
-          <h1 class="title title__dev">Développeurs Jeu Vidéo</h1>
-          <ColorLigne />
-          </div>
-        
-
-          <div class="content__assoc">
-            <CardSlider
-              cards={infos.filter((info) => info.type === "jv")}
-            />
-          </div>
-        </div>
-      </div>
-    </section>
-
-
-    <!-- <section class="section dark" id="assoc">
-      <div class="content">
-        <div class="main__assoc">
-          <div class="title__slide">
-          <h1 class="title title__assoc">Associations</h1>
-          <ColorLigne />
+            <h1 class="title title__dev">Développeurs Jeu Vidéo</h1>
+            <ColorLigne />
           </div>
 
           <div class="content__assoc">
-            {}
+            <CardSlider cards={infos.filter((info) => info.type === "jv")} />
           </div>
         </div>
       </div>
     </section>
 
     <section class="section dark" id="assoc">
+      <div class="content">
+        <div class="main__assoc">
+          <div class="title__slide">
+            <h1 class="title title__assoc">Associations</h1>
+            <ColorLigne />
+          </div>
+
+          <div class="content__assoc">
+            <CardSlider cards={infos.filter((info) => info.type === "assos")} imgOnly={true} />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- <section class="section dark" id="assoc">
       <div class="content">
         <div class="main__assoc">
           <div class="title__slide">
@@ -202,6 +197,19 @@ const programme = [
       </div>
     </section> -->
 
+    <section class="section dark" id="part">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
+        <h1 class="title">Et bien plus encore !</h1>
+      </div>
+    </section>
+
     <section class="section" id="join">
       <div class="content">
         <div class="info__prog">
@@ -215,7 +223,12 @@ const programme = [
           </p>
         </div>
 
-        <Button link="#" paddingTop="16px"> Nous rejoindre </Button>
+        <Button
+          link="https://docs.google.com/forms/d/e/1FAIpQLSetzW4hVtLZoYg4YqSOzjeaUt7VJxWaK3gcbJPvl7MvLyrxcQ/viewform?usp=sf_link"
+          paddingTop="16px"
+        >
+          Nous rejoindre
+        </Button>
       </div>
     </section>
 
