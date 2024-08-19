@@ -10,7 +10,7 @@ type Props = {
 let { cards, imgOnly } = Astro.props;
 ---
 
-<div>
+<div class="main">
   <!-- <div class="shade"></div> -->
   <div class="wrapperC animate">
     {
@@ -25,7 +25,12 @@ let { cards, imgOnly } = Astro.props;
       imgOnly &&
         cards.map((card) => (
           <div class="element">
-            <Image src={card.image} alt={card.titre} height={200} loading="eager"/>
+            <Image
+              src={card.image}
+              alt={card.titre}
+              height={200}
+              loading="eager"
+            />
           </div>
         ))
     }
@@ -33,6 +38,9 @@ let { cards, imgOnly } = Astro.props;
 </div>
 
 <style define:vars={{ dur: `${cards.length * 2}s` }}>
+  .main {
+    transform: translateX(-50%);
+  }
   .wrapperC {
     display: inline-flex;
     overflow: hidden;
@@ -56,17 +64,23 @@ let { cards, imgOnly } = Astro.props;
 
   @keyframes slide {
     0% {
-      transform: translateX(100vw);
+      transform: translateX(0);
     }
     100% {
-      /* transform: translateX(calc(-50% - 50vw)); */
-      transform: translateX(calc(-100% - 40vw));
+      transform: translateX(-100%);
     }
   }
 
   .element {
     margin: 0 10px;
+    /* width: 400px; */
   }
+
+  /* @media screen and (max-width: 768px) {
+    .element {
+      width: 300px;
+    }
+  } */
 
   .shade {
     position: absolute;
@@ -79,24 +93,32 @@ let { cards, imgOnly } = Astro.props;
 </style>
 
 <script>
-  function animation() {
-    const wrappers = document.querySelectorAll(".wrapperC");
+  const wrappers = document.querySelectorAll<HTMLElement>(".wrapperC");
 
-    wrappers.forEach((wrapper, i) => {
-      console.log(i, wrapper.scrollWidth, window.innerWidth);
-      if (
-        wrapper.scrollWidth > window.innerWidth - 64 ||
-        (window.innerWidth > 1000 && wrapper.scrollWidth > 1000)
-      ) {
-        wrapper.classList.add("animate");
-        wrapper.classList.remove("center");
-      } else {
-        wrapper.classList.remove("animate");
-        wrapper.classList.add("center");
-      }
+  wrappers.forEach((wrapper) => {
+    wrapper.classList.remove("animate");
+    const elements = wrapper.querySelectorAll<HTMLElement>(".element");
+
+    elements.forEach((element) => {
+      const clone = element.cloneNode(true);
+      wrapper.appendChild(clone);
     });
-  }
 
-  addEventListener("load", animation);
-  addEventListener("resize", animation);
+    let offset = 0;
+
+    function animateSlides() {
+      offset -= 2; // Move slides to the left
+      if (
+        offset <=
+        -(wrapper.firstElementChild as HTMLElement).offsetWidth - 20
+      ) {
+        offset = 0;
+        wrapper.appendChild(wrapper.firstElementChild); // Move first slide to the end
+      }
+      wrapper.style.transform = `translateX(${offset}px)`;
+      requestAnimationFrame(animateSlides); // Call the animation again
+    }
+
+    animateSlides();
+  });
 </script>
