@@ -14,7 +14,6 @@ import CardSlider from "@/components/festival/CardSlider.astro";
 import IconFestival from "@/components/festival/IconFestival.astro";
 import festival from "@/assets/festival";
 
-
 import { Button } from "@/components/markdown";
 
 import fs from "node:fs";
@@ -31,37 +30,41 @@ const programme = [
   {
     icon: miscIcons.penRuler,
     title: "Jeux indés",
-    desc : "Stands avec présentations et tests de Jeux Vidéos et de Société indépendants",
+    desc: "Stands avec présentations et tests de Jeux Vidéos et de Société indépendants",
   },
   {
     icon: miscIcons.trophy,
     title: "Tournois",
-    desc : "Tournois Smash, Osu!, Tetris",
+    desc: "Tournois Smash, Osu!, Tetris",
   },
   {
     icon: miscIcons.mic,
     title: "Conférences",
-    desc : "Conférences autour du jeu, par des chercheurs",
+    desc: "Conférences autour du jeu, par des chercheurs",
   },
   {
     icon: miscIcons.dices,
     title: "Jeux de rôles",
-    desc : "Initiations aux jeux de rôles",
+    desc: "Initiations aux jeux de rôles",
   },
   {
     icon: miscIcons.proj,
     title: "Expositions",
-    desc : "Expositions sur le jeu",
+    desc: "Expositions sur le jeu",
   },
   {
     icon: miscIcons.tetris,
     title: "Rétro-gaming",
-    desc : "Bornes d'arcades et consoles rétro en accès libre",
+    desc: "Bornes d'arcades et consoles rétro en accès libre",
   },
 ];
 ---
 
-<HeaderL title={"Festival Play Sorbonne"} description="Festival de jeu de Play Sorbonne Université. Le festival rassemble joueurs, développeurs, éditeurs, associations, étudiants, et tous ceux qui font vivre les jeux." metaImg="/assets/festival/logo_festival.png">
+<HeaderL
+  title={"Festival Play Sorbonne"}
+  description="Festival de jeu de Play Sorbonne Université. Le festival rassemble joueurs, développeurs, éditeurs, associations, étudiants, et tous ceux qui font vivre les jeux."
+  metaImg="/assets/festival/logo_festival.png"
+>
   <header class="header">
     <a href="/">
       <Image src={clubLogos.psu} alt="" class="logo__header" height="80" />
@@ -72,8 +75,9 @@ const programme = [
       <div class="content__hero">
         <div class="info__hero">
           <!-- <img class="psu__hero" src=`${clubLogos.champsuOnly.src}` alt=""> -->
-          <h1 class="title title__hero">Play Sorbonne Festival</h1>
-          <h2 class="subtitle__hero">Le 28 septembre 2024</h2>
+          <h1 class="title title__hero redNeon">Play Sorbonne</h1>
+          <h1 class="festival__hero redNeon">FESTIVAL</h1>
+          <h2 class="subtitle__hero">Le 28 septembre 2024, 4 place Jussieu</h2>
           <div class="buttons__hero">
             <a href="#prog" class="button__hero">En savoir plus</a>
             <a
@@ -106,8 +110,8 @@ const programme = [
 
         <div class="content__prog">
           {
-            programme.map(({ icon, title, desc}) => (
-              <IconFestival icon={icon} title={title} desc = {desc}/>
+            programme.map(({ icon, title, desc }) => (
+              <IconFestival icon={icon} title={title} desc={desc} />
             ))
           }
         </div>
@@ -152,7 +156,10 @@ const programme = [
           </div>
 
           <div class="content__assoc">
-            <CardSlider cards={infos.filter((info) => info.type === "assos")} imgOnly={true} />
+            <CardSlider
+              cards={infos.filter((info) => info.type === "assos")}
+              imgOnly={true}
+            />
           </div>
         </div>
       </div>
@@ -346,9 +353,10 @@ const programme = [
 
   .buttons__hero {
     display: flex;
-    gap: 1rem;
-    justify-content: space-around;
+    gap: 4rem;
+    justify-content: center;
     width: 100%;
+    color: white;
   }
 
   .button__hero {
@@ -358,19 +366,27 @@ const programme = [
     border-radius: 5px;
     font-weight: bold;
     text-decoration: none;
+    transition: all 0.5s ease-in-out;
+  }
+  
+  .button__hero:hover {
+    transform: scale(1.1);
+    transition: all 0.5s ease-in-out;
   }
 
   .info__hero {
     display: flex;
+    position: absolute;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
-    margin-top: calc(100vh / 4);
+    /* margin-top: calc(100vh / 4); */
+    top: 25%;
+    right: 10vw;
   }
 
   @media screen and ((max-width: 768px) or (max-aspect-ratio: 12/16)) {
     .info__hero {
-      margin-top: 0;
+      position: static;
     }
     .img_container__hero {
       width: 100%;
@@ -385,15 +401,35 @@ const programme = [
   }
 
   .title__hero {
+    font-family: "No Continue", sans-serif;
+    text-transform: uppercase;
     color: white;
-    font-size: 3rem;
+    font-size: 5.8vw;
+    letter-spacing: 2px;
+    text-align: center;
+    transform: translateY(2.5vw);
+  }
+
+  .festival__hero {
+    font-family: "No Continue", sans-serif;
+    text-transform: uppercase;
+    color: white;
+    font-size: 10vw;
     letter-spacing: 2px;
     text-align: center;
   }
+  .redNeon {
+    text-shadow: 0 0 15px rgb(var(--main-color));
+  }
+
 
   .subtitle__hero {
-    color: rgb(var(--secondary-color));
+    color: rgb(146, 228, 255);
+    font-size: 2.3vw;
     margin-bottom: 16px;
+    font-family: "No Continue", sans-serif;
+    text-transform: uppercase;
+    text-shadow: 0 0 7px rgb(var(--secondary-color));
   }
 
   .psu__hero {
@@ -401,11 +437,18 @@ const programme = [
     height: 100px;
   }
 
-  @media screen and (max-width: 1000px) {
+  @media screen and ((max-width: 768px) or (max-aspect-ratio: 12/16)) {
     .title__hero {
-      font-size: 2rem;
+      font-size: 10vw;
+    }
+    .festival__hero {
+      font-size: 17.2vw;
+    }
+    .subtitle__hero {
+      font-size: 4.1vw;
     }
   }
+
 
   .section {
     /* background-color: var(--main-color); */
