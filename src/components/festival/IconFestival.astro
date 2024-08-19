@@ -4,21 +4,24 @@ import { Image } from "astro:assets";
 interface Props {
   icon: ImageMetadata;
   title: string;
+  desc: string;
   // truc truc
 }
 
-const { icon, title } = Astro.props;
+const { icon, title, desc} = Astro.props;
 ---
 
 <div class="item">
   <Image src={icon} alt="icon" class="icon" width="50" />
   <p class="title">{title}</p>
+  <span class="tooltiptext">{desc}</div>
 </div>
 
 
 <style>
   .item {
     display: flex;
+    cursor: pointer;
     align-items: center;
     gap: 0.5rem;
     background-color: rgba(var(--main-color), 0.5);
@@ -35,4 +38,27 @@ const { icon, title } = Astro.props;
   .title {
     font-weight: bold;
   }
+  
+  .item .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .item:hover .tooltiptext{
+    visibility: visible;
+    opacity: 1;
+  }
+
 </style>

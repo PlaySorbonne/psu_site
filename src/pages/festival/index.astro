@@ -31,26 +31,32 @@ const programme = [
   {
     icon: miscIcons.penRuler,
     title: "Jeux indés",
+    desc : "Stands avec présentations et tests de Jeux Vidéos et de Société indépendants",
   },
   {
     icon: miscIcons.trophy,
-    title: "Tournoi",
+    title: "Tournois",
+    desc : "Tournois Smash, Osu!, Tetris",
   },
   {
     icon: miscIcons.mic,
     title: "Conférences",
+    desc : "Conférences autour du jeu, par des chercheurs",
   },
   {
     icon: miscIcons.dices,
     title: "Jeux de rôles",
+    desc : "Initiations aux jeux de rôles",
   },
   {
     icon: miscIcons.proj,
     title: "Expositions",
+    desc : "Expositions sur le jeu",
   },
   {
     icon: miscIcons.tetris,
     title: "Rétro-gaming",
+    desc : "Bornes d'arcades et consoles rétro en accès libre",
   },
 ];
 ---
@@ -100,8 +106,8 @@ const programme = [
 
         <div class="content__prog">
           {
-            programme.map(({ icon, title }) => (
-              <IconFestival icon={icon} title={title} />
+            programme.map(({ icon, title, desc}) => (
+              <IconFestival icon={icon} title={title} desc = {desc}/>
             ))
           }
         </div>
