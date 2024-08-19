@@ -129,5 +129,5 @@ let { cards, imgOnly } = Astro.props;
 
   // BUG ouais quand tu resize la fenêtre ça va bugger
   // addEventListener("resize", slider);
-  addEventListener("load", slider);
+  document.addEventListener("astro:page-load", slider);
 </script>
