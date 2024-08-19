@@ -1,28 +1,42 @@
 ---
 import { ViewTransitions } from "astro:transitions";
+import { SEOMetadata } from 'astro-seo-metadata';
+
 
 interface Props {
   title: string; // title de la page
   prefetchs?: string[]; // liste des liens à prefetch
-  // description?: string; // TODO description de la page
+  description?: string; 
+  metaImg?: string; 
+  favicon?: string;
 }
 
-const { title, prefetchs } = Astro.props;
+const { title, description, metaImg, favicon, prefetchs } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <ViewTransitions />
-    <link rel="sitemap" href="/sitemap-index.xml" />
 
-
-    <meta charset="UTF-8" />
-    <!-- <meta name="description" content="Play Sorbonne Université, le site !" /> -->
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    
+    <SEOMetadata
+      siteName="Play Sorbonne"
+      title={title}
+      description={description}
+      image={metaImg}
+      favicon={favicon ?? "/favicon.ico"}
+      author={"Play Sorbonne Université"}
+      astroSitemap={true}
+      astroGenerator={true}
+      canonicalUrl={Astro.url.toString()}
+      type="website"
+    />
+    
+    <meta name="twitter:site" content="@PlaySorbonneU">
 
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
