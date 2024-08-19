@@ -41,7 +41,7 @@ const { icon, title, desc} = Astro.props;
   
   .item .tooltiptext {
     visibility: hidden;
-    width: 120px;
+    width: 100%; 
     background-color: black;
     color: #fff;
     text-align: center;
@@ -50,8 +50,7 @@ const { icon, title, desc} = Astro.props;
     position: absolute;
     z-index: 1;
     bottom: 125%;
-    left: 50%;
-    margin-left: -60px;
+    left: 0%;
     opacity: 0;
     transition: opacity 0.3s;
   }
