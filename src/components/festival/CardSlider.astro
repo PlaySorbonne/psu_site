@@ -39,6 +39,7 @@ let { cards, imgOnly } = Astro.props;
 
 <style define:vars={{ dur: `${cards.length * 2}s` }}>
   .main {
+    /* HACK Il marchera pas dans tout les cas ce -50%, faut peut-être faire la taille précise du padding */
     transform: translateX(-50%);
   }
   .wrapperC {
