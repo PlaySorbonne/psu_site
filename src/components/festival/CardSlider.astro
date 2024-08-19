@@ -94,33 +94,45 @@ let { cards, imgOnly } = Astro.props;
 </style>
 
 <script>
-  const wrappers = document.querySelectorAll<HTMLElement>(".wrapperC");
+  function slider() {
+    const wrappers = document.querySelectorAll<HTMLElement>(".wrapperC");
 
-  wrappers.forEach((wrapper) => {
-    wrapper.parentElement.classList.add("offset");
-    wrapper.classList.remove("animate");
-    const elements = wrapper.querySelectorAll<HTMLElement>(".element");
+    wrappers.forEach((wrapper) => {
+      wrapper.parentElement.classList.add("offset");
+      wrapper.classList.remove("animate");
+      const elements = wrapper.querySelectorAll<HTMLElement>(".element");
 
-    elements.forEach((element) => {
-      const clone = element.cloneNode(true);
-      wrapper.appendChild(clone);
-    });
-
-    let offset = 0;
-
-    function animateSlides() {
-      offset -= 2; // Move slides to the left
-      if (
-        offset <=
-        -(wrapper.firstElementChild as HTMLElement).offsetWidth - 20
-      ) {
-        offset = 0;
-        wrapper.appendChild(wrapper.firstElementChild); // Move first slide to the end
+      for (let i = 0; i < 3; i++) {
+        if (wrapper.offsetWidth > window.innerWidth + 1000) break;
+        elements.forEach((element) => {
+          const clone = element.cloneNode(true);
+          wrapper.appendChild(clone);
+        });
       }
-      wrapper.style.transform = `translateX(${offset}px)`;
-      requestAnimationFrame(animateSlides); // Call the animation again
-    }
 
-    animateSlides();
-  });
+      let defaultOffset = wrapper.offsetWidth / 3;
+      let offset = -defaultOffset;
+
+      function animateSlides() {
+        offset -= 2; // Move slides to the left
+        if (
+          offset <=
+          -(wrapper.firstElementChild as HTMLElement).offsetWidth -
+            20 -
+            defaultOffset
+        ) {
+          offset = -defaultOffset;
+          wrapper.appendChild(wrapper.firstElementChild); // Move first slide to the end
+        }
+        wrapper.style.transform = `translateX(${offset}px)`;
+        requestAnimationFrame(animateSlides); // Call the animation again
+      }
+
+      animateSlides();
+    });
+  }
+
+  // BUG ouais quand tu resize la fenêtre ça va bugger
+  // addEventListener("resize", slider);
+  addEventListener("load", slider);
 </script>
