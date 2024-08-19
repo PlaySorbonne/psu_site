@@ -38,10 +38,6 @@ let { cards, imgOnly } = Astro.props;
 </div>
 
 <style define:vars={{ dur: `${cards.length * 2}s` }}>
-  .offset {
-    /* HACK Il marchera pas dans tout les cas ce -50%, faut peut-être faire la taille précise du padding */
-    transform: translateX(-50%);
-  }
   .wrapperC {
     display: inline-flex;
     overflow: hidden;
@@ -98,12 +94,11 @@ let { cards, imgOnly } = Astro.props;
     const wrappers = document.querySelectorAll<HTMLElement>(".wrapperC");
 
     wrappers.forEach((wrapper) => {
-      wrapper.parentElement.classList.add("offset");
       wrapper.classList.remove("animate");
       const elements = wrapper.querySelectorAll<HTMLElement>(".element");
 
       for (let i = 0; i < 3; i++) {
-        if (wrapper.offsetWidth > window.innerWidth + 1000) break;
+        if (wrapper.offsetWidth > window.innerWidth + 1500) break;
         elements.forEach((element) => {
           const clone = element.cloneNode(true);
           wrapper.appendChild(clone);
