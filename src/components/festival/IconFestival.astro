@@ -1,0 +1,34 @@
+---
+import { Image } from "astro:assets";
+
+interface Props {
+  icon: ImageMetadata;
+  title: string;
+  // truc truc
+}
+
+const { icon, title } = Astro.props;
+---
+
+<div class="item">
+  <Image src={icon} alt="icon" class="icon" width="50" />
+  <p class="title">{title}</p>
+</div>
+
+
+<style>
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: rgba(var(--main-color), 0.5);
+    margin: 1rem;
+    padding: 0 10px;
+    border-radius: 10px;
+    transition: all 0.5s ease-in-out;
+  }
+
+  .title {
+    font-weight: bold;
+  }
+</style>

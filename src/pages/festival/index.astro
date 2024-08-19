@@ -11,7 +11,9 @@ import Logo from "@/assets/logo_festival.png";
 import logos, { Logos } from "@/assets/logos";
 import ColorLigne from "@/components/global/ColorLigne.astro";
 import CardSlider from "@/components/festival/CardSlider.astro";
+import IconFestival from "@/components/festival/IconFestival.astro";
 import festival from "@/assets/festival";
+
 
 import { Button } from "@/components/markdown";
 
@@ -28,27 +30,27 @@ infos.forEach((info) => {
 const programme = [
   {
     icon: miscIcons.penRuler,
-    desc: "Jeux indés",
+    title: "Jeux indés",
   },
   {
     icon: miscIcons.trophy,
-    desc: "Tournoi",
+    title: "Tournoi",
   },
   {
     icon: miscIcons.mic,
-    desc: "Conférences",
+    title: "Conférences",
   },
   {
     icon: miscIcons.dices,
-    desc: "Jeux de rôles",
+    title: "Jeux de rôles",
   },
   {
     icon: miscIcons.proj,
-    desc: "Expositions",
+    title: "Expositions",
   },
   {
     icon: miscIcons.tetris,
-    desc: "Rétro-gaming",
+    title: "Rétro-gaming",
   },
 ];
 ---
@@ -98,11 +100,8 @@ const programme = [
 
         <div class="content__prog">
           {
-            programme.map(({ icon, desc }) => (
-              <div class="item__prog">
-                <Image src={icon} alt="icon" class="icon__prog" width="50" />
-                <p class="desc__prog">{desc}</p>
-              </div>
+            programme.map(({ icon, title }) => (
+              <IconFestival icon={icon} title={title} />
             ))
           }
         </div>
