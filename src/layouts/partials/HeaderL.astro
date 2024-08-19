@@ -1,13 +1,12 @@
 ---
 import { ViewTransitions } from "astro:transitions";
-import { SEOMetadata } from 'astro-seo-metadata';
-
+import { SEOMetadata } from "astro-seo-metadata";
 
 interface Props {
   title: string; // title de la page
   prefetchs?: string[]; // liste des liens à prefetch
-  description?: string; 
-  metaImg?: string; 
+  description?: string;
+  metaImg?: string;
   favicon?: string;
 }
 
@@ -19,10 +18,10 @@ const { title, description, metaImg, favicon, prefetchs } = Astro.props;
   <head>
     <ViewTransitions />
 
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <title>{title}</title>
-    
+
     <SEOMetadata
       siteName="Play Sorbonne"
       title={title}
@@ -35,22 +34,37 @@ const { title, description, metaImg, favicon, prefetchs } = Astro.props;
       canonicalUrl={Astro.url.toString()}
       type="website"
     />
-    
-    <meta name="twitter:site" content="@PlaySorbonneU">
 
+    <meta name="twitter:site" content="@PlaySorbonneU" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;700&family=Titillium+Web:wght@200;400;700;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;400;700;900&display=swap"
       rel="stylesheet"
     />
     {prefetchs?.map((prefetch) => <link rel="prefetch" href={prefetch} />)}
-    <script async defer data-website-id="b18bc4a7-99f7-42c5-82ef-9b93aebb6cf5" src="https://stats.backend.playsorbonne.fr/umami.js"></script>
+    <script
+      async
+      defer
+      data-website-id="b18bc4a7-99f7-42c5-82ef-9b93aebb6cf5"
+      src="https://stats.backend.playsorbonne.fr/umami.js"></script>
   </head>
   <body>
     <slot />
     <style is:global>
+      @font-face {
+        font-family: "No Continue";
+        src:
+          url("/font/gomarice_no_continue-webfont.woff2") format("woff2"),
+          url("/font/gomarice_no_continue-webfont.woff") format("woff"),
+          url("/font/gomarice_no_continue-webfont.ttf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
+      
+      
+
       :root {
         --black-text: 61, 61, 111;
         --black-title: 0, 32, 51;
