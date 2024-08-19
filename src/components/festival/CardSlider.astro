@@ -38,7 +38,7 @@ let { cards, imgOnly } = Astro.props;
 </div>
 
 <style define:vars={{ dur: `${cards.length * 2}s` }}>
-  .main {
+  .offset {
     /* HACK Il marchera pas dans tout les cas ce -50%, faut peut-être faire la taille précise du padding */
     transform: translateX(-50%);
   }
@@ -65,10 +65,10 @@ let { cards, imgOnly } = Astro.props;
 
   @keyframes slide {
     0% {
-      transform: translateX(0);
+      transform: translateX(100vw);
     }
     100% {
-      transform: translateX(-100%);
+      transform: translateX(calc(-100% - 40vw));
     }
   }
 
@@ -97,6 +97,7 @@ let { cards, imgOnly } = Astro.props;
   const wrappers = document.querySelectorAll<HTMLElement>(".wrapperC");
 
   wrappers.forEach((wrapper) => {
+    wrapper.parentElement.classList.add("offset");
     wrapper.classList.remove("animate");
     const elements = wrapper.querySelectorAll<HTMLElement>(".element");
 
