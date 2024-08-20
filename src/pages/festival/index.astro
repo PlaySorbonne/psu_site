@@ -323,18 +323,14 @@ const programme = [
   }
 
   .logo__hero {
-    height: auto;
-    border-radius: 10px;
-    opacity: 0;
-    max-width: 30%;
+    visibility: hidden;
   }
 
   @media screen and ((max-width: 768px) or (max-aspect-ratio: 12/16)) {
     .logo__hero {
-      opacity: 1;
+      visibility: visible;
       max-width: 100%;
-      width: 90%;
-      padding: 30px;
+      width: 100%;
     }
     .hero {
       background: linear-gradient(
