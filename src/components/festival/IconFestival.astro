@@ -1,0 +1,63 @@
+---
+import { Image } from "astro:assets";
+
+interface Props {
+  icon: ImageMetadata;
+  title: string;
+  desc: string;
+  // truc truc
+}
+
+const { icon, title, desc} = Astro.props;
+---
+
+<div class="item">
+  <Image src={icon} alt="icon" class="icon" width="50" />
+  <p class="title">{title}</p>
+  <span class="tooltiptext">{desc}</div>
+</div>
+
+
+<style>
+  .item {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: rgba(var(--main-color), 0.5);
+    margin: 1rem;
+    padding: 0 10px;
+    border-radius: 10px;
+    transition: all 0.5s ease-in-out;
+  }
+  .item:hover {
+    background-color: rgba(var(--main-color), 0.8);
+    transform: scale(1.1);
+    transition: all 0.5s ease-in-out;
+  }
+  .title {
+    font-weight: bold;
+  }
+  
+  .item .tooltiptext {
+    visibility: hidden;
+    width: 100%; 
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 0%;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .item:hover .tooltiptext{
+    visibility: visible;
+    opacity: 1;
+  }
+
+</style>

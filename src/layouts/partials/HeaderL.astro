@@ -1,48 +1,77 @@
 ---
 import { ViewTransitions } from "astro:transitions";
+import { SEOMetadata } from "astro-seo-metadata";
 
 interface Props {
   title: string; // title de la page
   prefetchs?: string[]; // liste des liens à prefetch
-  // description?: string; // TODO description de la page
+  description?: string;
+  metaImg?: string;
+  favicon?: string;
 }
 
-const { title, prefetchs } = Astro.props;
+const { title, description, metaImg, favicon, prefetchs } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <ViewTransitions />
-    <link rel="sitemap" href="/sitemap-index.xml" />
 
-
-    <meta charset="UTF-8" />
-    <!-- <meta name="description" content="Play Sorbonne Université, le site !" /> -->
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+
+    <SEOMetadata
+      siteName="Play Sorbonne"
+      title={title}
+      description={description}
+      image={metaImg}
+      favicon={favicon ?? "/favicon.ico"}
+      author={"Play Sorbonne Université"}
+      astroSitemap={true}
+      astroGenerator={true}
+      canonicalUrl={Astro.url.toString()}
+      type="website"
+    />
+
+    <meta name="twitter:site" content="@PlaySorbonneU" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;700&family=Titillium+Web:wght@200;400;700;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;400;700;900&display=swap"
       rel="stylesheet"
     />
     {prefetchs?.map((prefetch) => <link rel="prefetch" href={prefetch} />)}
-    <script async defer data-website-id="b18bc4a7-99f7-42c5-82ef-9b93aebb6cf5" src="https://stats.backend.playsorbonne.fr/umami.js"></script>
+    <script
+      async
+      defer
+      data-website-id="b18bc4a7-99f7-42c5-82ef-9b93aebb6cf5"
+      src="https://stats.backend.playsorbonne.fr/umami.js"></script>
   </head>
   <body>
     <slot />
     <style is:global>
+      @font-face {
+        font-family: "No Continue";
+        src:
+          url("/font/gomarice_no_continue.woff2") format("woff2"),
+          url("/font/gomarice_no_continue.woff") format("woff"),
+          url("/font/gomarice_no_continue.ttf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
+      
+      
+
       :root {
         --black-text: 61, 61, 111;
         --black-title: 0, 32, 51;
         --white-title: 255, 255, 255;
       }
       html {
-        background-color: #f6f6f6;
+        background-color: var(--main-bg);
         font-family: "Titillium Web", sans-serif;
         scroll-behavior: smooth;
       }

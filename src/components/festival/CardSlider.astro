@@ -1,0 +1,133 @@
+---
+import { Image } from "astro:assets";
+import Card, { type CardInfo } from "./Card.astro";
+
+type Props = {
+  cards: CardInfo[];
+  imgOnly?: boolean;
+};
+
+let { cards, imgOnly } = Astro.props;
+---
+
+<div class="main">
+  <!-- <div class="shade"></div> -->
+  <div class="wrapperC animate">
+    {
+      !imgOnly &&
+        cards.map((card) => (
+          <div class="element">
+            <Card {...card} />
+          </div>
+        ))
+    }
+    {
+      imgOnly &&
+        cards.map((card) => (
+          <div class="element">
+            <Image
+              src={card.image}
+              alt={card.titre}
+              height={200}
+              loading="eager"
+            />
+          </div>
+        ))
+    }
+  </div>
+</div>
+
+<style define:vars={{ dur: `${cards.length * 2}s` }}>
+  .wrapperC {
+    display: inline-flex;
+    overflow: hidden;
+    padding: 20px;
+    margin-top: 20px;
+  }
+
+  .animate {
+    animation-name: slide;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+    animation-duration: var(--dur);
+  }
+
+  .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  @keyframes slide {
+    0% {
+      transform: translateX(100vw);
+    }
+    100% {
+      transform: translateX(calc(-100% - 40vw));
+    }
+  }
+
+  .element {
+    margin: 0 10px;
+    /* width: 400px; */
+  }
+
+  /* @media screen and (max-width: 768px) {
+    .element {
+      width: 300px;
+    }
+  } */
+
+  .shade {
+    position: absolute;
+    z-index: 1;
+    background: rgba(0, 0, 0, 1);
+
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<script>
+  function slider() {
+    const wrappers = document.querySelectorAll<HTMLElement>(".wrapperC");
+
+    wrappers.forEach((wrapper) => {
+      wrapper.classList.remove("animate");
+      const elements = wrapper.querySelectorAll<HTMLElement>(".element");
+
+      for (let i = 0; i < 3; i++) {
+        if (wrapper.offsetWidth > window.innerWidth + 1500) break;
+        elements.forEach((element) => {
+          const clone = element.cloneNode(true);
+          wrapper.appendChild(clone);
+        });
+      }
+
+      let defaultOffset = wrapper.offsetWidth / 3;
+      let offset = -defaultOffset;
+
+      function animateSlides() {
+        offset -= 2; // Move slides to the left
+        if (
+          offset <=
+          -(wrapper.firstElementChild as HTMLElement).offsetWidth -
+            20 -
+            defaultOffset
+        ) {
+          offset = -defaultOffset;
+          wrapper.appendChild(wrapper.firstElementChild); // Move first slide to the end
+        }
+        wrapper.style.transform = `translateX(${offset}px)`;
+        requestAnimationFrame(animateSlides); // Call the animation again
+      }
+
+      animateSlides();
+    });
+  }
+
+  // BUG ouais quand tu resize la fenêtre ça va bugger
+  // addEventListener("resize", slider);
+  document.addEventListener("astro:page-load", slider);
+</script>

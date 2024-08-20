@@ -1,0 +1,77 @@
+---
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+
+export interface CardInfo {
+  titre: string;
+  description: string;
+  image: ImageMetadata;
+}
+
+type Props = CardInfo;
+
+let { image, titre, description } = Astro.props;
+---
+
+<div class="card">
+  <Image loading="eager" src={image} alt={titre} class="img" width={300}/>
+  <div class="info">
+    <h2 class="title">{titre}</h2>
+    <p class="description">{description}</p>
+  </div>
+</div>
+
+<style>
+  .img {
+    /* to background */
+    position: absolute;
+    z-index: 0;
+    width: 100%;
+    min-height: 100%;
+  }
+  .card {
+    position: relative;
+    overflow: hidden;
+    width: 400px;
+    height: 200px;
+    
+    /* background-color: rgba(255, 255, 255, 0.4); */
+  }
+
+  @media screen and (max-width: 768px) {
+    .card {
+      width: 300px;
+      height: 200px;
+    }
+  }
+
+  .info {
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(
+      0deg,
+      rgba(255,255,255, 1) 0%,
+      rgba(255,255,255, 0.8) 30%,
+      rgba(255, 255, 255, 0.1) 95%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    color: black;
+    font-weight: bolder;
+    text-transform: capitalize;
+  }
+
+  .card .info {
+    top: 70%;
+    transition: all 0.5s;
+  }
+
+  .card:hover .info {
+    transition: all 0.5s;
+    top: 0;
+  }
+</style>

@@ -1,0 +1,667 @@
+---
+// You can override --main-color --dark-color and --secondary-color
+import Footer from "@/components/global/Footer.astro";
+import HeaderL from "@/layouts/partials/HeaderL.astro";
+import { csvJSON, type ClubName } from "@/helpers";
+
+import { clubLogos } from "@/assets/logos/psu";
+import { miscIcons } from "@/assets/misc";
+import { Image } from "astro:assets";
+import Logo from "@/assets/logo_festival.png";
+import logos, { Logos } from "@/assets/logos";
+import ColorLigne from "@/components/global/ColorLigne.astro";
+import CardSlider from "@/components/festival/CardSlider.astro";
+import IconFestival from "@/components/festival/IconFestival.astro";
+import festival from "@/assets/festival";
+
+import { Button } from "@/components/markdown";
+
+import fs from "node:fs";
+
+let infos = csvJSON(
+  fs.readFileSync("./src/pages/festival/_infos.csv", "utf-8")
+);
+
+infos.forEach((info) => {
+  info.image = festival[info.type][info.img] ?? logos.psu.champsu;
+});
+
+const programme = [
+  {
+    icon: miscIcons.penRuler,
+    title: "Jeux indés",
+    desc: "Stands avec présentations et tests de Jeux Vidéos et de Société indépendants",
+  },
+  {
+    icon: miscIcons.trophy,
+    title: "Tournois",
+    desc: "Tournois Smash, Osu!, Tetris",
+  },
+  {
+    icon: miscIcons.mic,
+    title: "Conférences",
+    desc: "Conférences autour du jeu, par des chercheurs",
+  },
+  {
+    icon: miscIcons.dices,
+    title: "Jeux de rôles",
+    desc: "Initiations aux jeux de rôles",
+  },
+  {
+    icon: miscIcons.proj,
+    title: "Exposition",
+    desc: "Exposition sur le jeu et la sociologie, basée sur les travaux de Roger Caillois",
+  },
+  {
+    icon: miscIcons.tetris,
+    title: "Rétro-gaming",
+    desc: "Bornes d'arcades et consoles rétro en accès libre",
+  },
+];
+---
+
+<HeaderL
+  title={"Festival Play Sorbonne"}
+  description="Festival de jeu de Play Sorbonne Université. Le festival rassemble joueurs, développeurs, éditeurs, associations, étudiants, et tous ceux qui font vivre les jeux."
+  metaImg="/assets/festival/logo_festival.png"
+>
+  <header class="header">
+    <a href="/">
+      <Image src={clubLogos.psu} alt="" class="logo__header" height="80" />
+    </a>
+  </header>
+  <main>
+    <section class="hero" id="bg">
+      <div class="content__hero">
+        <div class="info__hero">
+          <!-- <img class="psu__hero" src=`${clubLogos.champsuOnly.src}` alt=""> -->
+          <h1 class="title title__hero redNeon">Play Sorbonne</h1>
+          <h1 class="festival__hero redNeon">FESTIVAL</h1>
+          <h2 class="subtitle__hero">Le 28 septembre 2024, 4 place Jussieu</h2>
+          <div class="buttons__hero">
+            <a href="#prog" class="button__hero">En savoir plus</a>
+            <a
+              href="https://www.helloasso.com/associations/play-sorbonne-universite/evenements/play-sorbonne-festival-2024-2"
+              target="_blank"
+              class="button__hero">S'inscrire</a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section" id="prog">
+      <div class="content">
+        <div class="info__prog">
+          <h1 class="title title__prog">Programme</h1>
+          <ColorLigne />
+          <p class="desc-fest__prog">
+            Play Sorbonne Université est le festival étudiant du jeu. Organisé
+            par des passionnés, il ambitionne de célébrer et faire découvrir la
+            culture du jeu sous toutes ses formes : jeux vidéos et jeux de
+            plateau sont réunis pour cette manifestation. Le festival rassemble
+            joueurs, développeurs, éditeurs, associations et tous ceux qui font
+            vivre les jeux. L'événement s'adresse aux pro-gamers comme aux
+            non-joueurs qui souhaitent découvrir cet univers.
+          </p>
+        </div>
+
+        <div class="content__prog">
+          {
+            programme.map(({ icon, title, desc }) => (
+              <IconFestival icon={icon} title={title} desc={desc} />
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark" id="dev">
+      <div class="content">
+        <div class="main__dev">
+          <div class="title__slide">
+            <h1 class="title title__dev">Développeurs Jeu de Plateau</h1>
+            <ColorLigne />
+          </div>
+
+          <div class="content__assoc">
+            <CardSlider cards={infos.filter((info) => info.type === "j2s")} />
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section dark" id="dev">
+      <div class="content">
+        <div class="main__dev">
+          <div class="title__slide">
+            <h1 class="title title__dev">Développeurs Jeu Vidéo</h1>
+            <ColorLigne />
+          </div>
+
+          <div class="content__assoc">
+            <CardSlider cards={infos.filter((info) => info.type === "jv")} />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark" id="assoc">
+      <div class="content">
+        <div class="main__dev">
+          <div class="title__slide">
+            <h1 class="title title__assoc">Associations</h1>
+            <ColorLigne />
+          </div>
+
+          <div class="content__assoc">
+            <CardSlider
+              cards={infos.filter((info) => info.type === "assos")}
+              imgOnly={true}
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- <section class="section dark" id="assoc">
+      <div class="content">
+        <div class="main__assoc">
+          <div class="title__slide">
+          <h1 class="title title__assoc">Évenements</h1>
+          <ColorLigne />
+          </div>
+
+          <div class="content__assoc">
+            {}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark" id="assoc">
+      <div class="">
+        <div class="main__assoc">
+          <div class="title__slide">
+            <h1 class="title title__assoc">Conférences</h1>
+            <ColorLigne />
+          </div>
+
+          <div class="content__assoc">
+            {
+              (
+                <CardSlider
+                  cards={infos}
+                />
+              )
+            }
+          </div>
+        </div>
+      </div>
+    </section> -->
+
+    <section class="section dark" id="part">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
+        <h1 class="title">Et bien plus encore !</h1>
+      </div>
+    </section>
+
+    <section class="section" id="join">
+      <div class="content">
+        <div class="info__prog">
+          <h1 class="title title__prog">Rejoignez-nous</h1>
+          <ColorLigne />
+          <p class="desc-fest__prog">
+            Vous êtes un <b>développeur indépendant</b>, une <b>association</b>,
+            un <b>éditeur</b> ou une <b>entreprise</b> ? Vous souhaitez participer
+            à l'événement ou devenir partenaire ? Remplissez le formulaire ci-dessous
+            pour nous rejoindre.
+          </p>
+        </div>
+
+        <Button
+          link="https://docs.google.com/forms/d/e/1FAIpQLSetzW4hVtLZoYg4YqSOzjeaUt7VJxWaK3gcbJPvl7MvLyrxcQ/viewform?usp=sf_link"
+          paddingTop="16px"
+        >
+          Nous rejoindre
+        </Button>
+      </div>
+    </section>
+
+    <section class="section dark" id="part">
+      <div class="content">
+        <div class="main__part">
+          <h1 class="title title__part">Nos partenaires</h1>
+          <div class="content__part">
+            {
+              Object.values(Logos.ext)
+                .reverse()
+                .map((logo) => <Image src={logo} alt={""} width="200" />)
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</HeaderL>
+
+<style>
+  :root {
+    --main-color: 232, 101, 173;
+    --secondary-color: 41, 200, 255;
+    --dark-color: 61, 61, 111;
+    --main-bg: #f6f6f6;
+  }
+
+  main {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  section {
+    width: 100%;
+  }
+
+  section .content {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .title {
+    font-size: 2rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .color_ligne {
+    width: 100%;
+  }
+
+  .header {
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    height: 100px;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    color: whitesmoke;
+    border-bottom: rgba(255, 255, 255, 0.2) 1px solid;
+    transition: top 0.3s;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero {
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(
+      190deg,
+      rgba(2, 0, 36, 1) 0%,
+      rgb(41, 13, 97) 55%,
+      #29105e 80%,
+      rgb(75, 9, 44) 100%
+    );
+  }
+
+  .content__hero {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-evenly;
+    height: 100%;
+    min-height: 100vh;
+    background: url(/assets/festival/bg_hero.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: left bottom;
+  }
+
+  .logo__hero {
+    visibility: hidden;
+  }
+
+  @media screen and ((max-width: 1260px) or (max-aspect-ratio: 12/16)) {
+    .logo__hero {
+      visibility: visible;
+      max-width: 100%;
+      width: 100%;
+    }
+    .content__hero {
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding-top: 200px;
+      background: url(/assets/festival/fondmobile.png);
+      background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    }
+  }
+
+  .buttons__hero {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    width: 100%;
+    color: white;
+  }
+
+  .button__hero {
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    background-color: rgb(var(--main-color));
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: calc(12px + 0.5vw);
+    transition: all 0.5s ease-in-out;
+  }
+
+  .button__hero:hover {
+    transform: scale(1.1);
+    filter: brightness(1.25) saturate(0.75);
+    transition: all 0.5s ease-in-out;
+  }
+
+  .info__hero {
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    align-items: center;
+    /* margin-top: calc(100vh / 4); */
+    align-self: center;
+    right: 10vw;
+  }
+
+  @media screen and ((max-width: 1260px) or (max-aspect-ratio: 12/16)) {
+    .info__hero {
+      position: static;
+    }
+    .img_container__hero {
+      width: 100%;
+      height: 100%;
+    }
+    .button__hero {
+    width: 40%;
+    }
+  }
+
+  .img_container__hero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .title__hero {
+    font-family: "No Continue", sans-serif;
+    font-weight: lighter;
+    text-transform: uppercase;
+    color: white;
+    font-size: 5.8vw;
+    letter-spacing: 2px;
+    text-align: center;
+    transform: translateY(2.5vw);
+  }
+
+  .festival__hero {
+    font-family: "No Continue", sans-serif;
+    font-weight: lighter;
+    text-transform: uppercase;
+    color: white;
+    font-size: 10vw;
+    letter-spacing: 2px;
+    text-align: center;
+  }
+  .redNeon {
+    text-shadow: 0 0 15px rgb(var(--main-color));
+  }
+
+  .subtitle__hero {
+    color: rgb(177, 225, 241);
+    font-weight: lighter;
+    font-size: 2.3vw;
+    margin-bottom: 30px;
+    font-family: "No Continue", sans-serif;
+    text-transform: uppercase;
+    text-shadow: 0 0 7px rgb(var(--secondary-color));
+    transform: translatey(-50%);
+  }
+
+  .psu__hero {
+    width: 100px;
+    height: 100px;
+  }
+
+  @media screen and ((max-width: 1260px) or (max-aspect-ratio: 12/16)) {
+    .title__hero {
+      font-size: 10vw;
+    }
+    .festival__hero {
+      font-size: 17.2vw;
+    }
+    .subtitle__hero {
+      font-size: 4.1vw;
+    }
+  }
+
+  .section {
+    /* background-color: var(--main-color); */
+    padding: 2rem;
+  }
+
+  .info__prog {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .content__prog {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  @media screen and (max-width: 768px or min-aspect-ratio: 10/16) {
+    .content__prog {
+      gap: 0;
+    }
+  }
+
+  .item__prog {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: rgba(var(--main-color), 0.5);
+    margin: 1rem;
+    padding: 0 10px;
+    border-radius: 10px;
+    transition: all 0.5s ease-in-out;
+  }
+
+  .item__prog:hover {
+    background-color: rgba(var(--main-color), 0.8);
+    transform: scale(1.1);
+    transition: all 0.5s ease-in-out;
+  }
+
+  .desc__prog {
+    font-weight: bold;
+  }
+
+  .subtitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .main__part {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .content__part {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .dark {
+    background-color: rgb(var(--dark-color));
+    color: white;
+  }
+  .title__slide {
+    max-width: 1000px;
+    width: 100%;
+  }
+  .main__assoc {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
+
+<script>
+  window.ar = function getAspectRatio() {
+    console.log(window.screen.availWidth / window.screen.availHeight);
+    console.log(window.screen.width / window.screen.height);
+    console.log("9/16", 9 / 16);
+    console.log("10/16", 10 / 16);
+    console.log("12/16", 12 / 16);
+    return window.screen.availWidth / window.screen.availHeight;
+  };
+</script>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    let prevScrollPos = window.scrollY;
+
+    window.addEventListener("scroll", function () {
+      const currentScrollPos = window.scrollY;
+
+      if (prevScrollPos > currentScrollPos || currentScrollPos < 80) {
+        document.querySelector<HTMLElement>(".header").style.top = "0";
+      } else {
+        // user has scrolled down
+        document.querySelector<HTMLElement>(".header").style.top = "-200px";
+      }
+
+      // update previous scroll position
+      prevScrollPos = currentScrollPos;
+    });
+  });
+</script>
+
+<style>
+  /* big thanks to https://codepen.io/csigel/pen/dyMbvWm */
+  [class^="smoke"] {
+    opacity: 0;
+    position: absolute;
+    width: 5%;
+    height: 5%;
+    background: linear-gradient(
+      to bottom,
+      rgba(231, 16, 16, 0.8),
+      rgba(0, 0, 0, 0)
+    );
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    filter: blur(20px);
+  }
+
+  .smoke1 {
+    animation: smoke1 4s infinite;
+  }
+  @keyframes smoke1 {
+    20% {
+      opacity: 1;
+    }
+    100% {
+      width: 10%;
+      height: 20%;
+      margin-top: -30%;
+      margin-left: -30%;
+      opacity: 0;
+    }
+  }
+  .smoke2 {
+    margin-left: 5%;
+    animation: smoke2 4s infinite;
+    animation-delay: -2s;
+  }
+  @keyframes smoke2 {
+    20% {
+      opacity: 1;
+    }
+    100% {
+      width: 15%;
+      height: 30%;
+      margin-top: -20%;
+      margin-left: -20%;
+      opacity: 0;
+    }
+  }
+  .smoke3 {
+    margin-left: 8%;
+    animation: smoke3 4s infinite;
+  }
+  @keyframes smoke3 {
+    20% {
+      opacity: 1;
+    }
+    100% {
+      width: 5%;
+      height: 35%;
+      margin-top: -20%;
+      margin-left: -25%;
+      opacity: 0;
+    }
+  }
+  .smoke4 {
+    margin-left: -5%;
+    animation: smoke4 4s infinite;
+    animation-delay: -2s;
+  }
+  @keyframes smoke4 {
+    20% {
+      opacity: 1;
+    }
+    100% {
+      width: 10%;
+      height: 10%;
+      margin-top: -10%;
+      margin-left: -20%;
+      opacity: 0;
+    }
+  }
+</style>
+
+<script>
+  const smokes = document.querySelectorAll<HTMLElement>("[class^='smoke']");
+  smokes.forEach((smoke) => {
+    setInterval(() => {
+      smoke.style.top = `${Math.floor(Math.random() * 100)}%`;
+      smoke.style.left = `${Math.floor(Math.random() * 100)}%`;
+    }, 4000);
+  });
+</script>

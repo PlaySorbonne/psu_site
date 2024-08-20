@@ -1,22 +1,11 @@
-import dlc from "./dlc.png";
-import luxludi from "./luxludi.png";
-import psu from "./psu.svg";
-import pls from "./pls.png";
-import champsu from "./champsu.png"
+import { default as psu } from "./psu";
+import { default as ext } from "./ext";
 
-export const clubLogos = {
-  dlc,
-  luxludi,
+export const Logos = {
   psu,
-  pls,
-  champsu
-} as const;
-
-/* return by default the psu logo */
-export function getClubLogo(name: string) {
-  return clubLogos[name] || psu;
-}
+  ext,
+};
 
 export default {
-  ...clubLogos,
+  ...Logos,
 };

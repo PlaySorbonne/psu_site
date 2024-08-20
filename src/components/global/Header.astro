@@ -1,5 +1,5 @@
 ---
-import { getClubLogo } from "@/assets/logos";
+import { getClubLogo } from "@/assets/logos/psu";
 import type { ClubName } from "@/helpers";
 import NavBar from "./NavBar.astro";
 import MobileNav from "./MobileNav.astro";
@@ -94,13 +94,16 @@ const psuLogo = getClubLogo("champsu");
     window.addEventListener("scroll", function () {
       // current scroll position
       const currentScrollPos = window.scrollY;
+      
+      let sticky = document.querySelector<HTMLElement>(".sticky");
+      if (!sticky) return;
 
       if (prevScrollPos > currentScrollPos && currentScrollPos > 80) {
         // user has scrolled up
-        document.querySelector<HTMLElement>(".sticky").style.top = "0";
+        sticky.style.top = "0";
       } else {
         // user has scrolled down
-        document.querySelector<HTMLElement>(".sticky").style.top = "-200px";
+        sticky.style.top = "-200px";
       }
 
       // update previous scroll position
@@ -140,7 +143,7 @@ const psuLogo = getClubLogo("champsu");
     align-items: flex-end;
     padding-right: 20px;
     height: 80px;
-    background-color: #fff;
+    background-color: var(--main-bg);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
   a {
