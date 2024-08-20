@@ -87,9 +87,6 @@ const programme = [
             >
           </div>
         </div>
-        <div class="img_container__hero">
-          <Image src={Logo} alt="" class="logo__hero" width="600" />
-        </div>
       </div>
     </section>
     <section class="section" id="prog">
@@ -306,12 +303,15 @@ const programme = [
   }
 
   .hero {
-    background: url(/assets/festival/bg_hero.png);
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: left bottom;
     width: 100%;
     min-height: 100vh;
+    background: linear-gradient(
+      190deg,
+      rgba(2, 0, 36, 1) 0%,
+      rgb(41, 13, 97) 55%,
+      #29105e 80%,
+      rgb(75, 9, 44) 100%
+    );
   }
 
   .content__hero {
@@ -320,6 +320,10 @@ const programme = [
     justify-content: space-evenly;
     height: 100%;
     min-height: 100vh;
+    background: url(/assets/festival/bg_hero.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: left bottom;
   }
 
   .logo__hero {
@@ -332,18 +336,15 @@ const programme = [
       max-width: 100%;
       width: 100%;
     }
-    .hero {
-      background: linear-gradient(
-        190deg,
-        rgba(2, 0, 36, 1) 0%,
-        rgb(41, 13, 97) 55%,
-        #29105e 80%,
-        rgb(75, 9, 44) 100%
-      );
-    }
     .content__hero {
       flex-direction: column;
-      padding-top: 130px;
+      justify-content: flex-start;
+      align-items: center;
+      padding-top: 200px;
+      background: url(/assets/festival/fondmobile.png);
+      background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-position: left bottom;
     }
   }
 
@@ -364,7 +365,7 @@ const programme = [
     text-decoration: none;
     transition: all 0.5s ease-in-out;
   }
-  
+
   .button__hero:hover {
     transform: scale(1.1);
     transition: all 0.5s ease-in-out;
@@ -418,7 +419,6 @@ const programme = [
     text-shadow: 0 0 15px rgb(var(--main-color));
   }
 
-
   .subtitle__hero {
     color: rgb(146, 228, 255);
     font-size: 2.3vw;
@@ -444,7 +444,6 @@ const programme = [
       font-size: 4.1vw;
     }
   }
-
 
   .section {
     /* background-color: var(--main-color); */
