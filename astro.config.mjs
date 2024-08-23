@@ -24,7 +24,7 @@ export default defineConfig({
         minifyURLs: true,
         removeComments: true,
       },
-    })
+    }),
   ],
   markdown: {
     remarkPlugins: [remarkDirective],
