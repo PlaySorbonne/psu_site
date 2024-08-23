@@ -13,14 +13,22 @@ import ColorLigne from "@/components/global/ColorLigne.astro";
 import CardSlider from "@/components/festival/CardSlider.astro";
 import IconFestival from "@/components/festival/IconFestival.astro";
 import festival from "@/assets/festival";
+import { parse } from 'csv-parse/sync';
+
 
 import { Button } from "@/components/markdown";
 
 import fs from "node:fs";
 
-let infos = csvJSON(
-  fs.readFileSync("./src/pages/festival/_infos.csv", "utf-8")
+
+let infos = parse(
+  fs.readFileSync("./src/pages/festival/_infos.csv", "utf-8"),
+  {
+    columns: true,
+    skip_empty_lines: true,
+  }
 );
+
 
 infos.forEach((info) => {
   info.image = festival[info.type][info.img] ?? logos.psu.champsu;
@@ -305,6 +313,7 @@ const programme = [
   .hero {
     width: 100%;
     min-height: 100vh;
+    min-height: 100dvh;
     background: linear-gradient(
       190deg,
       rgba(2, 0, 36, 1) 0%,
@@ -320,6 +329,7 @@ const programme = [
     justify-content: space-evenly;
     height: 100%;
     min-height: 100vh;
+    min-height: 100dvh;
     background: url(/assets/festival/bg_hero.png);
     background-repeat: no-repeat;
     background-size: cover;
@@ -540,17 +550,6 @@ const programme = [
     align-items: center;
   }
 </style>
-
-<script>
-  window.ar = function getAspectRatio() {
-    console.log(window.screen.availWidth / window.screen.availHeight);
-    console.log(window.screen.width / window.screen.height);
-    console.log("9/16", 9 / 16);
-    console.log("10/16", 10 / 16);
-    console.log("12/16", 12 / 16);
-    return window.screen.availWidth / window.screen.availHeight;
-  };
-</script>
 
 <script>
   document.addEventListener("astro:page-load", () => {

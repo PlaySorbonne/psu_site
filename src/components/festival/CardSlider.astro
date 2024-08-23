@@ -16,22 +16,22 @@ let { cards, imgOnly } = Astro.props;
     {
       !imgOnly &&
         cards.map((card) => (
-          <div class="element">
+          <a class="element" href={card.link} target="_blank">
             <Card {...card} />
-          </div>
+          </a>
         ))
     }
     {
       imgOnly &&
         cards.map((card) => (
-          <div class="element">
+          <a class="element" href={card.link} target="_blank">
             <Image
               src={card.image}
               alt={card.titre}
               height={200}
               loading="eager"
             />
-          </div>
+          </a>
         ))
     }
   </div>
