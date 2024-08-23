@@ -12,6 +12,13 @@ import minami_lane from "./minami_lane.png";
 import minami_lane2 from "./minami_lane2.png";
 import seccia from "./seccia.png";
 import seccia2 from "./seccia2.png";
+import ceclon from "./ceclon.jpg";
+import ceclon2 from "./ceclon2.png";
+import idoine from "./idoine.png";
+import knightica from "./knightica.png";
+import unseen from "./unseen.png";
+import whimside from "./whimside.png";
+import whimside2 from "./whimside2.png";
 
 export default {
   demon_girls,
@@ -28,4 +35,11 @@ export default {
   minami_lane2,
   seccia,
   seccia2,
+  ceclon,
+  ceclon2,
+  idoine,
+  knightica,
+  unseen,
+  whimside,
+  whimside2,
 };
