@@ -108,20 +108,33 @@ let { cards, imgOnly } = Astro.props;
       let defaultOffset = wrapper.offsetWidth / 3;
       let offset = -defaultOffset;
 
+      let animationId: number | null = null;
+      let isPaused = false;
+
       function animateSlides() {
-        offset -= 2; // Move slides to the left
-        if (
-          offset <=
-          -(wrapper.firstElementChild as HTMLElement).offsetWidth -
-            20 -
-            defaultOffset
-        ) {
-          offset = -defaultOffset;
-          wrapper.appendChild(wrapper.firstElementChild); // Move first slide to the end
+        if (!isPaused) {
+          offset -= 2; // Move slides to the left
+          if (
+            offset <=
+            -(wrapper.firstElementChild as HTMLElement).offsetWidth -
+              20 -
+              defaultOffset
+          ) {
+            offset = -defaultOffset;
+            wrapper.appendChild(wrapper.firstElementChild); // Move first slide to the end
+          }
+          wrapper.style.transform = `translateX(${offset}px)`;
         }
-        wrapper.style.transform = `translateX(${offset}px)`;
-        requestAnimationFrame(animateSlides); // Call the animation again
+        animationId = requestAnimationFrame(animateSlides);
       }
+
+      wrapper.addEventListener('mouseenter', () => {
+        isPaused = true;
+      });
+
+      wrapper.addEventListener('mouseleave', () => {
+        isPaused = false;
+      });
 
       animateSlides();
     });
