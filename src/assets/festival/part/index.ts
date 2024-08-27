@@ -8,6 +8,9 @@ import nextgaymer from './nextgaymer.png';
 import suesport from './suesport.png';
 import tvjussieu from './tvjussieu.png';
 
+import cerberus from './cerberus.jpg';
+import debord from './debord.png';
+
 export default {
   desndes,
   fbi,
@@ -17,5 +20,7 @@ export default {
   msn,
   nextgaymer,
   suesport,
-  tvjussieu
+  tvjussieu,
+  cerberus,
+  debord,
 };
