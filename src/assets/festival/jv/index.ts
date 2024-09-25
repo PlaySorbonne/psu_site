@@ -19,6 +19,13 @@ import knightica from "./knightica.png";
 import unseen from "./unseen.png";
 import whimside from "./whimside.png";
 import whimside2 from "./whimside2.png";
+import paragnosia from "./paragnosia.png";
+import lastmoon from "./lastmoon.png";
+import decorporate from "./decorporate.png";
+import cthuloot from "./cthuloot.png";
+import bloodrush from "./bloodrush.png";
+import beyoundastra from "./beyoundastra.png";
+import assass from "./assass.png";
 
 export default {
   demon_girls,
@@ -42,4 +49,11 @@ export default {
   unseen,
   whimside,
   whimside2,
+  paragnosia,
+  lastmoon,
+  decorporate,
+  bloodrush,
+  cthuloot,
+  beyoundastra,
+  assass,
 };
