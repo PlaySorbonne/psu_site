@@ -13,22 +13,16 @@ import ColorLigne from "@/components/global/ColorLigne.astro";
 import CardSlider from "@/components/festival/CardSlider.astro";
 import IconFestival from "@/components/festival/IconFestival.astro";
 import festival from "@/assets/festival";
-import { parse } from 'csv-parse/sync';
-
+import { parse } from "csv-parse/sync";
 
 import { Button } from "@/components/markdown";
 
 import fs from "node:fs";
 
-
-let infos = parse(
-  fs.readFileSync("./src/pages/festival/_infos.csv", "utf-8"),
-  {
-    columns: true,
-    skip_empty_lines: true,
-  }
-);
-
+let infos = parse(fs.readFileSync("./src/pages/festival/_infos.csv", "utf-8"), {
+  columns: true,
+  skip_empty_lines: true,
+});
 
 infos.forEach((info) => {
   info.image = festival[info.type][info.img] ?? logos.psu.champsu;
@@ -88,9 +82,7 @@ const programme = [
           <h2 class="subtitle__hero">Le 20 septembre 2025, 4 place Jussieu</h2>
           <div class="buttons__hero">
             <a href="#prog" class="button__hero">En savoir plus</a>
-            <p
-              class="button__hero">Bientôt !</p
-            >
+            <p class="button__hero">Bientôt !</p>
           </div>
         </div>
       </div>
@@ -231,22 +223,20 @@ const programme = [
         </div>
 
         <div style={{ display: "flex", justifyContent: "center" }}>
-
           <Button
             link="https://docs.google.com/forms/d/e/1FAIpQLSf34MC7ztbJcBg1dOuBzSA0W0CgTm5x2M9QRHb6GyeRYW6y2Q/viewform?usp=sharing"
-
             paddingTop="16px"
-            >
+          >
             Jeux Vidéo ou Jeux de Société
           </Button>
 
           <Button
-          link="https://docs.google.com/forms/d/e/1FAIpQLSetzW4hVtLZoYg4YqSOzjeaUt7VJxWaK3gcbJPvl7MvLyrxcQ/viewform?usp=sf_link"
-          paddingTop="16px"
+            link="https://docs.google.com/forms/d/e/1FAIpQLSfVnIJnYKNnj901jutQDvF-4KSPcFziZdxvbOesN9ub-E1aOQ/viewform?usp=dialog"
+            paddingTop="16px"
           >
-          Autres
-        </Button>
-      </div>
+            Autres
+          </Button>
+        </div>
       </div>
     </section>
 
@@ -362,8 +352,8 @@ const programme = [
       padding-top: 200px;
       background: url(/assets/festival/fondmobile.png);
       background-size: 100% auto;
-    background-repeat: no-repeat;
-    background-position: left bottom;
+      background-repeat: no-repeat;
+      background-position: left bottom;
     }
   }
 
@@ -414,7 +404,7 @@ const programme = [
       height: 100%;
     }
     .button__hero {
-    width: 40%;
+      width: 40%;
     }
   }
 
