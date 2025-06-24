@@ -2,12 +2,10 @@
 // You can override --main-color --dark-color and --secondary-color
 import Footer from "@/components/global/Footer.astro";
 import HeaderL from "@/layouts/partials/HeaderL.astro";
-import { csvJSON, type ClubName } from "@/helpers";
 
 import { clubLogos } from "@/assets/logos/psu";
 import { miscIcons } from "@/assets/misc";
 import { Image } from "astro:assets";
-import Logo from "@/assets/logo_festival.png";
 import logos, { Logos } from "@/assets/logos";
 import ColorLigne from "@/components/global/ColorLigne.astro";
 import CardSlider from "@/components/festival/CardSlider.astro";
@@ -17,7 +15,7 @@ import { parse } from "csv-parse/sync";
 
 import { Button } from "@/components/markdown";
 
-import fs from "node:fs";
+import * as fs from "node:fs";
 
 let infos = parse(fs.readFileSync("./src/pages/festival/_infos.csv", "utf-8"), {
   columns: true,
