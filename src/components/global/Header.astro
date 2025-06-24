@@ -98,12 +98,12 @@ const psuLogo = getClubLogo("champsu");
       let sticky = document.querySelector<HTMLElement>(".sticky");
       if (!sticky) return;
 
-      if (prevScrollPos > currentScrollPos && currentScrollPos > 80) {
-        // user has scrolled up
-        sticky.style.top = "0";
-      } else {
+      if (prevScrollPos < currentScrollPos && currentScrollPos > 120) {
         // user has scrolled down
         sticky.style.top = "-200px";
+      } else {
+        // user has scrolled up
+        sticky.style.top = "0";
       }
 
       // update previous scroll position
@@ -119,7 +119,7 @@ const psuLogo = getClubLogo("champsu");
 
   .sticky {
     position: fixed;
-    top: -200px;
+    top: 0px;
     width: 100%;
     z-index: 98;
     transition: top 0.3s;
