@@ -2,17 +2,72 @@
 interface Props {
   ytLink: string;
   title?: string;
+  cookieName?: string;
 }
 
-const { ytLink, title = "Youtube embed" } = Astro.props;
+const {
+  ytLink,
+  title = "Youtube embed",
+  cookieName = "youtube_consent",
+} = Astro.props;
+const embedParams = "?rel=0&modestbranding=1";
 ---
 
-<iframe
-  src=`${ytLink}?rel=0&modestbranding=1`
-  title={title}
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-  allowfullscreen
-  class="frame"></iframe>
+<div
+  class="youtube-consent"
+  id={cookieName}
+  data-yt-consent-key={cookieName}
+  data-yt-consent-link={ytLink}
+  data-yt-consent-title={title}
+  data-embed-params={embedParams}
+>
+  <div class="placeholder">
+    <p>
+      Pour visionner cette vidéo YouTube, veuillez accepter le stockage de
+      cookies.
+    </p>
+    <button id={`${cookieName}-accept`}>Accepter et charger la vidéo</button>
+  </div>
+</div>
+
+<script>
+  // Gestion des cookies simples
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+  }
+
+  document.addEventListener("astro:page-load", () => {
+    const container = document.querySelector(".youtube-consent") as HTMLElement;
+    const consentKey = container.dataset.ytConsentKey;
+    const link = container.dataset.ytConsentLink;
+    const videoTitle = container.dataset.ytConsentTitle;
+    const embedParams = container.dataset.embedParams;
+
+    function loadIframe() {
+      container.innerHTML = `
+        <iframe
+          src="${link}${embedParams}"
+          title="${videoTitle}"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          class="frame"
+        ></iframe>
+      `;
+    }
+
+    if (getCookie(consentKey) === "true") {
+      loadIframe();
+    } else {
+      const btn = document.getElementById(`${consentKey}-accept`);
+      btn.addEventListener("click", () => {
+        document.cookie = `${consentKey}=true; path=/; max-age=${60 * 60 * 24 * 365}`; // 1 an
+        loadIframe();
+      });
+    }
+  });
+</script>
 
 <style>
   .frame {
@@ -26,5 +81,31 @@ const { ytLink, title = "Youtube embed" } = Astro.props;
     .frame {
       height: calc(90vw * 9 / 16);
     }
+  }
+
+  .youtube-consent .placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+  }
+
+  .youtube-consent .placeholder p {
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .youtube-consent .placeholder button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #c4302b;
+    color: white;
+    font-size: 14px;
   }
 </style>
