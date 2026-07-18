@@ -35,7 +35,7 @@ const programme = [
   {
     icon: miscIcons.trophy,
     title: "Tournois",
-    desc: "Tournois Osu!, Tetris, Smash Bros, Mario Kart, TFT",
+    desc: "Tournois d'e-sport : Mario Kart World, SSBU, TFT, osu!…",
   },
   {
     icon: miscIcons.mic,
@@ -45,7 +45,7 @@ const programme = [
   {
     icon: miscIcons.dices,
     title: "Jeux de rôles",
-    desc: "Jeu de rôle sur scene et initiation",
+    desc: "Jeu de rôle sur scène animé par FibreTigre et mister MV, et initiations",
   },
   {
     icon: miscIcons.proj,
@@ -90,17 +90,43 @@ const programme = [
     <section class="section" id="prog">
       <div class="content">
         <div class="info__prog">
-          <h1 class="title title__prog">Programme 2025</h1>
+          <h1 class="title title__prog">Programme 2026</h1>
           <ColorLigne />
           <p class="desc-fest__prog">
-            Play Sorbonne Université est le festival étudiant du jeu. Organisé
-            par des passionnés, il ambitionne de célébrer et faire découvrir la
-            culture du jeu sous toutes ses formes : jeux vidéos et jeux de
-            plateau sont réunis pour cette manifestation. Le festival rassemble
-            joueurs, développeurs, éditeurs, associations et tous ceux qui font
-            vivre les jeux. L'événement s'adresse aux pro-gamers comme aux
-            non-joueurs qui souhaitent découvrir cet univers.
+            Le festival où rencontrer les développeurs indépendants de jeux
+            vidéos, de plateau et de société est de retour ! Play Sorbonne
+            Université est le festival étudiant du jeu. Organisé par des
+            passionnés, il ambitionne de célébrer et faire découvrir la culture
+            du ludique sous toutes ses formes. Le festival rassemble joueurs,
+            développeurs, associations et tous ceux qui font vivre le jeu.
+            L'événement s'adresse aux pro-gamers comme aux non-joueurs qui
+            souhaitent découvrir toute la diversité du jeu.
           </p>
+          <p class="desc-fest__prog">
+            Au programme : stands de développeurs indépendants, jeux en accès
+            libre, bornes d'arcade, exposition, conférences, tournois d'e-sport
+            (Mario Kart World, SSBU, TFT, osu!, etc.), concours de cosplay… et
+            même une émission animée par Mathieu Lambda ou encore un jeu de rôle
+            sur scène animé par FibreTigre et mister MV ! (attention, les places
+            pour l'actual play sont limitées à 500). L'entrée est libre sur
+            inscription.
+          </p>
+          <p class="desc-fest__prog">
+            Rendez-vous le 19 septembre 2026, de 10h à 19h, au 4 place Jussieu,
+            dans le campus Pierre et Marie Curie de Sorbonne Université !
+            (Station Jussieu, lignes M7 et M10)
+          </p>
+        </div>
+        <div class="content__prog">
+          {
+            programme.map((item) => (
+              <IconFestival
+                icon={item.icon}
+                title={item.title}
+                desc={item.desc}
+              />
+            ))
+          }
         </div>
       </div>
     </section>
@@ -109,7 +135,7 @@ const programme = [
   <section class="section dark" id="join">
     <div class="content">
       <div class="info__prog">
-        <h1 class="title title__prog">Rejoignez-nous</h1>
+        <h1 class="title title__prog">Vous présentez un jeu ?</h1>
         <ColorLigne />
         <p class="desc-fest__prog">
           Vous avez un jeu à présenter au festival ? Remplissez ce formulaire
