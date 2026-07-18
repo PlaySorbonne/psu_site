@@ -17,6 +17,16 @@ import { Button } from "@/components/markdown";
 
 import * as fs from "node:fs";
 
+import {
+  getDevs,
+  estJeuDePlateau,
+  estJeuVideo,
+  devSlug,
+  type JeuT,
+} from "@/helpers/gamedevs";
+
+// Le CSV ne contient plus que les participants (assos) ; les jeux viennent
+// de l'API gamedevs (inscriptions acceptées + affichées).
 let infos = parse(fs.readFileSync("./src/pages/festival/_infos.csv", "utf-8"), {
   columns: true,
   skip_empty_lines: true,
@@ -25,6 +35,21 @@ let infos = parse(fs.readFileSync("./src/pages/festival/_infos.csv", "utf-8"), {
 infos.forEach((info) => {
   info.image = festival[info.type][info.img] ?? logos.psu.champsu;
 });
+
+const devs = await getDevs();
+
+const jeuxCards = (filtre: (jeu: JeuT) => boolean) =>
+  devs.flatMap((dev) =>
+    dev.jeux.filter(filtre).map((jeu) => ({
+      titre: jeu.nom_jeu,
+      description: jeu.description_jeu || jeu.style_jeu || dev.nom_studio,
+      image: jeu.image_site ?? dev.logo_studio ?? logos.psu.champsu,
+      link: `/festival/devs/${devSlug(dev)}#jeu-${jeu.id}`,
+    })),
+  );
+
+const jeuxPlateau = jeuxCards(estJeuDePlateau);
+const jeuxVideo = jeuxCards(estJeuVideo);
 
 const programme = [
   {
@@ -153,35 +178,55 @@ const programme = [
     </div>
   </section>
 
-  <section class="section" id="dev">
-    <div class="content">
-      <div class="main__dev">
-        <div class="title__slide">
-          <h1 class="title title__dev">Jeux de Plateau 2024</h1>
-          <ColorLigne />
-        </div>
+  {
+    jeuxPlateau.length > 0 && (
+      <section class="section" id="dev">
+        <div class="content">
+          <div class="main__dev">
+            <div class="title__slide">
+              <h1 class="title title__dev">Jeux de Plateau 2026</h1>
+              <ColorLigne />
+            </div>
 
-        <div class="content__assoc">
-          <CardSlider cards={infos.filter((info) => info.type === "j2s")} />
+            <div class="content__assoc">
+              <CardSlider cards={jeuxPlateau} />
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
+    )
+  }
 
-  <section class="section" id="dev">
-    <div class="content">
-      <div class="main__dev">
-        <div class="title__slide">
-          <h1 class="title title__dev">Jeux Vidéo 2024</h1>
-          <ColorLigne />
-        </div>
+  {
+    jeuxVideo.length > 0 && (
+      <section class="section" id="dev">
+        <div class="content">
+          <div class="main__dev">
+            <div class="title__slide">
+              <h1 class="title title__dev">Jeux Vidéo 2026</h1>
+              <ColorLigne />
+            </div>
 
-        <div class="content__assoc">
-          <CardSlider cards={infos.filter((info) => info.type === "jv")} />
+            <div class="content__assoc">
+              <CardSlider cards={jeuxVideo} />
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
+    )
+  }
+
+  {
+    devs.length > 0 && (
+      <section class="section" id="alldevs">
+        <div class="content" style={{ display: "flex", justifyContent: "center" }}>
+          <a href="/festival/devs" class="button__hero button__hero--primary">
+            Découvrir tous les studios
+          </a>
+        </div>
+      </section>
+    )
+  }
 
   <section class="section" id="assoc">
     <div class="content">
