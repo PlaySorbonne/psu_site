@@ -79,10 +79,13 @@ const programme = [
           <h1 class="festival__hero redNeon">FESTIVAL</h1>
           <h2 class="subtitle__hero">Le 19 septembre 2026, 4 place Jussieu</h2>
           <div class="buttons__hero">
-            <a href="#prog" class="button__hero">En savoir plus</a>
-            <a href="" class="button__hero"
-              >Inscription visiteurs ouvertes bientôt!</a
+            <a href="#prog" class="button__hero button__hero--primary"
+              >En savoir plus</a
             >
+            <span class="button__hero button__hero--soon" aria-disabled="true">
+              Inscription visiteurs
+              <small class="button__hero-note">Ouverture prochaine</small>
+            </span>
           </div>
         </div>
       </div>
@@ -365,30 +368,64 @@ const programme = [
 
   .buttons__hero {
     display: flex;
-    gap: 2rem;
+    gap: 1.25rem;
     justify-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
     width: 100%;
     color: white;
   }
 
   .button__hero {
-    width: 30%;
-    display: flex;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
-    padding: 0.5rem 1rem;
-    background-color: rgb(var(--main-color));
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
+    gap: 0.5rem;
+    padding: 0.85rem 1.75rem;
+    border-radius: 999px;
+    font-weight: 800;
     text-decoration: none;
-    font-size: calc(12px + 0.5vw);
-    transition: all 0.5s ease-in-out;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: calc(11px + 0.4vw);
+    line-height: 1.2;
+    white-space: nowrap;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease,
+      background-color 0.3s ease;
   }
 
-  .button__hero:hover {
-    transform: scale(1.1);
-    filter: brightness(1.25) saturate(0.75);
-    transition: all 0.5s ease-in-out;
+  .button__hero--primary {
+    color: white;
+    background-color: rgb(var(--main-color));
+    border: 2px solid transparent;
+    box-shadow: 0 0 18px rgba(var(--main-color), 0.6);
+  }
+
+  .button__hero--primary:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 0 28px rgba(var(--main-color), 0.9);
+  }
+
+  .button__hero--soon {
+    flex-direction: column;
+    gap: 0.15rem;
+    color: rgba(255, 255, 255, 0.85);
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 2px solid rgba(var(--main-color), 0.55);
+    box-shadow: 0 0 14px rgba(var(--main-color), 0.25);
+    cursor: default;
+  }
+
+  .button__hero-note {
+    font-size: 0.7em;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: none;
+    color: rgb(var(--main-color));
+    opacity: 0.9;
   }
 
   .info__hero {
@@ -409,8 +446,12 @@ const programme = [
       width: 100%;
       height: 100%;
     }
+    .buttons__hero {
+      flex-direction: column;
+      align-items: center;
+    }
     .button__hero {
-      width: 40%;
+      white-space: normal;
     }
   }
 
