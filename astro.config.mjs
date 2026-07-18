@@ -13,6 +13,11 @@ const devMode = !!import.meta.env.PUBLIC_DEV_MODE;
 export default defineConfig({
   scopedStyleStrategy: "attribute",
   site: devMode ? "https://demo.playsorbonne.fr" : "https://playsorbonne.fr/",
+  image: {
+    // images de l'API gamedevs, optimisées au build ; localhost pour
+    // tester contre une instance gestion_gamedevs locale (GAMEDEVS_API)
+    domains: ["gamedevs.playsorbonne.fr", "localhost", "127.0.0.1"],
+  },
   integrations: [
     react(),
     mdx(),

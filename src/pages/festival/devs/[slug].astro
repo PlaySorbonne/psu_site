@@ -1,0 +1,338 @@
+---
+import Footer from "@/components/global/Footer.astro";
+import HeaderL from "@/layouts/partials/HeaderL.astro";
+import ColorLigne from "@/components/global/ColorLigne.astro";
+import Galerie from "@/components/festival/Galerie.astro";
+import { Image } from "astro:assets";
+import { clubLogos } from "@/assets/logos/psu";
+import logos from "@/assets/logos";
+import {
+  getDevs,
+  devSlug,
+  instaUrl,
+  imagesJeu,
+  type DevT,
+} from "@/helpers/gamedevs";
+
+export async function getStaticPaths() {
+  const devs = await getDevs();
+  return devs.map((dev) => ({
+    params: { slug: devSlug(dev) },
+    props: { dev },
+  }));
+}
+
+type Props = { dev: DevT };
+const { dev } = Astro.props;
+---
+
+<HeaderL
+  title={`${dev.nom_studio} — Festival Play Sorbonne`}
+  description={`${dev.nom_studio} présente ${dev.jeux.map((jeu) => jeu.nom_jeu).join(", ")} au Festival Play Sorbonne.`}
+  metaImg="/assets/festival/logo_festival.png"
+>
+  <header class="header">
+    <a href="/festival">
+      <Image src={clubLogos.psu} alt="" class="logo__header" height="80" />
+    </a>
+  </header>
+  <main>
+    <section class="banner">
+      {
+        dev.logo_studio && (
+          <Image
+            class="logo__studio"
+            src={dev.logo_studio}
+            alt=""
+            width={300}
+            inferSize
+          />
+        )
+      }
+      <h1 class="title__banner redNeon">{dev.nom_studio}</h1>
+      {
+        dev.insta && (
+          <a
+            class="insta"
+            href={instaUrl(dev.insta)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            @{dev.insta.replace(/^@/, "")}
+          </a>
+        )
+      }
+    </section>
+    <section class="section">
+      <div class="content">
+        <p class="breadcrumb">
+          <a href="/festival/devs">← Tous les studios</a>
+        </p>
+        {
+          dev.jeux.map((jeu) => (
+            <article class="jeu" id={`jeu-${jeu.id}`}>
+              <div class="image__jeu">
+                {imagesJeu(jeu).length > 0 ? (
+                  <Galerie images={imagesJeu(jeu)} alt={jeu.nom_jeu} />
+                ) : dev.logo_studio ? (
+                  <Image
+                    class="image__seule"
+                    src={dev.logo_studio}
+                    alt={jeu.nom_jeu}
+                    width={600}
+                    loading="lazy"
+                    decoding="async"
+                    inferSize
+                  />
+                ) : (
+                  <Image
+                    class="image__seule"
+                    src={logos.psu.champsu}
+                    alt=""
+                    width={600}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                )}
+              </div>
+              <div class="infos__jeu">
+                <h2 class="nom__jeu">{jeu.nom_jeu}</h2>
+                <ColorLigne />
+                <p class="badges">
+                  <span class="badge">{jeu.type_de_jeu.label}</span>
+                  {jeu.style_jeu && <span class="badge">{jeu.style_jeu}</span>}
+                </p>
+                {jeu.description_jeu && (
+                  <p class="description">{jeu.description_jeu}</p>
+                )}
+                {jeu.site_jeu && (
+                  <a
+                    class="site"
+                    href={
+                      jeu.site_jeu.startsWith("http")
+                        ? jeu.site_jeu
+                        : `https://${jeu.site_jeu}`
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Découvrir le jeu
+                  </a>
+                )}
+              </div>
+            </article>
+          ))
+        }
+        {
+          dev.jeux.length === 0 && (
+            <p class="empty">
+              Les jeux de ce studio seront bientôt annoncés !
+            </p>
+          )
+        }
+      </div>
+    </section>
+  </main>
+</HeaderL>
+<Footer />
+
+<style>
+  :root {
+    --main-color: 232, 101, 173;
+    --secondary-color: 41, 200, 255;
+    --dark-color: 61, 61, 111;
+    --main-bg: #f6f6f6;
+  }
+
+  main {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .header {
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    height: 100px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    color: whitesmoke;
+    border-bottom: rgba(255, 255, 255, 0.2) 1px solid;
+    transition: top 0.3s;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    min-height: 320px;
+    padding: 140px 2rem 2.5rem;
+    background: linear-gradient(
+      190deg,
+      rgba(2, 0, 36, 1) 0%,
+      rgb(41, 13, 97) 55%,
+      #29105e 80%,
+      rgb(75, 9, 44) 100%
+    );
+  }
+
+  .logo__studio {
+    max-height: 150px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .title__banner {
+    font-family: "No Continue", sans-serif;
+    font-weight: lighter;
+    text-transform: uppercase;
+    color: white;
+    font-size: clamp(2rem, 6vw, 4rem);
+    letter-spacing: 2px;
+    text-align: center;
+  }
+
+  .redNeon {
+    text-shadow: 0 0 15px rgb(var(--main-color));
+  }
+
+  .insta {
+    color: rgb(177, 225, 241);
+    text-shadow: 0 0 7px rgb(var(--secondary-color));
+    font-weight: bold;
+  }
+
+  .insta:hover {
+    text-decoration: underline;
+  }
+
+  .section {
+    padding: 2rem;
+  }
+
+  .content {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .breadcrumb {
+    font-weight: bold;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .jeu {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    margin: 2.5rem 0;
+    /* pour que l'ancre #jeu-<id> ne soit pas masquée par le header fixe */
+    scroll-margin-top: 120px;
+  }
+
+  .jeu:nth-child(even) {
+    flex-direction: row-reverse;
+  }
+
+  .image__jeu {
+    flex: 0 0 45%;
+  }
+
+  .image__seule {
+    width: 100%;
+    height: auto;
+    max-height: 350px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .infos__jeu {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .nom__jeu {
+    font-size: 1.8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  .badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    background-color: rgba(var(--main-color), 0.2);
+    border: 1px solid rgb(var(--main-color));
+    border-radius: 999px;
+    padding: 0.15rem 0.75rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
+  .site {
+    align-self: flex-start;
+    padding: 0.6rem 1.5rem;
+    border-radius: 5px;
+    background-color: rgb(var(--main-color));
+    color: white;
+    font-weight: 700;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .site:hover {
+    transform: scale(1.05);
+  }
+
+  .empty {
+    text-align: center;
+  }
+
+  @media screen and (max-width: 768px) {
+    .jeu,
+    .jeu:nth-child(even) {
+      flex-direction: column;
+    }
+
+    .image__jeu {
+      flex: none;
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    let prevScrollPos = window.scrollY;
+
+    window.addEventListener("scroll", function () {
+      const currentScrollPos = window.scrollY;
+      const header = document.querySelector<HTMLElement>(".header");
+      if (!header) return;
+
+      if (prevScrollPos > currentScrollPos || currentScrollPos < 80) {
+        header.style.top = "0";
+      } else {
+        header.style.top = "-200px";
+      }
+
+      prevScrollPos = currentScrollPos;
+    });
+  });
+</script>

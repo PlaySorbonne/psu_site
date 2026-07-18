@@ -5,7 +5,9 @@ import { Image } from "astro:assets";
 export interface CardInfo {
   titre: string;
   description: string;
-  image: ImageMetadata;
+  // ImageMetadata pour les assets locaux, URL (string) pour les images
+  // distantes de l'API gamedevs
+  image: ImageMetadata | string;
   link?: string;
 }
 
@@ -15,7 +17,28 @@ let { image, titre, description } = Astro.props;
 ---
 
 <div class="card">
-  <Image loading="lazy" decoding="async" src={image} alt={titre} class="img" width={300}/>
+  {
+    typeof image === "string" ? (
+      <Image
+        loading="lazy"
+        decoding="async"
+        src={image}
+        alt={titre}
+        class="img"
+        width={300}
+        inferSize
+      />
+    ) : (
+      <Image
+        loading="lazy"
+        decoding="async"
+        src={image}
+        alt={titre}
+        class="img"
+        width={300}
+      />
+    )
+  }
   <div class="info">
     <h2 class="title">{titre}</h2>
     <p class="description">{description}</p>

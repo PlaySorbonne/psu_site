@@ -1,0 +1,179 @@
+---
+import { Image } from "astro:assets";
+
+// Petite galerie d'images (scroll-snap + flèches + points), utilisée sur les
+// pages studios pour montrer tous les visuels d'un jeu venant de l'API gamedevs.
+
+type Props = {
+  images: string[];
+  alt: string;
+};
+
+const { images, alt } = Astro.props;
+---
+
+<div class="galerie">
+  <div class="rail">
+    {
+      images.map((img, i) => (
+        <div class="slide">
+          <Image
+            class="img__galerie"
+            src={img}
+            alt={`${alt} — visuel ${i + 1}`}
+            width={600}
+            loading="lazy"
+            decoding="async"
+            inferSize
+          />
+        </div>
+      ))
+    }
+  </div>
+  {
+    images.length > 1 && (
+      <>
+        <button class="fleche gauche" aria-label="Visuel précédent">
+          ‹
+        </button>
+        <button class="fleche droite" aria-label="Visuel suivant">
+          ›
+        </button>
+        <div class="points">
+          {images.map((_, i) => (
+            <button
+              class:list={["point", { actif: i === 0 }]}
+              aria-label={`Aller au visuel ${i + 1}`}
+            />
+          ))}
+        </div>
+      </>
+    )
+  }
+</div>
+
+<style>
+  .galerie {
+    position: relative;
+  }
+
+  .rail {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    scrollbar-width: none;
+  }
+
+  .rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  .slide {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+  }
+
+  .img__galerie {
+    display: block;
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+  }
+
+  .fleche {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    border-radius: 50%;
+    width: 2.2rem;
+    height: 2.2rem;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.45);
+    color: white;
+    transition: background 0.3s ease;
+  }
+
+  .fleche:hover {
+    background: rgba(0, 0, 0, 0.75);
+  }
+
+  .gauche {
+    left: 10px;
+  }
+
+  .droite {
+    right: 10px;
+  }
+
+  .points {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .point {
+    width: 0.6rem;
+    height: 0.6rem;
+    border: none;
+    border-radius: 50%;
+    padding: 0;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.5);
+    transition: background 0.3s ease;
+  }
+
+  .point.actif {
+    background: white;
+  }
+</style>
+
+<script>
+  function initGaleries() {
+    document.querySelectorAll<HTMLElement>(".galerie").forEach((galerie) => {
+      const rail = galerie.querySelector<HTMLElement>(".rail");
+      if (!rail || rail.dataset.init) return;
+      rail.dataset.init = "1";
+
+      const points = [...galerie.querySelectorAll<HTMLElement>(".point")];
+      const nbSlides = rail.children.length;
+      const indexActuel = () =>
+        Math.round(rail.scrollLeft / rail.clientWidth);
+      const versSlide = (index: number) =>
+        rail.scrollTo({ left: index * rail.clientWidth, behavior: "smooth" });
+
+      galerie
+        .querySelector(".gauche")
+        ?.addEventListener("click", () =>
+          versSlide((indexActuel() - 1 + nbSlides) % nbSlides),
+        );
+      galerie
+        .querySelector(".droite")
+        ?.addEventListener("click", () =>
+          versSlide((indexActuel() + 1) % nbSlides),
+        );
+      points.forEach((point, i) =>
+        point.addEventListener("click", () => versSlide(i)),
+      );
+      rail.addEventListener(
+        "scroll",
+        () => {
+          const actif = indexActuel();
+          points.forEach((point, i) =>
+            point.classList.toggle("actif", i === actif),
+          );
+        },
+        { passive: true },
+      );
+    });
+  }
+
+  document.addEventListener("astro:page-load", initGaleries);
+</script>
