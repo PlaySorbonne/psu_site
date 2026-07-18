@@ -7,6 +7,10 @@ on:
     branches: [ main ]
   # Allows you to run this workflow manually from the Actions tab on GitHub.
   workflow_dispatch:
+  # Rebuild régulier pour rafraîchir les données de l'API gamedevs
+  # (studios/jeux affichés sur /festival et /festival/devs)
+  schedule:
+    - cron: "0 */6 * * *"
 
 # Allow this job to clone the repo and create a page deployment
 permissions:

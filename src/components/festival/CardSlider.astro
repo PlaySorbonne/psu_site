@@ -11,6 +11,9 @@ const { cards, imgOnly } = Astro.props;
 
 const duration = `${Math.max(cards.length, 1) * 4}s`;
 
+// les liens internes (pages du site) s'ouvrent dans le même onglet
+const estExterne = (link?: string) => !!link && !link.startsWith("/");
+
 // On rend deux copies identiques : la piste défile de 0 à -50%, donc à la fin
 // la 2ᵉ copie est exactement là où était la 1ʳᵉ → boucle sans couture.
 const copies = [0, 1];
@@ -24,12 +27,23 @@ const copies = [0, 1];
           <a
             class:list={["element", { clone: copy === 1 }]}
             href={card.link}
-            target="_blank"
-            rel="noopener noreferrer"
+            target={estExterne(card.link) ? "_blank" : undefined}
+            rel={estExterne(card.link) ? "noopener noreferrer" : undefined}
             aria-hidden={copy === 1 ? "true" : undefined}
             tabindex={copy === 1 ? -1 : undefined}
           >
-            {imgOnly ? (
+            {!imgOnly ? (
+              <Card {...card} />
+            ) : typeof card.image === "string" ? (
+              <Image
+                src={card.image}
+                alt={card.titre}
+                height={200}
+                loading="lazy"
+                decoding="async"
+                inferSize
+              />
+            ) : (
               <Image
                 src={card.image}
                 alt={card.titre}
@@ -37,8 +51,6 @@ const copies = [0, 1];
                 loading="lazy"
                 decoding="async"
               />
-            ) : (
-              <Card {...card} />
             )}
           </a>
         )),
