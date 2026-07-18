@@ -7,140 +7,90 @@ type Props = {
   imgOnly?: boolean;
 };
 
-let { cards, imgOnly } = Astro.props;
+const { cards, imgOnly } = Astro.props;
+
+const duration = `${Math.max(cards.length, 1) * 4}s`;
+
+// On rend deux copies identiques : la piste défile de 0 à -50%, donc à la fin
+// la 2ᵉ copie est exactement là où était la 1ʳᵉ → boucle sans couture.
+const copies = [0, 1];
 ---
 
-<div class="main">
-  <!-- <div class="shade"></div> -->
-  <div class="wrapperC animate">
+<div class="marquee">
+  <div class="track" style={{ "--duration": duration }}>
     {
-      !imgOnly &&
+      copies.map((copy) =>
         cards.map((card) => (
-          <a class="element" href={card.link} target="_blank">
-            <Card {...card} />
+          <a
+            class:list={["element", { clone: copy === 1 }]}
+            href={card.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-hidden={copy === 1 ? "true" : undefined}
+            tabindex={copy === 1 ? -1 : undefined}
+          >
+            {imgOnly ? (
+              <Image
+                src={card.image}
+                alt={card.titre}
+                height={200}
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <Card {...card} />
+            )}
           </a>
-        ))
-    }
-    {
-      imgOnly &&
-        cards.map((card) => (
-          <a class="element" href={card.link} target="_blank">
-            <Image
-              src={card.image}
-              alt={card.titre}
-              height={200}
-              loading="eager"
-            />
-          </a>
-        ))
+        )),
+      )
     }
   </div>
 </div>
 
-<style define:vars={{ dur: `${cards.length * 2}s` }}>
-  .wrapperC {
-    display: inline-flex;
+<style>
+  .marquee {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
     overflow: hidden;
-    padding: 20px;
-    margin-top: 20px;
   }
 
-  .animate {
-    animation-name: slide;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    animation-direction: normal;
-    animation-duration: var(--dur);
-  }
-
-  .center {
+  .track {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    width: max-content;
+    padding: 20px 0;
+    animation: scroll var(--duration) linear infinite;
   }
 
-  @keyframes slide {
-    0% {
-      transform: translateX(100vw);
-    }
-    100% {
-      transform: translateX(calc(-100% - 40vw));
-    }
+  /* Pause au survol. */
+  .marquee:hover .track {
+    animation-play-state: paused;
   }
 
   .element {
+    flex: 0 0 auto;
     margin: 0 10px;
-    /* width: 400px; */
   }
 
-  /* @media screen and (max-width: 768px) {
-    .element {
-      width: 300px;
+  @keyframes scroll {
+    from {
+      transform: translateX(0);
     }
-  } */
+    to {
+      transform: translateX(-50%);
+    }
+  }
 
-  .shade {
-    position: absolute;
-    z-index: 1;
-    background: rgba(0, 0, 0, 1);
-
-    width: 100%;
-    height: 100%;
+  /* Accessibilité */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee {
+      overflow-x: auto;
+    }
+    .track {
+      animation: none;
+      width: auto;
+    }
+    .clone {
+      display: none;
+    }
   }
 </style>
-
-<script>
-  function slider() {
-    const wrappers = document.querySelectorAll<HTMLElement>(".wrapperC");
-
-    wrappers.forEach((wrapper) => {
-      wrapper.classList.remove("animate");
-      const elements = wrapper.querySelectorAll<HTMLElement>(".element");
-
-      for (let i = 0; i < 3; i++) {
-        if (wrapper.offsetWidth > window.innerWidth + 1500) break;
-        elements.forEach((element) => {
-          const clone = element.cloneNode(true);
-          wrapper.appendChild(clone);
-        });
-      }
-
-      let defaultOffset = wrapper.offsetWidth / 3;
-      let offset = -defaultOffset;
-
-      let animationId: number | null = null;
-      let isPaused = false;
-
-      function animateSlides() {
-        if (!isPaused) {
-          offset -= 2; // Move slides to the left
-          if (
-            offset <=
-            -(wrapper.firstElementChild as HTMLElement).offsetWidth -
-              20 -
-              defaultOffset
-          ) {
-            offset = -defaultOffset;
-            wrapper.appendChild(wrapper.firstElementChild); // Move first slide to the end
-          }
-          wrapper.style.transform = `translateX(${offset}px)`;
-        }
-        animationId = requestAnimationFrame(animateSlides);
-      }
-
-      wrapper.addEventListener('mouseenter', () => {
-        isPaused = true;
-      });
-
-      wrapper.addEventListener('mouseleave', () => {
-        isPaused = false;
-      });
-
-      animateSlides();
-    });
-  }
-
-  // BUG ouais quand tu resize la fenêtre ça va bugger
-  // addEventListener("resize", slider);
-  document.addEventListener("astro:page-load", slider);
-</script>
