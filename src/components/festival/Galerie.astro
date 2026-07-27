@@ -2,7 +2,9 @@
 import { Image } from "astro:assets";
 
 // Petite galerie d'images (scroll-snap + flèches + points), utilisée sur les
-// pages studios pour montrer tous les visuels d'un jeu venant de l'API gamedevs.
+// pages studios pour montrer tous les visuels d'un jeu venant de l'API
+// gamedevs. Un clic sur un visuel ouvre un diaporama plein écran (<dialog>),
+// navigable aux flèches, au clavier, et au doigt (scroll-snap) sur mobile.
 
 type Props = {
   images: string[];
@@ -13,47 +15,90 @@ const { images, alt } = Astro.props;
 ---
 
 <div class="galerie">
-  <div class="rail">
+  <div class="vue">
+    <div class="rail">
+      {
+        images.map((img, i) => (
+          <div class="slide">
+            <button class="zoom" aria-label={`Agrandir le visuel ${i + 1}`}>
+              <Image
+                class="img__galerie"
+                src={img}
+                alt={`${alt} — visuel ${i + 1}`}
+                width={600}
+                loading="lazy"
+                decoding="async"
+                inferSize
+              />
+            </button>
+          </div>
+        ))
+      }
+    </div>
     {
-      images.map((img, i) => (
-        <div class="slide">
-          <Image
-            class="img__galerie"
-            src={img}
-            alt={`${alt} — visuel ${i + 1}`}
-            width={600}
-            loading="lazy"
-            decoding="async"
-            inferSize
-          />
-        </div>
-      ))
+      images.length > 1 && (
+        <>
+          <button class="fleche gauche" aria-label="Visuel précédent">
+            ‹
+          </button>
+          <button class="fleche droite" aria-label="Visuel suivant">
+            ›
+          </button>
+          <div class="points">
+            {images.map((_, i) => (
+              <button
+                class:list={["point", { actif: i === 0 }]}
+                aria-label={`Aller au visuel ${i + 1}`}
+              />
+            ))}
+          </div>
+        </>
+      )
     }
   </div>
-  {
-    images.length > 1 && (
-      <>
-        <button class="fleche gauche" aria-label="Visuel précédent">
-          ‹
-        </button>
-        <button class="fleche droite" aria-label="Visuel suivant">
-          ›
-        </button>
-        <div class="points">
-          {images.map((_, i) => (
-            <button
-              class:list={["point", { actif: i === 0 }]}
-              aria-label={`Aller au visuel ${i + 1}`}
-            />
-          ))}
-        </div>
-      </>
-    )
-  }
+  <dialog class="lightbox" aria-label={`Visuels de ${alt} en plein écran`}>
+    <button class="fermer" aria-label="Fermer le diaporama">×</button>
+    <div class="vue vue__lightbox">
+      <div class="rail">
+        {
+          images.map((img, i) => (
+            <div class="slide">
+              <Image
+                class="img__lightbox"
+                src={img}
+                alt={`${alt} — visuel ${i + 1}`}
+                width={1200}
+                loading="lazy"
+                decoding="async"
+                inferSize
+              />
+            </div>
+          ))
+        }
+      </div>
+      {
+        images.length > 1 && (
+          <>
+            <button class="fleche gauche" aria-label="Visuel précédent">
+              ‹
+            </button>
+            <button class="fleche droite" aria-label="Visuel suivant">
+              ›
+            </button>
+          </>
+        )
+      }
+    </div>
+  </dialog>
 </div>
 
 <style>
-  .galerie {
+  /* bloque le défilement de la page derrière le diaporama ouvert */
+  :global(html:has(dialog[open])) {
+    overflow: hidden;
+  }
+
+  .vue {
     position: relative;
   }
 
@@ -61,9 +106,14 @@ const { images, alt } = Astro.props;
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .vue:not(.vue__lightbox) .rail {
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    scrollbar-width: none;
+    /* fond des bandes laissées par object-fit: contain */
+    background: rgba(0, 0, 0, 0.05);
   }
 
   .rail::-webkit-scrollbar {
@@ -75,11 +125,20 @@ const { images, alt } = Astro.props;
     scroll-snap-align: center;
   }
 
+  .zoom {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: zoom-in;
+  }
+
   .img__galerie {
     display: block;
     width: 100%;
-    height: 350px;
-    object-fit: cover;
+    height: 400px;
+    object-fit: contain;
   }
 
   .fleche {
@@ -133,45 +192,146 @@ const { images, alt } = Astro.props;
   .point.actif {
     background: white;
   }
+
+  /* --- diaporama plein écran --- */
+
+  .lightbox {
+    border: none;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    max-height: 100vh;
+    max-height: 100dvh;
+    background: rgb(10, 8, 30);
+  }
+
+  .lightbox::backdrop {
+    background: rgba(0, 0, 0, 0.85);
+  }
+
+  .vue__lightbox .rail,
+  .vue__lightbox .slide {
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  .vue__lightbox .slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* le clic sur les bandes autour de l'image ferme le diaporama */
+    cursor: zoom-out;
+  }
+
+  .img__lightbox {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    cursor: default;
+  }
+
+  .vue__lightbox .fleche {
+    width: 3rem;
+    height: 3rem;
+    font-size: 2rem;
+  }
+
+  .fermer {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2;
+    border: none;
+    border-radius: 50%;
+    width: 2.8rem;
+    height: 2.8rem;
+    font-size: 1.8rem;
+    line-height: 1;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.45);
+    color: white;
+    transition: background 0.3s ease;
+  }
+
+  .fermer:hover {
+    background: rgba(0, 0, 0, 0.75);
+  }
 </style>
 
 <script>
+  // branche les flèches / points d'une vue (galerie ou lightbox) sur son rail
+  function brancheRail(vue: HTMLElement) {
+    const rail = vue.querySelector<HTMLElement>(".rail")!;
+    const nbSlides = rail.children.length;
+    const points = [...vue.querySelectorAll<HTMLElement>(".point")];
+    const indexActuel = () => Math.round(rail.scrollLeft / rail.clientWidth);
+    const versSlide = (index: number) =>
+      rail.scrollTo({
+        left: ((index + nbSlides) % nbSlides) * rail.clientWidth,
+        behavior: "smooth",
+      });
+
+    vue
+      .querySelector(".gauche")
+      ?.addEventListener("click", () => versSlide(indexActuel() - 1));
+    vue
+      .querySelector(".droite")
+      ?.addEventListener("click", () => versSlide(indexActuel() + 1));
+    points.forEach((point, i) =>
+      point.addEventListener("click", () => versSlide(i)),
+    );
+    rail.addEventListener(
+      "scroll",
+      () => {
+        const actif = indexActuel();
+        points.forEach((point, i) =>
+          point.classList.toggle("actif", i === actif),
+        );
+      },
+      { passive: true },
+    );
+    return { rail, versSlide, indexActuel };
+  }
+
   function initGaleries() {
     document.querySelectorAll<HTMLElement>(".galerie").forEach((galerie) => {
-      const rail = galerie.querySelector<HTMLElement>(".rail");
-      if (!rail || rail.dataset.init) return;
-      rail.dataset.init = "1";
+      if (galerie.dataset.init) return;
+      galerie.dataset.init = "1";
 
-      const points = [...galerie.querySelectorAll<HTMLElement>(".point")];
-      const nbSlides = rail.children.length;
-      const indexActuel = () =>
-        Math.round(rail.scrollLeft / rail.clientWidth);
-      const versSlide = (index: number) =>
-        rail.scrollTo({ left: index * rail.clientWidth, behavior: "smooth" });
+      const [vueGalerie, vueLightbox] = [
+        ...galerie.querySelectorAll<HTMLElement>(".vue"),
+      ];
+      brancheRail(vueGalerie);
 
-      galerie
-        .querySelector(".gauche")
-        ?.addEventListener("click", () =>
-          versSlide((indexActuel() - 1 + nbSlides) % nbSlides),
-        );
-      galerie
-        .querySelector(".droite")
-        ?.addEventListener("click", () =>
-          versSlide((indexActuel() + 1) % nbSlides),
-        );
-      points.forEach((point, i) =>
-        point.addEventListener("click", () => versSlide(i)),
+      const lightbox = galerie.querySelector<HTMLDialogElement>(".lightbox");
+      if (!lightbox || !vueLightbox) return;
+      const lb = brancheRail(vueLightbox);
+
+      galerie.querySelectorAll<HTMLElement>(".zoom").forEach((bouton, i) =>
+        bouton.addEventListener("click", () => {
+          lightbox.showModal();
+          // après le rendu du dialog, se placer sur le visuel cliqué
+          requestAnimationFrame(() => {
+            lb.rail.scrollLeft = i * lb.rail.clientWidth;
+          });
+        }),
       );
-      rail.addEventListener(
-        "scroll",
-        () => {
-          const actif = indexActuel();
-          points.forEach((point, i) =>
-            point.classList.toggle("actif", i === actif),
-          );
-        },
-        { passive: true },
-      );
+
+      lightbox
+        .querySelector(".fermer")
+        ?.addEventListener("click", () => lightbox.close());
+      // clic sur les bandes autour de l'image (pas sur l'image) : on ferme
+      lightbox.addEventListener("click", (e) => {
+        if ((e.target as HTMLElement).classList.contains("slide"))
+          lightbox.close();
+      });
+      lightbox.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft") lb.versSlide(lb.indexActuel() - 1);
+        if (e.key === "ArrowRight") lb.versSlide(lb.indexActuel() + 1);
+      });
     });
   }
 

@@ -5,11 +5,11 @@ import ColorLigne from "@/components/global/ColorLigne.astro";
 import Galerie from "@/components/festival/Galerie.astro";
 import { Image } from "astro:assets";
 import { clubLogos } from "@/assets/logos/psu";
-import logos from "@/assets/logos";
 import {
   getDevs,
   devSlug,
-  instaUrl,
+  lienInsta,
+  lienJeu,
   imagesJeu,
   type DevT,
 } from "@/helpers/gamedevs";
@@ -24,6 +24,7 @@ export async function getStaticPaths() {
 
 type Props = { dev: DevT };
 const { dev } = Astro.props;
+const insta = lienInsta(dev.insta);
 ---
 
 <HeaderL
@@ -51,14 +52,14 @@ const { dev } = Astro.props;
       }
       <h1 class="title__banner redNeon">{dev.nom_studio}</h1>
       {
-        dev.insta && (
+        insta && (
           <a
             class="insta"
-            href={instaUrl(dev.insta)}
+            href={insta.url}
             target="_blank"
             rel="noopener noreferrer"
           >
-            @{dev.insta.replace(/^@/, "")}
+            {insta.label}
           </a>
         )
       }
@@ -71,52 +72,29 @@ const { dev } = Astro.props;
         {
           dev.jeux.map((jeu) => (
             <article class="jeu" id={`jeu-${jeu.id}`}>
-              <div class="image__jeu">
-                {imagesJeu(jeu).length > 0 ? (
+              {imagesJeu(jeu).length > 0 && (
+                <div class="image__jeu">
                   <Galerie images={imagesJeu(jeu)} alt={jeu.nom_jeu} />
-                ) : dev.logo_studio ? (
-                  <Image
-                    class="image__seule"
-                    src={dev.logo_studio}
-                    alt={jeu.nom_jeu}
-                    width={600}
-                    loading="lazy"
-                    decoding="async"
-                    inferSize
-                  />
-                ) : (
-                  <Image
-                    class="image__seule"
-                    src={logos.psu.champsu}
-                    alt=""
-                    width={600}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                )}
-              </div>
+                </div>
+              )}
               <div class="infos__jeu">
                 <h2 class="nom__jeu">{jeu.nom_jeu}</h2>
                 <ColorLigne />
                 <p class="badges">
                   <span class="badge">{jeu.type_de_jeu.label}</span>
-                  {jeu.style_jeu && <span class="badge">{jeu.style_jeu}</span>}
                 </p>
+                {jeu.style_jeu && <p class="style__jeu">{jeu.style_jeu}</p>}
                 {jeu.description_jeu && (
                   <p class="description">{jeu.description_jeu}</p>
                 )}
-                {jeu.site_jeu && (
+                {lienJeu(jeu, dev) && (
                   <a
                     class="site"
-                    href={
-                      jeu.site_jeu.startsWith("http")
-                        ? jeu.site_jeu
-                        : `https://${jeu.site_jeu}`
-                    }
+                    href={lienJeu(jeu, dev)}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Découvrir le jeu
+                    En savoir plus
                   </a>
                 )}
               </div>
@@ -144,9 +122,17 @@ const { dev } = Astro.props;
     --main-bg: #f6f6f6;
   }
 
+  /* footer collé en bas même quand la page est plus courte que l'écran */
+  :global(body) {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
   main {
     width: 100%;
     overflow-x: hidden;
+    flex: 1;
   }
 
   .header {
@@ -246,16 +232,8 @@ const { dev } = Astro.props;
   }
 
   .image__jeu {
-    flex: 0 0 45%;
-  }
-
-  .image__seule {
-    width: 100%;
-    height: auto;
-    max-height: 350px;
-    object-fit: cover;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    flex: 0 0 55%;
+    min-width: 0;
   }
 
   .infos__jeu {
@@ -284,6 +262,11 @@ const { dev } = Astro.props;
     padding: 0.15rem 0.75rem;
     font-size: 0.9rem;
     font-weight: bold;
+  }
+
+  .style__jeu {
+    font-style: italic;
+    color: rgba(var(--black-text), 0.85);
   }
 
   .site {

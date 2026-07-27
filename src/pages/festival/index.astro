@@ -22,6 +22,7 @@ import {
   estJeuDePlateau,
   estJeuVideo,
   devSlug,
+  imagesJeu,
   type JeuT,
 } from "@/helpers/gamedevs";
 
@@ -43,7 +44,9 @@ const jeuxCards = (filtre: (jeu: JeuT) => boolean) =>
     dev.jeux.filter(filtre).map((jeu) => ({
       titre: jeu.nom_jeu,
       description: jeu.description_jeu || jeu.style_jeu || dev.nom_studio,
-      image: jeu.image_site ?? dev.logo_studio ?? logos.psu.champsu,
+      // image de référence du jeu, sinon n'importe quelle autre image du
+      // jeu, sinon le logo du studio (imagesJeu écarte aussi les non-images)
+      image: imagesJeu(jeu)[0] ?? dev.logo_studio ?? logos.psu.champsu,
       link: `/festival/devs/${devSlug(dev)}#jeu-${jeu.id}`,
     })),
   );
@@ -188,7 +191,10 @@ const programme = [
         <div class="content">
           <div class="main__dev">
             <div class="title__slide">
-              <h1 class="title title__dev">Jeux de Plateau 2026</h1>
+              <div class="titre__ligne">
+                <h1 class="title title__dev">Jeux de Plateau</h1>
+                <a class="voir__tout" href="/festival/devs">Voir tout →</a>
+              </div>
               <ColorLigne />
             </div>
 
@@ -207,7 +213,10 @@ const programme = [
         <div class="content">
           <div class="main__dev">
             <div class="title__slide">
-              <h1 class="title title__dev">Jeux Vidéo 2026</h1>
+              <div class="titre__ligne">
+                <h1 class="title title__dev">Jeux Vidéo</h1>
+                <a class="voir__tout" href="/festival/devs">Voir tout →</a>
+              </div>
               <ColorLigne />
             </div>
 
@@ -220,23 +229,11 @@ const programme = [
     )
   }
 
-  {
-    devs.length > 0 && (
-      <section class="section" id="alldevs">
-        <div class="content" style={{ display: "flex", justifyContent: "center" }}>
-          <a href="/festival/devs" class="button__hero button__hero--primary">
-            Découvrir tous les studios
-          </a>
-        </div>
-      </section>
-    )
-  }
-
   <section class="section" id="assoc">
     <div class="content">
       <div class="main__dev">
         <div class="title__slide">
-          <h1 class="title title__assoc">Participants 2024</h1>
+          <h1 class="title title__assoc">Participants</h1>
           <ColorLigne />
         </div>
 
@@ -618,6 +615,24 @@ const programme = [
   .title__slide {
     max-width: 1000px;
     width: 100%;
+  }
+
+  .titre__ligne {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .voir__tout {
+    font-weight: bold;
+    white-space: nowrap;
+    color: rgb(var(--main-color));
+  }
+
+  .voir__tout:hover {
+    text-decoration: underline;
   }
   .main__assoc {
     display: flex;
