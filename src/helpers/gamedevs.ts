@@ -59,19 +59,20 @@ export const estJeuDePlateau = (jeu: JeuT) =>
 export const estJeuVideo = (jeu: JeuT) =>
   jeu.type_de_jeu.code === "2" || jeu.type_de_jeu.code === "3";
 
-// visuels_jeu peut être une vidéo : on l'écarte des galeries d'images
-const EXTENSIONS_VIDEO = [".mp4", ".webm", ".mov", ".avi", ".mkv"];
-export const estVideo = (url: string) =>
-  EXTENSIONS_VIDEO.some((ext) => url.toLowerCase().endsWith(ext));
+// visuels_jeu peut être une vidéo ou un PDF : on ne garde que les formats
+// d'image, tout autre fichier fait échouer l'optimisation d'images d'Astro
+const EXTENSIONS_IMAGE = [".png", ".jpg", ".jpeg", ".webp", ".gif", ".avif", ".svg"];
+export const estImage = (url: string) =>
+  EXTENSIONS_IMAGE.some((ext) => url.toLowerCase().endsWith(ext));
 
 /*
  * Toutes les images d'un jeu (l'image de référence en premier),
- * sans doublons ni vidéos.
+ * sans doublons ni fichiers non-image.
  */
 export function imagesJeu(jeu: JeuT): string[] {
   const urls = [jeu.image_site, jeu.logo_jeu, jeu.visuels_jeu, jeu.mascotte_jeu];
   return [
-    ...new Set(urls.filter((url): url is string => !!url && !estVideo(url))),
+    ...new Set(urls.filter((url): url is string => !!url && estImage(url))),
   ];
 }
 
