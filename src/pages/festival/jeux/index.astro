@@ -8,21 +8,35 @@ import logos from "@/assets/logos";
 import {
   getDevs,
   devSlug,
+  imagesJeu,
   imageStudio,
   estJeuDePlateau,
   estJeuVideo,
 } from "@/helpers/gamedevs";
 
-const devs = (await getDevs()).sort((a, b) =>
-  a.nom_studio
-    .trim()
-    .localeCompare(b.nom_studio.trim(), "fr", { sensitivity: "base" }),
-);
+const devs = await getDevs();
+
+// même liste que la vue par studios, mais à plat : une carte par jeu
+const jeux = devs
+  .flatMap((dev) =>
+    dev.jeux.map((jeu) => ({
+      jeu,
+      dev,
+      // image de référence du jeu, sinon celle du studio
+      image: imagesJeu(jeu)[0] ?? imageStudio(dev),
+      link: `/festival/devs/${devSlug(dev)}#jeu-${jeu.id}`,
+    })),
+  )
+  .sort((a, b) =>
+    a.jeu.nom_jeu
+      .trim()
+      .localeCompare(b.jeu.nom_jeu.trim(), "fr", { sensitivity: "base" }),
+  );
 ---
 
 <HeaderL
-  title="Les studios du Festival Play Sorbonne"
-  description="Tous les développeurs et créateurs indépendants présents au Festival Play Sorbonne, et leurs jeux."
+  title="Les jeux du Festival Play Sorbonne"
+  description="Tous les jeux vidéo et jeux de plateau indépendants présentés au Festival Play Sorbonne."
   metaImg="/assets/festival/logo_festival.png"
 >
   <header class="header">
@@ -32,9 +46,10 @@ const devs = (await getDevs()).sort((a, b) =>
   </header>
   <main>
     <section class="banner">
-      <h1 class="title__banner redNeon">Les studios</h1>
+      <h1 class="title__banner redNeon">Les jeux</h1>
       <p class="subtitle__banner">
-        Développeurs et créateurs indépendants du Festival Play Sorbonne 2026
+        Jeux vidéo et jeux de plateau indépendants du Festival Play Sorbonne
+        2026
       </p>
     </section>
     <section class="section">
@@ -43,17 +58,13 @@ const devs = (await getDevs()).sort((a, b) =>
           <a href="/festival">← Retour au festival</a>
         </p>
         <div class="title__list">
-          <h2 class="title">Ils présentent leurs jeux au festival</h2>
+          <h2 class="title">Les jeux présentés au festival</h2>
           <ColorLigne />
         </div>
         {
-          devs.length > 0 && (
+          jeux.length > 0 && (
             <div class="barre">
-              <div
-                class="filtres"
-                role="group"
-                aria-label="Filtrer les studios"
-              >
+              <div class="filtres" role="group" aria-label="Filtrer les jeux">
                 <button class="filtre actif" data-filtre="tous">
                   Tous
                 </button>
@@ -65,10 +76,10 @@ const devs = (await getDevs()).sort((a, b) =>
                 </button>
               </div>
               <div class="vues" role="group" aria-label="Changer de vue">
-                <a class="vue actif" href="/festival/devs" aria-current="page">
+                <a class="vue" href="/festival/devs">
                   Par studios
                 </a>
-                <a class="vue" href="/festival/jeux">
+                <a class="vue actif" href="/festival/jeux" aria-current="page">
                   Par jeux
                 </a>
               </div>
@@ -76,28 +87,28 @@ const devs = (await getDevs()).sort((a, b) =>
           )
         }
         {
-          devs.length === 0 && (
+          jeux.length === 0 && (
             <p class="empty">
-              Les studios de cette édition seront bientôt annoncés, revenez un
-              peu plus tard !
+              Les jeux de cette édition seront bientôt annoncés, revenez un peu
+              plus tard !
             </p>
           )
         }
         <div class="grid">
           {
-            devs.map((dev) => (
+            jeux.map(({ jeu, dev, image, link }) => (
               <a
-                class="studio"
-                href={`/festival/devs/${devSlug(dev)}`}
-                data-plateau={dev.jeux.some(estJeuDePlateau) ? "1" : undefined}
-                data-video={dev.jeux.some(estJeuVideo) ? "1" : undefined}
+                class="carte"
+                href={link}
+                data-plateau={estJeuDePlateau(jeu) ? "1" : undefined}
+                data-video={estJeuVideo(jeu) ? "1" : undefined}
               >
                 <div class="logo__wrapper">
-                  {imageStudio(dev) ? (
+                  {image ? (
                     <Image
                       class="logo"
-                      src={imageStudio(dev)!}
-                      alt={dev.nom_studio}
+                      src={image}
+                      alt={jeu.nom_jeu}
                       width={400}
                       loading="lazy"
                       decoding="async"
@@ -115,12 +126,11 @@ const devs = (await getDevs()).sort((a, b) =>
                   )}
                 </div>
                 <div class="infos">
-                  <h3 class="nom">{dev.nom_studio}</h3>
-                  {dev.jeux.length > 0 && (
-                    <p class="jeux">
-                      {dev.jeux.map((jeu) => jeu.nom_jeu).join(" · ")}
-                    </p>
-                  )}
+                  <h3 class="nom">{jeu.nom_jeu}</h3>
+                  <p class="studio__nom">{dev.nom_studio}</p>
+                  <p class="badges">
+                    <span class="badge">{jeu.type_de_jeu.label}</span>
+                  </p>
                 </div>
               </a>
             ))
@@ -313,11 +323,11 @@ const devs = (await getDevs()).sort((a, b) =>
     gap: 1.5rem;
   }
 
-  .studio.cache {
+  .carte.cache {
     display: none;
   }
 
-  .studio {
+  .carte {
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -327,7 +337,7 @@ const devs = (await getDevs()).sort((a, b) =>
     transition: all 0.5s ease-in-out;
   }
 
-  .studio:hover {
+  .carte:hover {
     transform: scale(1.03);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   }
@@ -346,6 +356,9 @@ const devs = (await getDevs()).sort((a, b) =>
 
   .infos {
     padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
   }
 
   .nom {
@@ -354,9 +367,24 @@ const devs = (await getDevs()).sort((a, b) =>
     text-transform: uppercase;
   }
 
-  .jeux {
+  .studio__nom {
     color: rgba(var(--black-text), 0.8);
     text-align: left;
+  }
+
+  .badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    background-color: rgba(var(--main-color), 0.2);
+    border: 1px solid rgb(var(--main-color));
+    border-radius: 999px;
+    padding: 0.15rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: bold;
   }
 </style>
 
@@ -364,15 +392,15 @@ const devs = (await getDevs()).sort((a, b) =>
   document.addEventListener("astro:page-load", () => {
     // filtre jeux de plateau / jeux vidéo (data-plateau / data-video des cartes)
     const boutons = document.querySelectorAll<HTMLElement>(".filtre");
-    const studios = document.querySelectorAll<HTMLElement>(".studio");
+    const cartes = document.querySelectorAll<HTMLElement>(".carte");
     boutons.forEach((bouton) =>
       bouton.addEventListener("click", () => {
         boutons.forEach((b) => b.classList.toggle("actif", b === bouton));
         const filtre = bouton.dataset.filtre!;
-        studios.forEach((studio) =>
-          studio.classList.toggle(
+        cartes.forEach((carte) =>
+          carte.classList.toggle(
             "cache",
-            filtre !== "tous" && !studio.dataset[filtre],
+            filtre !== "tous" && !carte.dataset[filtre],
           ),
         );
       }),
