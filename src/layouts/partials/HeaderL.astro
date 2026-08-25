@@ -1,6 +1,6 @@
 ---
-import { ViewTransitions } from "astro:transitions";
-import { SEOMetadata } from "astro-seo-metadata";
+import { ClientRouter } from "astro:transitions";
+import { SEO } from "astro-seo";
 
 interface Props {
   title: string; // title de la page
@@ -11,28 +11,48 @@ interface Props {
 }
 
 const { title, description, metaImg, favicon, prefetchs } = Astro.props;
+
+// og:image doit être une URL absolue ; à défaut d'image on retombe sur le favicon
+const ogImage = new URL(
+  metaImg ?? favicon ?? "/favicon.ico",
+  Astro.site
+).toString();
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <ViewTransitions />
+    <ClientRouter />
 
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>{title}</title>
 
-    <SEOMetadata
-      siteName="Play Sorbonne"
+    <SEO
       title={title}
       description={description}
-      image={metaImg}
-      favicon={favicon ?? "/favicon.ico"}
-      author={"Play Sorbonne Université"}
-      astroSitemap={true}
-      astroGenerator={true}
-      canonicalUrl={Astro.url.toString()}
-      type="website"
+      canonical={Astro.url.toString()}
+      openGraph={{
+        basic: {
+          title: title,
+          type: "website",
+          image: ogImage,
+          url: Astro.url.toString(),
+        },
+        optional: {
+          siteName: "Play Sorbonne",
+          description: description,
+        },
+      }}
+      extend={{
+        link: [
+          { rel: "icon", href: favicon ?? "/favicon.ico" },
+          { rel: "sitemap", href: "/sitemap-index.xml" },
+        ],
+        meta: [
+          { name: "author", content: "Play Sorbonne Université" },
+          { name: "generator", content: Astro.generator },
+        ],
+      }}
     />
 
     <meta name="twitter:site" content="@PlaySorbonneU" />

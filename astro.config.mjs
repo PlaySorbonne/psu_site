@@ -2,7 +2,7 @@ import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 import compress from "astro-compress";
 import mdx from "@astrojs/mdx";
-import remarkDirective from "remark-directive";
+import { unified } from "@astrojs/markdown-remark";
 import { externalLink } from "./src/plugins";
 
 import sitemap from "@astrojs/sitemap";
@@ -12,6 +12,7 @@ const devMode = !!import.meta.env.PUBLIC_DEV_MODE;
 // https://astro.build/config
 export default defineConfig({
   scopedStyleStrategy: "attribute",
+  compressHTML: true,
   site: devMode ? "https://demo.playsorbonne.fr" : "https://playsorbonne.fr/",
   image: {
     // images de l'API gamedevs, optimisées au build ; localhost pour
@@ -32,14 +33,15 @@ export default defineConfig({
     }),
   ],
   markdown: {
-    remarkPlugins: [remarkDirective],
-    rehypePlugins: [
-      [
-        externalLink,
-        {
-          domain: "playsorbonne.fr",
-        },
+    processor: unified({
+      rehypePlugins: [
+        [
+          externalLink,
+          {
+            domain: "playsorbonne.fr",
+          },
+        ],
       ],
-    ],
+    }),
   },
 });

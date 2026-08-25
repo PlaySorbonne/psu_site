@@ -37,8 +37,10 @@ const indexLike = ["clubs", "proj", "404"]; // liste des pages à considérer co
 
 const isLikeIndex = indexLike.some((e) => url.includes(e));
 
-let imported = (
-  await Astro.glob<MDnXInstance<EventT>>("../../pages/**/*{.md,.mdx}")
+let imported = Object.values(
+  import.meta.glob<MDnXInstance<EventT>>("../../pages/**/*{.md,.mdx}", {
+    eager: true,
+  })
 )
   .filter(
     (e) => isLikeIndex || e.url.includes(url.split("/").splice(-1, 1).join("/"))

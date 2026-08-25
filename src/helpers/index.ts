@@ -58,7 +58,9 @@ export function sliceText(text: string, length: number): string {
 
 export type ClubName = "dlc" | "luxludi" | "psu" | "pls" | "champsu";
 
-export type MDnXInstance<T> = MarkdownInstance<T> | MDXInstance<T>;
+export type MDnXInstance<T extends Record<string, any>> =
+  | MarkdownInstance<T>
+  | MDXInstance<T>;
 
 export interface EventT {
   title: string; // title of the event, used in the carousel and listing of events
