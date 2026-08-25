@@ -15,7 +15,7 @@ export const socialsIcons = {
 } as const;
 
 export function getSocialIcon(name: string) {
-  return socialsIcons[name] || Default;
+  return socialsIcons[name as keyof typeof socialsIcons] || Default;
 }
 
 export default {

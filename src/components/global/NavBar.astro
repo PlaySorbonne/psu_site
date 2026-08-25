@@ -6,7 +6,7 @@ const allMds = Object.values(
   import.meta.glob<MDnXInstance<EventT>>("../../pages/**/*{.md,.mdx}", {
     eager: true,
   })
-).filter((md) => md.url.split("/").length > 1); // on retire les pages à la racine
+).filter((md) => (md.url ?? "").split("/").length > 1); // on retire les pages à la racine
 
 const events = rawMDtoSortedArray(allMds);
 

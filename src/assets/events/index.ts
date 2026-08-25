@@ -12,7 +12,7 @@ export const eventsIcons = {
 } as const;
 
 export function getEventIcon(name: string): ImageMetadata{
-  return eventsIcons[name] || unknown;
+  return eventsIcons[name as keyof typeof eventsIcons] || unknown;
 }
 
 export default {
