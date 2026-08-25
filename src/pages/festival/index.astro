@@ -22,6 +22,7 @@ import {
   estJeuVideo,
   devSlug,
   imagesJeu,
+  logoStudio,
   type JeuT,
 } from "@/helpers/gamedevs";
 
@@ -58,8 +59,8 @@ const jeuxCards = (filtre: (jeu: JeuT) => boolean) =>
       titre: jeu.nom_jeu,
       description: jeu.description_jeu || jeu.style_jeu || dev.nom_studio,
       // image de référence du jeu, sinon n'importe quelle autre image du
-      // jeu, sinon le logo du studio (imagesJeu écarte aussi les non-images)
-      image: imagesJeu(jeu)[0] ?? dev.logo_studio ?? logos.psu.champsu,
+      // jeu, sinon le logo du studio
+      image: imagesJeu(jeu)[0] ?? logoStudio(dev) ?? logos.psu.champsu,
       link: `/festival/devs/${devSlug(dev)}#jeu-${jeu.id}`,
     })),
   );

@@ -15,8 +15,6 @@ export default defineConfig({
   compressHTML: true,
   site: devMode ? "https://demo.playsorbonne.fr" : "https://playsorbonne.fr/",
   image: {
-    // images de l'API gamedevs, optimisées au build ; localhost pour
-    // tester contre une instance gestion_gamedevs locale (GAMEDEVS_API)
     domains: ["gamedevs.playsorbonne.fr", "localhost", "127.0.0.1"],
   },
   integrations: [
@@ -29,6 +27,11 @@ export default defineConfig({
         minifyJS: true,
         minifyURLs: true,
         removeComments: true,
+      },
+      Image: {
+        sharp: {
+          sharp: { limitInputPixels: false },
+        },
       },
     }),
   ],

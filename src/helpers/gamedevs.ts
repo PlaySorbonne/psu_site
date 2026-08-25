@@ -50,8 +50,63 @@ async function fetchDevs(): Promise<DevT[]> {
       `API gamedevs injoignable (${url}) : ${res.status} ${res.statusText}`,
     );
   const { devs } = await res.json();
+  await repereImagesTropLourdes(devs as DevT[]);
   return devs as DevT[];
 }
+
+const TAILLE_MAX_IMAGE = 10 * 1024 * 1024; // 10 Mo
+
+const estPeutEtreAnime = (url: string) =>
+  [".gif", ".webp"].some((ext) => url.toLowerCase().endsWith(ext));
+
+const imagesTropLourdes = new Set<string>();
+
+/*
+ * L'API ne renvoie pas la taille des fichiers : on la lit au build via une
+ * requête HEAD par image (content-length). Au moindre doute (pas de réponse,
+ * pas d'en-tête), on garde l'image.
+ */
+async function repereImagesTropLourdes(devs: DevT[]): Promise<void> {
+  const urls = new Set<string>();
+  for (const dev of devs) {
+    const candidats = [
+      dev.logo_studio,
+      dev.visuels_studio,
+      dev.mascotte_studio,
+      ...dev.jeux.flatMap((jeu) => [
+        jeu.image_site,
+        jeu.logo_jeu,
+        jeu.visuels_jeu,
+        jeu.mascotte_jeu,
+      ]),
+    ];
+    for (const url of candidats) if (url && estPeutEtreAnime(url)) urls.add(url);
+  }
+
+  await Promise.all(
+    [...urls].map(async (url) => {
+      try {
+        const absolu = url.startsWith("http") ? url : `${API_URL}${url}`;
+        const res = await fetch(absolu, { method: "HEAD" });
+        const taille = Number(res.headers.get("content-length"));
+        if (taille > TAILLE_MAX_IMAGE) {
+          console.warn(
+            `<!> animation écartée (${(taille / 1024 / 1024).toFixed(1)} Mo > ${
+              TAILLE_MAX_IMAGE / 1024 / 1024
+            } Mo) : ${url}`,
+          );
+          imagesTropLourdes.add(url);
+        }
+      } catch {
+        // pas de réponse : au bénéfice du doute, on garde l'image
+      }
+    }),
+  );
+}
+
+// image au format supporté ET pas une animation trop lourde
+export const imageAffichable = (url: string) =>
+  estImage(url) && !imagesTropLourdes.has(url);
 
 // code "3" = à la fois plateau et vidéo
 export const estJeuDePlateau = (jeu: JeuT) =>
@@ -77,13 +132,22 @@ export const estImage = (url: string) =>
 
 /*
  * Toutes les images d'un jeu (l'image de référence en premier),
- * sans doublons ni fichiers non-image.
+ * sans doublons ni fichiers non-image ou trop lourds.
  */
 export function imagesJeu(jeu: JeuT): string[] {
   const urls = [jeu.image_site, jeu.logo_jeu, jeu.visuels_jeu, jeu.mascotte_jeu];
   return [
-    ...new Set(urls.filter((url): url is string => !!url && estImage(url))),
+    ...new Set(
+      urls.filter((url): url is string => !!url && imageAffichable(url)),
+    ),
   ];
+}
+
+// logo du studio, s'il est affichable (format supporté, pas trop lourd)
+export function logoStudio(dev: DevT): string | null {
+  return dev.logo_studio && imageAffichable(dev.logo_studio)
+    ? dev.logo_studio
+    : null;
 }
 
 export function devSlug(dev: DevT): string {
@@ -168,5 +232,8 @@ export function imageStudio(dev: DevT): string | null {
     dev.mascotte_studio,
     dev.visuels_studio,
   ];
-  return candidats.find((url): url is string => !!url && estImage(url)) ?? null;
+  return (
+    candidats.find((url): url is string => !!url && imageAffichable(url)) ??
+    null
+  );
 }
