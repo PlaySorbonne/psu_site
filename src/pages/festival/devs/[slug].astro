@@ -11,6 +11,7 @@ import {
   lienInsta,
   lienJeu,
   imagesJeu,
+  logoStudio,
   type DevT,
 } from "@/helpers/gamedevs";
 
@@ -25,6 +26,7 @@ export async function getStaticPaths() {
 type Props = { dev: DevT };
 const { dev } = Astro.props;
 const insta = lienInsta(dev.insta);
+const logo = logoStudio(dev);
 ---
 
 <HeaderL
@@ -40,10 +42,10 @@ const insta = lienInsta(dev.insta);
   <main>
     <section class="banner">
       {
-        dev.logo_studio && (
+        logo && (
           <Image
             class="logo__studio"
-            src={dev.logo_studio}
+            src={logo}
             alt=""
             width={300}
             inferSize

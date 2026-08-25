@@ -16,7 +16,7 @@ export const clubLogos = {
 
 /* return by default the psu logo */
 export function getClubLogo(name: string) {
-  return clubLogos[name] || psu;
+  return clubLogos[name as keyof typeof clubLogos] || psu;
 }
 
 export default {

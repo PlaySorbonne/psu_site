@@ -39,7 +39,7 @@ events = events.filter(
           <div class={`content__element ${i % 2 && "content_left"}`}>
             <img
               loading="lazy"
-              src={event.icon || getEventIcon(event.icon).src}
+              src={event.icon || getEventIcon(event.icon ?? "").src}
               alt={event.title}
               class="img__element"
             />

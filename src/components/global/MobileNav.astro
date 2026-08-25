@@ -2,16 +2,19 @@
 import { type MDnXInstance, type EventT, rawMDtoSortedArray } from "@/helpers";
 
 // FIXME Duplicate from @/components/global/NavBar
-const allMds = (
-  await Astro.glob<MDnXInstance<EventT>>("../../pages/**/*{.md,.mdx}")
-).filter((md) => md.url.split("/").length > 1); // on retire les pages à la racine
+const allMds = Object.values(
+  import.meta.glob<MDnXInstance<EventT>>("../../pages/**/*{.md,.mdx}", {
+    eager: true,
+  })
+).filter((md) => (md.url ?? "").split("/").length > 1); // on retire les pages à la racine
 
 const events = rawMDtoSortedArray(allMds);
 
 const jeux = rawMDtoSortedArray(
-  (
-    await Astro.glob<MDnXInstance<EventT>>(
-      "../../pages/luxludi/jeux-org/*{.md,.mdx}"
+  Object.values(
+    import.meta.glob<MDnXInstance<EventT>>(
+      "../../pages/luxludi/jeux-org/*{.md,.mdx}",
+      { eager: true }
     )
   ).filter((md) => !md.file.includes("index")), // on retire la page jeux-org
   99

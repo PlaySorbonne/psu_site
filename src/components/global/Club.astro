@@ -8,7 +8,7 @@ interface Props {
   left?: boolean;
 }
 
-const { img, alt, link, horizontal, title, left=false } = Astro.props;
+const { img, alt, link, horizontal, left=false } = Astro.props;
 ---
 
 <a class=`wrapper ${horizontal? "wrapper_hor" : ""} ${link ? "animate" : ""}` href={link}>

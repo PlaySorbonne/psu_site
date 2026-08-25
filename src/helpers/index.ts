@@ -19,7 +19,7 @@ export function sortSlides(
       if (acc.find((e) => e.link === cur.link)) return acc;
       return acc.concat(cur);
     }, [] as EventT[]) // on retire les doublons
-    .sort((a, b) => b.priority - a.priority); // on trie par priorité
+    .sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0)); // on trie par priorité
 }
 
 export function rawMDtoSlide(e: MDnXInstance<EventT>): EventT {
@@ -58,7 +58,9 @@ export function sliceText(text: string, length: number): string {
 
 export type ClubName = "dlc" | "luxludi" | "psu" | "pls" | "champsu";
 
-export type MDnXInstance<T> = MarkdownInstance<T> | MDXInstance<T>;
+export type MDnXInstance<T extends Record<string, any>> =
+  | MarkdownInstance<T>
+  | MDXInstance<T>;
 
 export interface EventT {
   title: string; // title of the event, used in the carousel and listing of events
@@ -83,13 +85,13 @@ const LoremText =
 export function csvJSON(csv:string) {
   const separator = csv.includes(";") ? ";" : ",";
   const lines = csv.split("\n");
-  const result = [];
+  const result: Record<string, string>[] = [];
   const headers = lines[0].trim().split(separator);
-  
+
 
   for (let i = 1; i < lines.length; i++) {
     if (!lines[i]) continue;
-    const obj = {};
+    const obj: Record<string, string> = {};
     const currentline = lines[i].trim().split(separator).map((e) => e.trim());
 
     for (let j = 0; j < headers.length; j++) {

@@ -10,7 +10,7 @@ export const extLogos = {
 } as const;
 
 export function getEventIcon(name: string): ImageMetadata {
-  return extLogos[name] || su;
+  return extLogos[name as keyof typeof extLogos] || su;
 }
 
 export default {

@@ -29,7 +29,7 @@ let {
     eventTitle,
   },
   logo,
-  url,
+  url = "",
   file,
 } = Astro.props;
 
@@ -37,11 +37,14 @@ const indexLike = ["clubs", "proj", "404"]; // liste des pages à considérer co
 
 const isLikeIndex = indexLike.some((e) => url.includes(e));
 
-let imported = (
-  await Astro.glob<MDnXInstance<EventT>>("../../pages/**/*{.md,.mdx}")
+let imported = Object.values(
+  import.meta.glob<MDnXInstance<EventT>>("../../pages/**/*{.md,.mdx}", {
+    eager: true,
+  })
 )
   .filter(
-    (e) => isLikeIndex || e.url.includes(url.split("/").splice(-1, 1).join("/"))
+    (e) =>
+      isLikeIndex || e.url?.includes(url.split("/").splice(-1, 1).join("/"))
   ) // on garde ceux qui sont plus profonds que nous ou tout si index-like
   .filter((e) => e.file !== file); // on enlève celui qui est traité ici
 
