@@ -72,6 +72,13 @@ const ogImage = new URL(
       src="https://stats.backend.playsorbonne.fr/umami.js"></script>
   </head>
   <body>
+    <script>
+      document.addEventListener("astro:page-load", () => {
+        const index = history.state?.index;
+        if (typeof index === "number")
+          sessionStorage.setItem(`nav:${index}`, location.pathname);
+      });
+    </script>
     <slot />
     <style is:global>
       @font-face {

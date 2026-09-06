@@ -69,7 +69,7 @@ const logo = logoStudio(dev);
     <section class="section">
       <div class="content">
         <p class="breadcrumb">
-          <a href="/festival/devs">← Tous les studios</a>
+          <a id="retour" href="/festival/devs">← Tous les studios</a>
         </p>
         {
           dev.jeux.map((jeu) => (
@@ -304,6 +304,24 @@ const logo = logoStudio(dev);
 
 <script>
   document.addEventListener("astro:page-load", () => {
+    const retour = document.querySelector<HTMLAnchorElement>("a#retour");
+    if (retour) {
+      const index = history.state?.index;
+      const precedent =
+        typeof index === "number" && index > 0
+          ? sessionStorage.getItem(`nav:${index - 1}`)?.replace(/\/+$/, "")
+          : null;
+      if (precedent === "/festival/jeux") {
+        retour.href = "/festival/jeux";
+        retour.textContent = "← Tous les jeux";
+      }
+      if (precedent === "/festival/jeux" || precedent === "/festival/devs")
+        retour.addEventListener("click", (e) => {
+          e.preventDefault();
+          history.back();
+        });
+    }
+
     let prevScrollPos = window.scrollY;
 
     window.addEventListener("scroll", function () {
