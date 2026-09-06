@@ -7,10 +7,10 @@ on:
     branches: [ main ]
   # Allows you to run this workflow manually from the Actions tab on GitHub.
   workflow_dispatch:
-  # Rebuild régulier pour rafraîchir les données de l'API gamedevs
+  # Rebuild quotidien pour rafraîchir les données de l'API gamedevs
   # (studios/jeux affichés sur /festival et /festival/devs)
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: "0 4 * * *"
 
 # Allow this job to clone the repo and create a page deployment
 permissions:
@@ -19,7 +19,27 @@ permissions:
   id-token: write
 
 jobs:
+  # Les rebuilds programmés s'arrêtent après le festival : passé le
+  # 20 septembre 2026, un run du cron ne déploie plus rien (les push sur main
+  # et les lancements manuels continuent de fonctionner normalement).
+  garde:
+    runs-on: ubuntu-latest
+    outputs:
+      deployer: ${{ steps.date.outputs.deployer }}
+    steps:
+      - name: Le rebuild programmé est-il encore actif ?
+        id: date
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$(date -u +%Y%m%d)" -gt 20260920 ]; then
+            echo "Rebuild programmé désactivé depuis le 21 septembre 2026."
+            echo "deployer=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "deployer=true" >> "$GITHUB_OUTPUT"
+          fi
+
   build:
+    needs: garde
+    if: needs.garde.outputs.deployer == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout your repository using git
