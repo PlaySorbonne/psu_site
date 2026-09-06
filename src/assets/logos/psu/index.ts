@@ -1,6 +1,6 @@
 import dlc from "./dlc.png";
 import luxludi from "./luxludi.png";
-import psu from "./psu.svg";
+import psu from "./psu.png";
 import pls from "./pls.png";
 import champsu from "./champsu.png"
 import champsuOnly from "./champsu_only.svg"
