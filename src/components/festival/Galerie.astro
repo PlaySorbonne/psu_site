@@ -26,6 +26,7 @@ const { images, alt } = Astro.props;
                 src={img}
                 alt={`${alt} — visuel ${i + 1}`}
                 width={600}
+                fit="inside"
                 loading="lazy"
                 decoding="async"
                 inferSize
@@ -68,6 +69,7 @@ const { images, alt } = Astro.props;
                 src={img}
                 alt={`${alt} — visuel ${i + 1}`}
                 width={1200}
+                fit="inside"
                 loading="lazy"
                 decoding="async"
                 inferSize

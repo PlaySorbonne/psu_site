@@ -19,14 +19,16 @@ let { image, titre, description } = Astro.props;
 <div class="card">
   {
     typeof image === "string" ? (
+      // la vignette est recadrée en 400x200 par le CSS (object-fit: cover) :
+      // on demande l'image à ce format, en 2x, pour qu'elle reste nette
       <Image
         loading="lazy"
         decoding="async"
         src={image}
         alt={titre}
         class="img"
-        width={300}
-        inferSize
+        width={800}
+        height={400}
       />
     ) : (
       <Image
