@@ -10,7 +10,10 @@ import {
   devSlug,
   lienInsta,
   lienJeu,
-  imagesJeu,
+  liensAffichables,
+  mediasJeu,
+  mediasStudio,
+  documentsStudio,
   logoStudio,
   type DevT,
 } from "@/helpers/gamedevs";
@@ -27,11 +30,17 @@ type Props = { dev: DevT };
 const { dev } = Astro.props;
 const insta = lienInsta(dev.insta);
 const logo = logoStudio(dev);
+const liensStudio = liensAffichables(dev.liens).filter(
+  (lien) => lien.url !== insta?.url,
+);
+const galerieStudio = mediasStudio(dev);
+const documents = documentsStudio(dev);
 ---
 
 <HeaderL
   title={`${dev.nom_studio} — Festival Play Sorbonne`}
-  description={`${dev.nom_studio} présente ${dev.jeux.map((jeu) => jeu.nom_jeu).join(", ")} au Festival Play Sorbonne.`}
+  description={dev.description_studio ||
+    `${dev.nom_studio} présente ${dev.jeux.map((jeu) => jeu.nom_jeu).join(", ")} au Festival Play Sorbonne.`}
   metaImg="/assets/festival/logo_festival.png"
 >
   <header class="header">
@@ -54,54 +63,113 @@ const logo = logoStudio(dev);
       }
       <h1 class="title__banner redNeon">{dev.nom_studio}</h1>
       {
-        insta && (
-          <a
-            class="insta"
-            href={insta.url}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {insta.label}
-          </a>
+        (insta || liensStudio.length > 0) && (
+          <p class="liens__studio">
+            {insta && (
+              <a
+                class="insta"
+                href={insta.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {insta.label}
+              </a>
+            )}
+            {liensStudio.map((lien) => (
+              <a
+                class="insta"
+                href={lien.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {lien.label}
+              </a>
+            ))}
+          </p>
         )
       }
     </section>
     <section class="section">
       <div class="content">
         <p class="breadcrumb">
-          <a href="/festival/devs">← Tous les studios</a>
+          <a id="retour" href="/festival/devs">← Tous les studios</a>
         </p>
         {
-          dev.jeux.map((jeu) => (
-            <article class="jeu" id={`jeu-${jeu.id}`}>
-              {imagesJeu(jeu).length > 0 && (
-                <div class="image__jeu">
-                  <Galerie images={imagesJeu(jeu)} alt={jeu.nom_jeu} />
+          (dev.description_studio ||
+            galerieStudio.length > 0 ||
+            documents.length > 0) && (
+            <article class="studio__presentation">
+              {dev.description_studio && (
+                <p class="description">{dev.description_studio}</p>
+              )}
+              {galerieStudio.length > 0 && (
+                <div class="galerie__studio">
+                  <Galerie medias={galerieStudio} alt={dev.nom_studio} />
                 </div>
               )}
-              <div class="infos__jeu">
-                <h2 class="nom__jeu">{jeu.nom_jeu}</h2>
-                <ColorLigne />
-                <p class="badges">
-                  <span class="badge">{jeu.type_de_jeu.label}</span>
+              {documents.length > 0 && (
+                <p class="documents">
+                  {documents.map((doc) => (
+                    <a href={doc.url} target="_blank" rel="noopener noreferrer">
+                      📄 {doc.nom}
+                    </a>
+                  ))}
                 </p>
-                {jeu.style_jeu && <p class="style__jeu">{jeu.style_jeu}</p>}
-                {jeu.description_jeu && (
-                  <p class="description">{jeu.description_jeu}</p>
-                )}
-                {lienJeu(jeu, dev) && (
-                  <a
-                    class="site"
-                    href={lienJeu(jeu, dev)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    En savoir plus
-                  </a>
-                )}
-              </div>
+              )}
             </article>
-          ))
+          )
+        }
+        {
+          dev.jeux.map((jeu) => {
+            const medias = mediasJeu(jeu);
+            const lien = lienJeu(jeu, dev);
+            const autresLiens = liensAffichables(jeu.liens).filter(
+              (l) => l.url !== lien,
+            );
+            return (
+              <article class="jeu" id={`jeu-${jeu.id}`}>
+                {medias.length > 0 && (
+                  <div class="image__jeu">
+                    <Galerie medias={medias} alt={jeu.nom_jeu} />
+                  </div>
+                )}
+                <div class="infos__jeu">
+                  <h2 class="nom__jeu">{jeu.nom_jeu}</h2>
+                  <ColorLigne />
+                  <p class="badges">
+                    <span class="badge">{jeu.type_de_jeu.label}</span>
+                  </p>
+                  {jeu.style_jeu && <p class="style__jeu">{jeu.style_jeu}</p>}
+                  {jeu.description_jeu && (
+                    <p class="description">{jeu.description_jeu}</p>
+                  )}
+                  {lien && (
+                    <a
+                      class="site"
+                      href={lien}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      En savoir plus
+                    </a>
+                  )}
+                  {autresLiens.length > 0 && (
+                    <p class="autres__liens">
+                      {autresLiens.map((l) => (
+                        <a
+                          href={l.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {l.label}
+                        </a>
+                      ))}
+                    </p>
+                  )}
+                </div>
+              </article>
+            );
+          })
         }
         {
           dev.jeux.length === 0 && (
@@ -193,6 +261,13 @@ const logo = logoStudio(dev);
     text-shadow: 0 0 15px rgb(var(--main-color));
   }
 
+  .liens__studio {
+    display: flex;
+    gap: 0.5rem 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
   .insta {
     color: rgb(177, 225, 241);
     text-shadow: 0 0 7px rgb(var(--secondary-color));
@@ -200,6 +275,33 @@ const logo = logoStudio(dev);
   }
 
   .insta:hover {
+    text-decoration: underline;
+  }
+
+  .studio__presentation {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0 2.5rem;
+  }
+
+  .galerie__studio {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .documents {
+    display: flex;
+    gap: 0.5rem 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .documents a {
+    font-weight: bold;
+  }
+
+  .documents a:hover {
     text-decoration: underline;
   }
 
@@ -229,7 +331,8 @@ const logo = logoStudio(dev);
     scroll-margin-top: 120px;
   }
 
-  .jeu:nth-child(even) {
+  /* "of .jeu" : le bloc de présentation du studio ne décale pas l'alternance */
+  .jeu:nth-child(even of .jeu) {
     flex-direction: row-reverse;
   }
 
@@ -285,13 +388,24 @@ const logo = logoStudio(dev);
     transform: scale(1.05);
   }
 
+  .autres__liens {
+    display: flex;
+    gap: 0.5rem 1rem;
+    flex-wrap: wrap;
+  }
+
+  .autres__liens a {
+    font-weight: bold;
+    text-decoration: underline;
+  }
+
   .empty {
     text-align: center;
   }
 
   @media screen and (max-width: 768px) {
     .jeu,
-    .jeu:nth-child(even) {
+    .jeu:nth-child(even of .jeu) {
       flex-direction: column;
     }
 
@@ -304,6 +418,27 @@ const logo = logoStudio(dev);
 
 <script>
   document.addEventListener("astro:page-load", () => {
+    // bouton retour : si on vient d'un des deux listings du site, un vrai
+    // retour arrière (position de scroll conservée, libellé adapté) ; sinon
+    // le lien se comporte normalement (vers la liste des studios)
+    const retour = document.querySelector<HTMLAnchorElement>("a#retour");
+    if (retour) {
+      const index = history.state?.index;
+      const precedent =
+        typeof index === "number" && index > 0
+          ? sessionStorage.getItem(`nav:${index - 1}`)?.replace(/\/+$/, "")
+          : null;
+      if (precedent === "/festival/jeux") {
+        retour.href = "/festival/jeux";
+        retour.textContent = "← Tous les jeux";
+      }
+      if (precedent === "/festival/jeux" || precedent === "/festival/devs")
+        retour.addEventListener("click", (e) => {
+          e.preventDefault();
+          history.back();
+        });
+    }
+
     let prevScrollPos = window.scrollY;
 
     window.addEventListener("scroll", function () {

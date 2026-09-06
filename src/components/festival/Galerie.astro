@@ -1,17 +1,26 @@
 ---
 import { Image } from "astro:assets";
+import { urlAbsolue, type MediaT } from "@/helpers/gamedevs";
 
-// Petite galerie d'images (scroll-snap + flèches + points), utilisée sur les
-// pages studios pour montrer tous les visuels d'un jeu venant de l'API
-// gamedevs. Un clic sur un visuel ouvre un diaporama plein écran (<dialog>),
+// Petite galerie de médias (scroll-snap + flèches + points), utilisée sur les
+// pages studios pour montrer tous les visuels et vidéos venant de l'API
+// gamedevs. Un clic sur une image ouvre un diaporama plein écran (<dialog>),
 // navigable aux flèches, au clavier, et au doigt (scroll-snap) sur mobile.
+// Les vidéos se lisent directement dans la galerie (après les images) et
+// n'apparaissent pas dans le diaporama.
 
 type Props = {
-  images: string[];
+  medias: MediaT[];
   alt: string;
 };
 
-const { images, alt } = Astro.props;
+const { medias, alt } = Astro.props;
+const images = medias
+  .filter((media) => media.type === "image")
+  .map((media) => media.url);
+const videos = medias
+  .filter((media) => media.type === "video")
+  .map((media) => media.url);
 ---
 
 <div class="galerie">
@@ -26,6 +35,7 @@ const { images, alt } = Astro.props;
                 src={img}
                 alt={`${alt} — visuel ${i + 1}`}
                 width={600}
+                fit="contain"
                 loading="lazy"
                 decoding="async"
                 inferSize
@@ -34,9 +44,23 @@ const { images, alt } = Astro.props;
           </div>
         ))
       }
+      {
+        videos.map((video, i) => (
+          <div class="slide">
+            <video
+              class="video__galerie"
+              src={urlAbsolue(video)}
+              controls
+              preload="metadata"
+              playsinline
+              aria-label={`${alt} — vidéo ${i + 1}`}
+            />
+          </div>
+        ))
+      }
     </div>
     {
-      images.length > 1 && (
+      medias.length > 1 && (
         <>
           <button class="fleche gauche" aria-label="Visuel précédent">
             ‹
@@ -45,7 +69,7 @@ const { images, alt } = Astro.props;
             ›
           </button>
           <div class="points">
-            {images.map((_, i) => (
+            {medias.map((_, i) => (
               <button
                 class:list={["point", { actif: i === 0 }]}
                 aria-label={`Aller au visuel ${i + 1}`}
@@ -56,40 +80,43 @@ const { images, alt } = Astro.props;
       )
     }
   </div>
-  <dialog class="lightbox" aria-label={`Visuels de ${alt} en plein écran`}>
-    <button class="fermer" aria-label="Fermer le diaporama">×</button>
-    <div class="vue vue__lightbox">
-      <div class="rail">
-        {
-          images.map((img, i) => (
-            <div class="slide">
-              <Image
-                class="img__lightbox"
-                src={img}
-                alt={`${alt} — visuel ${i + 1}`}
-                width={1200}
-                loading="lazy"
-                decoding="async"
-                inferSize
-              />
-            </div>
-          ))
-        }
-      </div>
-      {
-        images.length > 1 && (
-          <>
-            <button class="fleche gauche" aria-label="Visuel précédent">
-              ‹
-            </button>
-            <button class="fleche droite" aria-label="Visuel suivant">
-              ›
-            </button>
-          </>
-        )
-      }
-    </div>
-  </dialog>
+  {
+    images.length > 0 && (
+      <dialog class="lightbox" aria-label={`Visuels de ${alt} en plein écran`}>
+        <button class="fermer" aria-label="Fermer le diaporama">
+          ×
+        </button>
+        <div class="vue vue__lightbox">
+          <div class="rail">
+            {images.map((img, i) => (
+              <div class="slide">
+                <Image
+                  class="img__lightbox"
+                  src={img}
+                  alt={`${alt} — visuel ${i + 1}`}
+                  width={1200}
+                  fit="contain"
+                  loading="lazy"
+                  decoding="async"
+                  inferSize
+                />
+              </div>
+            ))}
+          </div>
+          {images.length > 1 && (
+            <>
+              <button class="fleche gauche" aria-label="Visuel précédent">
+                ‹
+              </button>
+              <button class="fleche droite" aria-label="Visuel suivant">
+                ›
+              </button>
+            </>
+          )}
+        </div>
+      </dialog>
+    )
+  }
 </div>
 
 <style>
@@ -139,6 +166,14 @@ const { images, alt } = Astro.props;
     width: 100%;
     height: 400px;
     object-fit: contain;
+  }
+
+  .video__galerie {
+    display: block;
+    width: 100%;
+    height: 400px;
+    object-fit: contain;
+    background: black;
   }
 
   .fleche {
@@ -290,6 +325,11 @@ const { images, alt } = Astro.props;
         points.forEach((point, i) =>
           point.classList.toggle("actif", i === actif),
         );
+        // met en pause les vidéos des slides qu'on quitte
+        [...rail.children].forEach((slide, i) => {
+          if (i !== actif)
+            slide.querySelectorAll("video").forEach((video) => video.pause());
+        });
       },
       { passive: true },
     );

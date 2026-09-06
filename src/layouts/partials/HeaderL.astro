@@ -72,6 +72,18 @@ const ogImage = new URL(
       src="https://stats.backend.playsorbonne.fr/umami.js"></script>
   </head>
   <body>
+    <script>
+      // Le ClientRouter ne met pas à jour document.referrer lors des
+      // navigations SPA : on mémorise l'URL de chaque entrée d'historique
+      // (indexée par history.state.index, posé par le routeur d'Astro) pour
+      // que les pages puissent proposer un vrai "retour en arrière" qui
+      // conserve la position de scroll.
+      document.addEventListener("astro:page-load", () => {
+        const index = history.state?.index;
+        if (typeof index === "number")
+          sessionStorage.setItem(`nav:${index}`, location.pathname);
+      });
+    </script>
     <slot />
     <style is:global>
       @font-face {
