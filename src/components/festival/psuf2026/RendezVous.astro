@@ -20,31 +20,6 @@ const pellicule = { ph0, ph1, ph2, ph3, ph4 };
   >
 
   <div class="enveloppe">
-    <div class="s-rdv__avant">
-      <p class="oeil">Ce à quoi ça ressemble</p>
-      <ul class="s-rdv__photos">
-        {
-          photos.map((p) => (
-            <li>
-              <figure>
-                <Image
-                  src={pellicule[p.f as keyof typeof pellicule]}
-                  alt={p.alt}
-                  width={520}
-                  height={360}
-                  loading="lazy"
-                />
-                <figcaption>
-                  {p.legende}
-                  {p.credit && <small>{p.credit}</small>}
-                </figcaption>
-              </figure>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-
     <div class="bloc bloc--c bloc-blanc s-rdv__carton">
       <div>
         <p class="oeil s-rdv__oeil">{festival.prix}</p>
