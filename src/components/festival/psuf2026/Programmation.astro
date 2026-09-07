@@ -1,21 +1,4 @@
 ---
-/*
- * La programmation : trois scènes, trois frises, un jeu d'onglets.
- *
- * Les conférences, l'auditorium et la scène Pyramide ont chacun leur
- * frise, avec la même grammaire : une chaîne de blocs magenta, chacun avec sa
- * pastille horaire blanche. Les onglets choisissent la scène ouverte.
- *
- * Le volet de l'auditorium porte en plus la rangée des neuf têtes
- * d'affiche, dont le casting suit la session choisie.
- *
- * La frise de la journée, plus haut dans la page, sait ouvrir un volet
- * précis : ses créneaux émettent `prog:volet` sur le bus.
- *
- * Un volet marqué `inerte` ne s'ouvre pas : son onglet reste affiché,
- * avec son état, mais ni le clic, ni le clavier, ni le bus ne le
- * sélectionnent tant que son programme n'est pas publié.
- */
 import { Image } from "astro:assets";
 import {
   festival,
@@ -154,11 +137,11 @@ const compte = (id: string) =>
               <li class="s-prg__item">
                 <article class="s-prg__conf">
                   <div class:list={["s-prg__carte", "bloc", coupe(i)]}>
-                    <p class="oeil s-prg__num">
-                      {v.id === "conferences"
-                        ? `Conférence ${String(i + 1).padStart(2, "0")} · 45 min`
-                        : `Créneau ${String(i + 1).padStart(2, "0")}`}
-                    </p>
+                    {v.id === "conferences" && (
+                      <p class="oeil s-prg__num">
+                        Conférence {String(i + 1).padStart(2, "0")} · 45 min
+                      </p>
+                    )}
                     <h4 class="s-prg__titre">{s.titre}</h4>
                     {s.par && (
                       <p class="s-prg__par">
@@ -177,11 +160,13 @@ const compte = (id: string) =>
                   >
                     {/* pas de retour à la ligne dans l'heure : le
                         navigateur y verrait une espace, « 10 h 30 » */}
-                    <span class="s-prg__debut"><span class="lecteur-seul">De </span>{heure(s.debut).split("h")[0]}<i>h</i>{heure(s.debut).split("h")[1]}</span>
-                    <span class="s-prg__fin">
-                      <span class="lecteur-seul">à </span>
-                      <i aria-hidden="true">→</i> {heure(s.fin)}
-                    </span>
+                    <span class="s-prg__debut"><span class="lecteur-seul">{s.fin ? "De " : "À "}</span>{heure(s.debut).split("h")[0]}<i>h</i>{heure(s.debut).split("h")[1]}</span>
+                    {s.fin && (
+                      <span class="s-prg__fin">
+                        <span class="lecteur-seul">à </span>
+                        <i aria-hidden="true">→</i> {heure(s.fin)}
+                      </span>
+                    )}
                     {s.tag && <span class="s-prg__tag">{s.tag}</span>}
                   </p>
                 </article>

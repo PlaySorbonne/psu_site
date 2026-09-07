@@ -1,12 +1,5 @@
 ---
-/*
- * La barre de commande des deux listes : filtre plateau / vidéo, bascule
- * entre la vue par studios et la vue par jeux, et compteur de résultats.
- *
- * Le filtre agit sur les `li` de la grille (`data-plateau` / `data-video`
- * posés par la page) : masquer l'élément de grille lui-même évite les
- * trous que laisserait un `display:none` sur la carte seule.
- */
+
 type Props = {
   /* la vue courante, pour marquer le bon lien */
   vue: "devs" | "jeux";

@@ -1,30 +1,3 @@
-/*
- * Play Sorbonne Festival 2026 : les faits de la page /festival.
- *
- * Tout ce qui est écrit ici a été relevé sur les documents officiels de
- * l'édition (dossier « Visuels (Print & Digital) 2026 » du drive) :
- *   - affiche_psuf2026.png        : date, horaires, lieu, liste d'activités
- *   - affichetalents_psuf2026.png : les neuf têtes d'affiche
- *   - programmegeneral_psuf2026.png : la frise des sept lieux
- *   - programmeconf_psuf2026.png  : les sept conférences
- *   - plan_psuf2026.png           : les dix zones et leur légende
- *
- * <!> Les horaires de la frise générale ont été relevés au pixel sur
- * l'affiche du programme : ils sont justes au quart d'heure près, pas plus.
- * À corriger dès qu'une grille horaire chiffrée est disponible.
- *
- * <!> Les tournois (`tournois`, plus bas) ne viennent pas des affiches :
- * horaires, formats et liens d'inscription ont été transmis par les
- * organisateurs de chaque tournoi. Là où ils prévalent sur l'affiche, ce
- * sont eux qui font foi, et les créneaux de la frise ont été recalés
- * dessus (TETR.IO finit à 17h45, Pokémon commence son check-in à 15h).
- *
- * <!> Deux documents n'existent pas encore : le programme détaillé de la
- * scène Pyramide, et celui de l'auditorium au-delà des deux sessions de JDR.
- * Les volets correspondants portent leur propre message d'attente ; il suffit
- * de remplir `creneaux` pour qu'ils s'affichent comme les autres.
- */
-
 export const festival = {
   nom: "Play Sorbonne Festival",
   edition: "10e édition",
@@ -90,9 +63,9 @@ export const programme: Creneau[] = [
   {
     lieu: "foyer",
     debut: "10:00",
-    fin: "16:30",
+    fin: "16:45",
     titre: "Tournoi osu! et osu!mania 7K",
-    note: "Check-in jusqu'à 10h30. 32 places osu! et 16 places osu!mania 7K. Inscription en ligne.",
+    note: "Check-in jusqu'à 10h30, finale osu! à 16h45. 32 places osu! et 16 places osu!mania 7K. Inscription en ligne.",
     ancre: "#tournoi-osu",
   },
   {
@@ -100,7 +73,7 @@ export const programme: Creneau[] = [
     debut: "10:00",
     fin: "19:00",
     titre: "Concours Cosplay, activités, quiz et autres évènements fun",
-    note: "Programme détaillé de la scène Pyramide à venir.",
+    note: "Just Dance géant, Kahoot, concours cosplay, karaoké et blind test, puis la tombola.",
     volet: "pyramide",
   },
   {
@@ -124,7 +97,7 @@ export const programme: Creneau[] = [
     debut: "15:00",
     fin: "18:40",
     titre: "Tournoi Pokémon Close Combat",
-    note: "Check-in de 15h à 15h30, tournoi de 16h à 18h40. 16 joueurs, inscription en ligne.",
+    note: "Check-in de 15h à 15h30, remise des prix à 18h30. 16 joueurs, inscription en ligne.",
     ancre: "#tournoi-pokemon",
   },
   {
@@ -132,7 +105,7 @@ export const programme: Creneau[] = [
     debut: "10:00",
     fin: "18:30",
     titre: "Tournois Mario Kart World, Super Smash Bros. Ultimate, TFT",
-    note: "Check-in dès 10h, début des trois tournois à 11h. Inscription en ligne, et sur place à 10h30 pour Mario Kart World. Entre 32 et 96 places selon le jeu.",
+    note: "Check-in dès 10h, début des trois tournois à 11h, remise des prix à 18h30. Inscription en ligne, et sur place à 10h30 pour Mario Kart World.",
     ancre: "#tournois",
   },
   {
@@ -226,20 +199,21 @@ export const tournois: Tournoi[] = [
     id: "tft",
     nom: "Teamfight Tactics",
     lieuId: "atrium",
-    plage: "11h00 → fin à confirmer",
+    plage: "10h00 → 18h30",
     inscription:
       "https://play.toornament.com/fr/tournaments/2539147707801890815/",
     hote: "Toornament",
     etapes: [
       { debut: "10:00", quoi: "Check-in des joueurs pré-inscrits" },
       { debut: "11:00", quoi: "Début du tournoi" },
+      { debut: "18:30", quoi: "Fin du tournoi et remise des prix" },
     ],
   },
   {
     id: "mariokart",
     nom: "Mario Kart World",
     lieuId: "atrium",
-    plage: "11h00 → fin à confirmer",
+    plage: "10h00 → 18h30",
     inscription:
       "https://play.toornament.com/fr/tournaments/2539147973964118015/",
     hote: "Toornament",
@@ -247,6 +221,7 @@ export const tournois: Tournoi[] = [
       { debut: "10:00", quoi: "Check-in des joueurs pré-inscrits" },
       { debut: "10:30", quoi: "Ouverture des inscriptions sur place" },
       { debut: "11:00", quoi: "Début du tournoi" },
+      { debut: "18:30", quoi: "Fin du tournoi et remise des prix" },
     ],
   },
   {
@@ -279,36 +254,42 @@ export const tournois: Tournoi[] = [
     etapes: [
       { debut: "15:00", fin: "15:30", quoi: "Check-in" },
       { debut: "16:00", fin: "16:40", quoi: "Phases de poules" },
-      { debut: "16:40", fin: "16:50", quoi: "Pause" },
       { debut: "16:50", fin: "17:40", quoi: "Demi-finales" },
       { debut: "17:40", fin: "18:30", quoi: "Finale" },
-      { debut: "18:30", fin: "18:40", quoi: "Remise des prix" },
+      { debut: "18:30", quoi: "Remise des prix" },
     ],
-    note: "Trois heures de tournoi, de 16h à 18h40.",
   },
   {
     id: "osu",
     nom: "osu! et osu!mania 7K",
     lieuId: "foyer",
-    plage: "10h00 → 16h30",
+    plage: "10h00 → 16h45",
     inscription: "https://osu.ppy.sh/community/forums/topics/2239179?n=1",
     hote: "forum osu!",
     places: "32 places osu!, 16 places osu!mania 7K",
     etapes: [
       { debut: "10:00", fin: "10:30", quoi: "Check-in" },
-      { debut: "10:30", fin: "16:30", quoi: "Tournoi" },
+      { debut: "11:00", quoi: "16es de finale osu! · 8es de finale osu!mania 7K" },
+      { debut: "12:00", quoi: "8es de finale osu! · quarts de finale osu!mania 7K" },
+      { debut: "13:00", quoi: "Quarts de finale osu! · demi-finales osu!mania 7K" },
+      { debut: "14:00", quoi: "Demi-finales osu!" },
+      { debut: "15:00", quoi: "Finale osu!mania 7K" },
+      { debut: "16:45", quoi: "Finale osu!" },
     ],
+    note: "Les deux brackets tournent en parallèle : osu! d'un côté, osu!mania 7K de l'autre.",
   },
   {
     id: "cosplay",
     nom: "Concours Cosplay",
     lieuId: "pyramide",
-    plage: "10h00 → 19h00",
+    plage: "15h30 → 17h30",
     inscription: "https://inscription.epic-asso.com/news/29",
     hote: "EPIC",
-    etapes: [],
-    manque:
-      "L'heure de passage du concours n'est pas encore annoncée",
+    etapes: [
+      { debut: "15:30", fin: "16:15", quoi: "Passage des cosplayeuses et cosplayeurs" },
+      { debut: "17:00", fin: "17:30", quoi: "Résultats et remise des prix" },
+    ],
+    note: "Sur la scène Pyramide, avec EPIC. Entre les deux, karaoké et blind test.",
   },
 ];
 
@@ -318,7 +299,8 @@ export const tournois: Tournoi[] = [
 
 export type Seance = {
   debut: string;
-  fin: string;
+  /* absent = un instant, pas une plage (« 17h45, la finale ») */
+  fin?: string;
   titre: string;
   /* qui intervient */
   par?: string;
@@ -354,57 +336,57 @@ export const volets: Volet[] = [
     label: "Conférences",
     lieu: "Scène Conférences",
     lieuId: "conf",
-    plage: "10h30 → 17h30",
+    plage: "10h30 → 17h15",
     titre: "Les conférences",
     chapo:
       "Sept interventions s'enchaînent sur la scène Conférences. Au programme : cryptographie, sémiotique, représentation animale, réalité virtuelle et adaptation littéraire.",
     reperes: [
       { v: "7", l: "interventions" },
-      { v: "10h30 → 17h30", l: "en continu" },
+      { v: "45 min", l: "chacune" },
     ],
     seances: [
       {
         debut: "10:30",
-        fin: "11:30",
+        fin: "11:15",
         titre: "Représentation animale dans le jeu vidéo",
         par: "Florian Verdier",
       },
       {
         debut: "11:30",
-        fin: "12:30",
+        fin: "12:15",
         titre:
           "Comment les nouvelles productions inspirent-elles les jeunes artistes à casser les codes de la 3D ?",
         par: "Marion Valls et Siheme Bouaou",
       },
       {
         debut: "12:30",
-        fin: "13:30",
+        fin: "13:15",
         titre:
           "Jouer à des jeux de société sans craindre les tricheurs grâce à la cryptographie",
         par: "Xavier Bultel",
       },
       {
         debut: "13:30",
-        fin: "14:30",
+        fin: "14:15",
         titre: "Mentir honteusement aux joueurs sur leurs villes",
         par: "Hugo Saal",
       },
       {
         debut: "14:30",
-        fin: "15:30",
+        fin: "15:15",
         titre: "Adapter Émile Zola en jeu vidéo",
         par: "Alina Gonzalez Mediano et Samuel Freche",
       },
       {
         debut: "15:30",
-        fin: "16:30",
+        fin: "16:15",
         titre:
           "Lire entre les pixels : la sémiotique au cœur de la conception de jeux",
         par: "Gwendolyn Garan",
       },
       {
         debut: "16:30",
-        fin: "17:30",
+        fin: "17:15",
         titre: "La rééducation gamifiée en réalité virtuelle",
         par: "Olivier Pons, Théo Combe, Eulalie Verhulst",
       },
@@ -460,30 +442,73 @@ export const volets: Volet[] = [
   {
     id: "pyramide",
     label: "Scène Pyramide",
-    etat: "programme à venir",
-    inerte: true,
     lieu: "Scène Pyramide",
     lieuId: "pyramide",
     plage: "10h00 → 19h00",
     titre: "La scène Pyramide",
     chapo:
-      "C'est la scène qui ouvre et qui referme la journée : concours cosplay, quiz, animations et remises de lots s'y succèdent de 10h à 19h. Le découpage horaire, lui, n'est pas encore arrêté.",
+      "C'est la scène qui ouvre et qui referme la journée : jeux indés, Just Dance géant, Kahoot, concours cosplay, karaoké et blind test s'y succèdent de 10h à 19h, avant la tombola et les remerciements.",
     reperes: [
-      { v: "9 h", l: "de scène" },
-      { v: "10h00 → 19h00", l: "sans interruption" },
+      { v: "9", l: "rendez-vous" },
+      { v: "10h00 → 19h00", l: "de scène" },
       { v: "Accès libre", l: "sans billet" },
     ],
     seances: [
       {
         debut: "10:00",
+        fin: "11:00",
+        titre:
+          "On s'excite en testant des jeux indés comme si c'était encore la coupe du monde !!!!!!!",
+        note: "Alors que c'est fini depuis longtemps.",
+      },
+      {
+        debut: "11:15",
+        fin: "12:15",
+        titre: "Just Dance géant",
+        par: "Just Dance Club France",
+      },
+      {
+        debut: "12:30",
+        fin: "13:45",
+        titre:
+          "Venez remporter des lots ! Objectif 1000 personnes sur le Kahoot !",
+        note: "Coup de cœur de l'équipe PSU ♥",
+      },
+      {
+        debut: "14:00",
+        fin: "15:15",
+        titre: "(re) Just Dance géant",
+        par: "Just Dance Club France",
+      },
+      {
+        debut: "15:30",
+        fin: "16:15",
+        titre: "Concours Cosplay",
+        par: "EPIC",
+      },
+      {
+        debut: "16:15",
+        fin: "17:00",
+        titre:
+          "Karaoké & blind test : venez perdre vos poumons en attendant les résultats du Concours Cosplay !?!!??!",
+      },
+      {
+        debut: "17:00",
+        fin: "17:30",
+        titre: "Résultats du Concours Cosplay",
+        par: "EPIC",
+      },
+      {
+        debut: "17:45",
+        titre: "Finale des Fruits contre les Légumes !",
+      },
+      {
+        debut: "18:30",
         fin: "19:00",
-        titre: "Concours Cosplay, activités, quiz et autres évènements fun",
-        tag: "Toute la journée",
-        note: "Le seul créneau publié à ce jour : l'affiche du programme général annonce la scène ouverte de 10h à 19h, sans détail des passages.",
+        titre: "Tombola & remerciements",
+        tag: "Clôture",
       },
     ],
-    attente:
-      "Le programme détaillé de la scène Pyramide n'est pas encore publié. Ce volet est prêt à le recevoir : dès l'annonce, chaque animation s'ajoutera à la frise avec son horaire.",
   },
 ];
 

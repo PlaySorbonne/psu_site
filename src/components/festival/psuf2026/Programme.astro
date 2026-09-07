@@ -1,14 +1,4 @@
 ---
-/*
- * La frise de la journée : une grille de Gantt en CSS, sept lieux sur
- * neuf heures, graduée au quart d'heure. Ce n'est pas une image, donc
- * modifiable, lisible au lecteur d'écran, et repliée en liste par lieu
- * sous 820 px.
- *
- * Un créneau qui renvoie ailleurs dans la page est un lien : vers un
- * volet de la programmation, dont il ouvre le bon onglet, ou vers la
- * fiche d'un tournoi et son lien d'inscription.
- */
 import {
   festival,
   lieux,
@@ -18,8 +8,6 @@ import {
   NB_COLONNES,
 } from "@/data/psuf2026";
 
-/* la règle des heures : une étiquette toutes les quatre colonnes,
-   la dernière heure étant posée à droite de la règle */
 const heures = Array.from({ length: NB_COLONNES / 4 }, (_, i) => ({
   label: `${10 + i}H`,
   colonne: 2 + i * 4,
