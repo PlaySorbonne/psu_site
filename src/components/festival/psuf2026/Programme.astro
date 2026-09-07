@@ -5,8 +5,9 @@
  * modifiable, lisible au lecteur d'écran, et repliée en liste par lieu
  * sous 820 px.
  *
- * Un créneau qui renvoie vers un volet de la programmation est un lien :
- * il ouvre le bon onglet plus bas dans la page.
+ * Un créneau qui renvoie ailleurs dans la page est un lien : vers un
+ * volet de la programmation, dont il ouvre le bon onglet, ou vers la
+ * fiche d'un tournoi et son lien d'inscription.
  */
 import {
   festival,
@@ -28,8 +29,6 @@ const parLieu = lieux.map((lieu) => ({
   lieu,
   creneaux: programme.filter((c) => c.lieu === lieu.id),
 }));
-
-const nbCreneaux = programme.length;
 ---
 
 <section class="bande s-prog" id="programme" data-jour={festival.dateIso}>
@@ -56,8 +55,9 @@ const nbCreneaux = programme.length;
         Sept lieux, dix créneaux, neuf heures de programme&nbsp;: le tournoi <em
           >osu!</em
         > et ceux de l&rsquo;atrium ouvrent à 10h00, la scène Pyramide referme la
-        journée à 19h00. Chaque créneau porte son détail&nbsp;: check-in, nombre
-        de places, retrait des billets.
+        journée à 19h00. Les quatre créneaux de tournoi renvoient à leur fiche
+        et à son lien d&rsquo;inscription&nbsp;: check-in, nombre de places,
+        retrait des billets.
       </p>
     </header>
 
@@ -96,10 +96,13 @@ const nbCreneaux = programme.length;
                 {creneaux.map((c) => {
                   const { grille, rogne } = colonnes(c.debut, c.fin);
                   const style = `grid-column:${grille}${rogne ? `;--rogne:${rogne}` : ""}`;
+                  /* un volet vise la programmation, une ancre une fiche de
+                     tournoi : dans les deux cas le créneau devient un lien */
+                  const cible = c.volet ? "#programmation" : c.ancre;
                   const classes = [
                     "s-prog__bloc",
                     c.variante === "billet" && "s-prog__bloc--billet",
-                    c.volet && "s-prog__bloc--lien",
+                    cible && "s-prog__bloc--lien",
                   ]
                     .filter(Boolean)
                     .join(" ");
@@ -120,10 +123,10 @@ const nbCreneaux = programme.length;
                       {c.note && <span class="s-prog__note">{c.note}</span>}
                     </Fragment>
                   );
-                  return c.volet ? (
+                  return cible ? (
                     <a
                       class={classes}
-                      href="#programmation"
+                      href={cible}
                       data-volet={c.volet}
                       style={style}
                       data-creneau={plage(c.debut, c.fin)}
@@ -162,25 +165,9 @@ const nbCreneaux = programme.length;
         >
         <span class="s-prog__leg-item"
           ><span class="s-prog__leg s-prog__leg--fle" aria-hidden="true">↗</span
-          >Ouvre la programmation détaillée</span
+          >Renvoie au détail, plus bas dans la page</span
         >
       </p>
-
-      <div class="s-prog__detail bloc bloc--c" aria-hidden="true">
-        <p class="s-prog__detail-repos">
-          <b>{nbCreneaux} créneaux, {lieux.length} lieux, 9 heures.</b> Survolez
-          la frise, ou sélectionnez un créneau au clavier, pour afficher ici son
-          détail&nbsp;: check-in, nombre de places, retrait des billets.
-        </p>
-        <div class="s-prog__detail-vif" hidden>
-          <p class="s-prog__detail-meta">
-            <span class="s-prog__detail-lieu"></span>
-            <span class="s-prog__detail-creneau"></span>
-          </p>
-          <p class="s-prog__detail-titre"></p>
-          <p class="s-prog__detail-note"></p>
-        </div>
-      </div>
 
       <div class="s-prog__pied">
         <p class="s-prog__avenir">
@@ -209,75 +196,8 @@ const nbCreneaux = programme.length;
     const lignes = Array.from(sec.querySelectorAll<HTMLElement>(".s-prog__ligne"));
     const blocs = Array.from(sec.querySelectorAll<HTMLElement>(".s-prog__bloc"));
     const etiqs = Array.from(sec.querySelectorAll(".s-prog__etiq"));
-    const detail = sec.querySelector<HTMLElement>(".s-prog__detail");
-    const dRepos = sec.querySelector<HTMLElement>(".s-prog__detail-repos");
-    const dVif = sec.querySelector<HTMLElement>(".s-prog__detail-vif");
-    const dLieu = sec.querySelector(".s-prog__detail-lieu");
-    const dCreneau = sec.querySelector(".s-prog__detail-creneau");
-    const dTitre = sec.querySelector(".s-prog__detail-titre");
-    const dNote = sec.querySelector(".s-prog__detail-note");
-
-    /* le panneau de détail est facultatif : s'il manque une pièce, la frise
-       reste utilisable, chaque note est dans le DOM de son créneau */
-    const aDetail = !!(
-      detail && dRepos && dVif && dLieu && dCreneau && dTitre && dNote
-    );
 
     let epingle: HTMLElement | null = null;
-
-    const txt = (el: Element, sel: string) =>
-      el.querySelector(sel)?.textContent?.trim() ?? "";
-    const nomLieu = (ligne: Element) => txt(ligne, ".s-prog__nom");
-
-    function peins(id: string | null) {
-      detail?.style.setProperty("--cd", id ? `var(--l-${id})` : "var(--jaune)");
-    }
-
-    function montreBloc(bloc: HTMLElement) {
-      if (!aDetail) return;
-      const ligne = bloc.closest(".s-prog__ligne");
-      peins(ligne?.getAttribute("data-lieu") ?? null);
-      dLieu!.textContent = ligne ? nomLieu(ligne) : "";
-      dCreneau!.textContent = bloc.getAttribute("data-creneau") ?? "";
-      dTitre!.textContent = txt(bloc, ".s-prog__titre");
-      dNote!.textContent = txt(bloc, ".s-prog__note");
-      dRepos!.hidden = true;
-      dVif!.hidden = false;
-    }
-
-    /* résumé d'un lieu : uniquement des valeurs lues dans la frise */
-    function montreLigne(ligne: HTMLElement) {
-      if (!aDetail) return;
-      const b = ligne.querySelectorAll(".s-prog__bloc");
-      if (!b.length) return;
-      const premier = b[0].getAttribute("data-creneau") ?? "";
-      const dernier = b[b.length - 1].getAttribute("data-creneau") ?? "";
-      peins(ligne.getAttribute("data-lieu"));
-      dLieu!.textContent = nomLieu(ligne);
-      dCreneau!.textContent = `${premier.split("→")[0].trim()} → ${dernier
-        .split("→")
-        .pop()!
-        .trim()}`;
-      dTitre!.textContent =
-        b.length > 1
-          ? `${b.length} créneaux sur la journée`
-          : txt(b[0], ".s-prog__titre");
-      dNote!.textContent = b.length > 1 ? "" : txt(b[0], ".s-prog__note");
-      dRepos!.hidden = true;
-      dVif!.hidden = false;
-    }
-
-    function repos() {
-      if (!aDetail) return;
-      if (epingle) {
-        if (epingle.classList.contains("s-prog__bloc")) montreBloc(epingle);
-        else montreLigne(epingle);
-        return;
-      }
-      peins(null);
-      dVif!.hidden = true;
-      dRepos!.hidden = false;
-    }
 
     function epingleSur(el: HTMLElement | null) {
       blocs.forEach((b) => b.classList.remove("est-choisi"));
@@ -285,7 +205,6 @@ const nbCreneaux = programme.length;
       epingle = el;
       if (el?.classList.contains("s-prog__bloc")) el.classList.add("est-choisi");
       else el?.querySelector(".s-prog__etiq")?.setAttribute("aria-pressed", "true");
-      repos();
     }
 
     /* ---- lignes : survol et focus ---- */
@@ -298,7 +217,6 @@ const nbCreneaux = programme.length;
       const sort = () => {
         ligne.classList.remove("est-actif");
         bus.emit("lieu:survol", null);
-        repos();
       };
       ligne.addEventListener("mouseenter", entre);
       ligne.addEventListener("mouseleave", sort);
@@ -309,8 +227,6 @@ const nbCreneaux = programme.length;
       });
 
       const etiq = ligne.querySelector(".s-prog__etiq");
-      etiq?.addEventListener("mouseenter", () => montreLigne(ligne));
-      etiq?.addEventListener("focus", () => montreLigne(ligne));
       etiq?.addEventListener("click", () => {
         epingleSur(epingle === ligne ? null : ligne);
         bus.emit("lieu:choix", { id });
@@ -319,9 +235,6 @@ const nbCreneaux = programme.length;
 
     /* ---- créneaux ---- */
     blocs.forEach((bloc) => {
-      bloc.addEventListener("mouseenter", () => montreBloc(bloc));
-      bloc.addEventListener("mouseleave", repos);
-      bloc.addEventListener("focus", () => montreBloc(bloc));
       bloc.addEventListener("click", () => {
         /* Un créneau qui renvoie à la programmation ouvre son volet ; le lien
            suit son ancre tout seul. Il n'allume rien sur le plan : verrouiller
@@ -329,7 +242,9 @@ const nbCreneaux = programme.length;
            lieu, à gauche de la ligne, qui sert à ça. */
         const volet = bloc.getAttribute("data-volet");
         if (volet) bus.emit("prog:volet", { id: volet });
-        else epingleSur(epingle === bloc ? null : bloc);
+        /* un créneau de tournoi est un lien vers sa fiche : l'ancre fait
+           le travail, il n'y a rien à épingler derrière */
+        else if (bloc.tagName !== "A") epingleSur(epingle === bloc ? null : bloc);
       });
     });
 
@@ -397,8 +312,6 @@ const nbCreneaux = programme.length;
       );
     }
     document.addEventListener("astro:before-swap", arrete, { once: true });
-
-    repos();
   }
 
   document.addEventListener("astro:page-load", frise);

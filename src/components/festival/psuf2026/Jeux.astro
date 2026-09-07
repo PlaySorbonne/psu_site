@@ -86,7 +86,7 @@ const COUPES = ["", "bloc--b", "bloc--c", "bloc--d"];
           jeux vidéo, à essayer avec leurs équipes.
         </p>
         <p class="s-jeux__lead-bis">
-          Vous jouez, vous posez vos questions, et l&rsquo;équipe en face repart
+          Vous jouez, vous posez vos questions, et l&rsquo;équipe repart
           avec un avis de plus. C&rsquo;est tout l&rsquo;intérêt du festival.
         </p>
       </div>
@@ -123,28 +123,9 @@ const COUPES = ["", "bloc--b", "bloc--c", "bloc--d"];
       </li>
     </ul>
 
-    {
-      chevauchement > 0 && (
-        <p class="bloc bloc--d bloc-nuit s-jeux__puce">
-          {plateau} jeux de plateau et {video} jeux vidéo pour {jeux} jeux
-          inscrits&nbsp;: {chevauchement === 1 ? "un jeu relève" : `${chevauchement} jeux relèvent`}
-          {" "}des deux familles et {chevauchement === 1 ? "compte" : "comptent"} dans
-          chacune.
-        </p>
-      )
-    }
   </div>
 
   <div class="s-jeux__bandes">
-    <p class="s-jeux__annonce">
-      <span class="bloc bloc--c bloc-nuit s-jeux__annonce-txt"
-        ><b>Aperçu</b> {bandes[0].length + bandes[1].length} des {jeux} jeux inscrits.
-        Les deux bandes défilent en continu, dans les deux sens, et
-        s&rsquo;arrêtent dès que la souris ou le clavier s&rsquo;y pose&nbsp;:
-        chaque vignette mène à la fiche du jeu.</span
-      >
-    </p>
-
     {
       bandes.map((bande, ib) => (
         <div class:list={["s-jeux__cadre", ib === 1 && "s-jeux__cadre--retour"]}>

@@ -1,0 +1,180 @@
+---
+/*
+ * Les tournois : une fiche par tournoi, et sur chacune le lien
+ * d'inscription de la plateforme qui la porte. C'est le seul endroit de
+ * la page où ces liens vivent ; la frise de la journée, plus haut, y
+ * renvoie par son ancre (`ancre` dans src/data/psuf2026.ts).
+ *
+ * Chaque fiche porte sa plaque bleu nuit, parce que la couleur de lieu ne
+ * passe l'AA ni en blanc ni en encre sur les aplats vifs (atrium rouge,
+ * amphi 45B jaune) : elle sert de pastille, pas de fond de texte.
+ *
+ * Ce qui n'est pas encore annoncé est dit tel quel (`manque`), au lieu
+ * d'être deviné : deux tournois de l'atrium n'ont pas d'heure de fin.
+ */
+import { tournois, nomLieu, heure } from "@/data/psuf2026";
+
+/* les quatre découpes de bloc de la DA, en alternance le long de la liste */
+const COUPES = ["", "bloc--b", "bloc--c", "bloc--d"];
+const coupe = (i: number) => COUPES[i % COUPES.length];
+
+const avecLien = tournois.length;
+const surPlace = tournois.filter((t) => t.surPlace).length;
+---
+
+<section class="bande s-trn" id="tournois">
+  <svg
+    class="deco s-trn__deco s-trn__deco--epee"
+    aria-hidden="true"
+    focusable="false"><use href="#psuf-doodle-epee"></use></svg
+  >
+  <svg
+    class="deco s-trn__deco s-trn__deco--console"
+    aria-hidden="true"
+    focusable="false"><use href="#psuf-doodle-console"></use></svg
+  >
+  <svg
+    class="deco s-trn__deco s-trn__deco--eclair"
+    aria-hidden="true"
+    focusable="false"><use href="#psuf-eclair"></use></svg
+  >
+  <svg
+    class="deco s-trn__deco s-trn__deco--etoile"
+    aria-hidden="true"
+    focusable="false"><use href="#psuf-etoile"></use></svg
+  >
+
+  <div class="enveloppe">
+    <header class="s-trn__tete">
+      <p class="oeil s-trn__oeil">
+        {avecLien} rendez-vous · inscription en ligne
+      </p>
+      <h2 class="h-sec s-trn__h2">Les tournois et le cosplay</h2>
+      <p class="s-trn__chapo">
+        Chaque tournoi ouvre ses inscriptions sur sa propre plateforme, et
+        chaque fiche ci-dessous porte son lien&nbsp;: {avecLien} en tout, du
+        Smash de l&rsquo;atrium au concours cosplay de la scène Pyramide.
+        {
+          surPlace > 0 && (
+            <>
+              Une seule inscription sur place est annoncée à ce jour, pour Mario
+              Kart World à 10h30&nbsp;: pour les autres, mieux vaut
+              s&rsquo;inscrire avant.
+            </>
+          )
+        }
+      </p>
+    </header>
+
+    <ol class="s-trn__l">
+      {
+        tournois.map((t, i) => (
+          <li
+            class="s-trn__item"
+            id={`tournoi-${t.id}`}
+            style={`--c:var(--l-${t.lieuId})`}
+          >
+            <article class:list={["s-trn__carte", "bloc", coupe(i)]}>
+              <p class="s-trn__plaque">
+                <span class="s-trn__pastille" aria-hidden="true" />
+                <span class="s-trn__lieu">{nomLieu(t.lieuId)}</span>
+                <span class="s-trn__plage">{t.plage}</span>
+              </p>
+
+              <div class="s-trn__dedans">
+                <h3 class="s-trn__nom">{t.nom}</h3>
+                {t.chapo && <p class="s-trn__accroche">{t.chapo}</p>}
+
+                {(t.places || t.format || t.recompense || t.surPlace) && (
+                  <dl class="s-trn__faits">
+                    {t.places && (
+                      <>
+                        <dt>Places</dt>
+                        <dd>{t.places}</dd>
+                      </>
+                    )}
+                    {t.format && (
+                      <>
+                        <dt>Format</dt>
+                        <dd>{t.format}</dd>
+                      </>
+                    )}
+                    {t.recompense && (
+                      <>
+                        <dt>Récompense</dt>
+                        <dd>{t.recompense}</dd>
+                      </>
+                    )}
+                    {t.surPlace && (
+                      <>
+                        <dt>Sur place</dt>
+                        <dd>{t.surPlace}</dd>
+                      </>
+                    )}
+                  </dl>
+                )}
+
+                {t.etapes.length > 0 && (
+                  <ol class="s-trn__fil">
+                    {t.etapes.map((e) => (
+                      <li class="s-trn__etape">
+                        <span class="s-trn__h">
+                          {e.fin ? (
+                            <>
+                              <span class="lecteur-seul">De </span>
+                              {heure(e.debut)}
+                              <i aria-hidden="true">→</i>
+                              <span class="lecteur-seul">à </span>
+                              {heure(e.fin)}
+                            </>
+                          ) : (
+                            <>
+                              <span class="lecteur-seul">À </span>
+                              {heure(e.debut)}
+                            </>
+                          )}
+                        </span>
+                        <span class="s-trn__quoi">{e.quoi}</span>
+                      </li>
+                    ))}
+                  </ol>
+                )}
+
+                {t.note && <p class="s-trn__note">{t.note}</p>}
+                {t.manque && (
+                  <p class="s-trn__manque">
+                    <b>À confirmer.</b> {t.manque}
+                  </p>
+                )}
+
+                <div class="s-trn__act">
+                  <a
+                    class="btn s-trn__btn"
+                    href={t.inscription}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-umami-event={`PSUF26 inscription ${t.id}`}
+                  >
+                    S&rsquo;inscrire<span class="lecteur-seul"> au {t.nom}</span>
+                    <svg
+                      class="s-trn__fleche"
+                      viewBox="0 0 24 12"
+                      aria-hidden="true"
+                      focusable="false"
+                    >
+                      <path
+                        d="M0 4.7h16.4V0L24 6l-7.6 6V7.3H0z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </a>
+                  <p class="s-trn__hote">sur {t.hote}</p>
+                </div>
+              </div>
+            </article>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

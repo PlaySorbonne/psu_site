@@ -11,6 +11,10 @@
  *
  * La frise de la journée, plus haut dans la page, sait ouvrir un volet
  * précis : ses créneaux émettent `prog:volet` sur le bus.
+ *
+ * Un volet marqué `inerte` ne s'ouvre pas : son onglet reste affiché,
+ * avec son état, mais ni le clic, ni le clavier, ni le bus ne le
+ * sélectionnent tant que son programme n'est pas publié.
  */
 import { Image } from "astro:assets";
 import {
@@ -76,7 +80,7 @@ const compte = (id: string) =>
       <p class="s-prg__chapo">
         Ce qui se joue sur scène, heure par heure&nbsp;: sept conférences, deux
         parties de jeu de rôle dans l&rsquo;auditorium, et la scène Pyramide
-        ouverte de 10h à 19h. Choisissez la scène, la frise suit.
+        ouverte de 10h à 19h.
       </p>
     </header>
 
@@ -87,6 +91,9 @@ const compte = (id: string) =>
         aria-label="Les trois scènes du festival"
       >
         {
+          /* aria-disabled : un onglet inerte reste lisible dans la barre,
+             avec son état, mais il n'est jamais celui qui est ouvert et
+             il sort de la rotation au clavier */
           volets.map((v, i) => (
             <button
               type="button"
@@ -95,6 +102,7 @@ const compte = (id: string) =>
               id={`prg-ong-${v.id}`}
               aria-controls={`prg-vol-${v.id}`}
               aria-selected={i === 0 ? "true" : "false"}
+              aria-disabled={v.inerte ? "true" : undefined}
               tabindex={i === 0 ? 0 : -1}
               data-volet={v.id}
             >
@@ -107,14 +115,14 @@ const compte = (id: string) =>
     </div>
 
     {
+      /* tabindex : le volet des conférences ne contient rien de
+         focalisable, il lui faut son propre point d'entrée au clavier */
       volets.map((v, iv) => (
         <div
           class:list={["s-prg__volet", v.id === "auditorium" && "s-audi"]}
           id={`prg-vol-${v.id}`}
           role="tabpanel"
           aria-labelledby={`prg-ong-${v.id}`}
-          /* le volet des conférences ne contient rien de focalisable :
-             il lui faut son propre point d'entrée au clavier */
           tabindex="0"
           hidden={iv !== 0}
         >
@@ -260,12 +268,8 @@ const compte = (id: string) =>
 
                   <p class="s-audi__pied">
                     <span>
-                      Les invités en retrait sont à la table de l&rsquo;autre
+                      Les invités en gris sont à la table de l&rsquo;autre
                       session.
-                    </span>
-                    <span class="s-audi__pied-b">
-                      Rappel&nbsp;: billets à retirer sur place,
-                      10h00&ndash;10h45 et 14h00&ndash;15h20.
                     </span>
                   </p>
                 </div>
@@ -286,9 +290,7 @@ const compte = (id: string) =>
           Deux expositions
         </h3>
         <p class="s-prg__expos-chapo">
-          Elles ne tiennent dans aucune des trois frises&nbsp;: pas
-          d&rsquo;horaire, pas de file d&rsquo;attente. On y entre et on en sort
-          librement, aux heures du festival.
+          On y entre et on en sort librement, aux heures du festival.
         </p>
       </div>
 
@@ -333,8 +335,28 @@ const compte = (id: string) =>
       document.getElementById(o.getAttribute("aria-controls")!),
     );
 
+    /* un onglet inerte annonce un programme non publié : il reste lisible
+       dans la barre, mais rien ne l'ouvre — ni le clic, ni les flèches,
+       ni la frise de la journée, ni le fragment de l'URL */
+    const inerte = (i: number) =>
+      onglets[i]?.getAttribute("aria-disabled") === "true";
+
+    /* le voisin ouvrable dans un sens ou dans l'autre, en sautant les
+       onglets inertes ; null s'il n'y en a aucun */
+    function voisin(i: number, pas: number) {
+      let k = i;
+      for (let n = 0; n < onglets.length; n++) {
+        k = (k + pas + onglets.length) % onglets.length;
+        if (!inerte(k)) return k;
+      }
+      return null;
+    }
+    /* le premier et le dernier onglet ouvrable, pour Origine et Fin */
+    const premier = () => voisin(onglets.length - 1, 1);
+    const dernier = () => voisin(0, -1);
+
     function ouvre(i: number, focus: boolean) {
-      if (!onglets[i]) return;
+      if (!onglets[i] || inerte(i)) return;
       onglets.forEach((o, k) => {
         o.setAttribute("aria-selected", k === i ? "true" : "false");
         o.tabIndex = k === i ? 0 : -1;
@@ -350,11 +372,11 @@ const compte = (id: string) =>
       o.addEventListener("keydown", (e) => {
         let suivant: number | null = null;
         if (e.key === "ArrowRight" || e.key === "ArrowDown")
-          suivant = (i + 1) % onglets.length;
+          suivant = voisin(i, 1);
         else if (e.key === "ArrowLeft" || e.key === "ArrowUp")
-          suivant = (i - 1 + onglets.length) % onglets.length;
-        else if (e.key === "Home") suivant = 0;
-        else if (e.key === "End") suivant = onglets.length - 1;
+          suivant = voisin(i, -1);
+        else if (e.key === "Home") suivant = premier();
+        else if (e.key === "End") suivant = dernier();
         if (suivant !== null) {
           e.preventDefault();
           ouvre(suivant, true);

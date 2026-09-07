@@ -4,7 +4,7 @@
  *
  * Charte : les affiches 2026 de Lou Cardon. Aplats francs, blocs
  * polygonaux, dé isométrique, grain, aucun néon. La page se lit d'une
- * traite : sept bandes dont les dégradés se raccordent bord à bord, donc
+ * traite : huit bandes dont les dégradés se raccordent bord à bord, donc
  * aucune ligne de séparation nulle part (voir la chaîne --de/--vers dans
  * src/styles/psuf2026.css).
  *
@@ -22,6 +22,7 @@ import Hero from "@/components/festival/psuf2026/Hero.astro";
 import Programme from "@/components/festival/psuf2026/Programme.astro";
 import Plan from "@/components/festival/psuf2026/Plan.astro";
 import Programmation from "@/components/festival/psuf2026/Programmation.astro";
+import Tournois from "@/components/festival/psuf2026/Tournois.astro";
 import Jeux from "@/components/festival/psuf2026/Jeux.astro";
 import Associations from "@/components/festival/psuf2026/Associations.astro";
 import RendezVous from "@/components/festival/psuf2026/RendezVous.astro";
@@ -120,6 +121,7 @@ const releve = new Date().toLocaleDateString("fr-FR", {
       <Programme />
       <Plan />
       <Programmation />
+      <Tournois />
       <Jeux
         jeux={nbJeux}
         studios={nbStudios}

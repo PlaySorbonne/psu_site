@@ -165,7 +165,8 @@ body{background:#141C3B;-webkit-font-smoothing:antialiased;}
 #programme     {--de:#294583;--vers:#22386E;}
 #plan          {--de:#22386E;--vers:#262E64;}
 #programmation {--de:#262E64;--mid:#6A1C62;--vers:#8E1C74;}
-#jeux          {--de:#8E1C74;--mid:#57267A;--vers:#2A4179;}
+#tournois      {--de:#8E1C74;--mid:#7C2078;--vers:#6A2A7C;}
+#jeux          {--de:#6A2A7C;--mid:#4C2F7B;--vers:#2A4179;}
 #associations  {--de:#2A4179;--vers:#22335F;}
 #rendez-vous   {--de:#22335F;--vers:#1B2950;}
 
@@ -508,33 +509,6 @@ body{background:#141C3B;-webkit-font-smoothing:antialiased;}
   box-shadow:inset 0 0 0 2px var(--l-auditorium);}
 .s-prog__leg--fle{color:var(--encre);font-size:.9rem;line-height:1;}
 
-/* ---------- panneau de détail ---------- */
-.s-prog__detail{margin-top:16px;padding:14px 18px 15px;
-  background:var(--bleu-nuit);color:var(--sur-nuit);
-  border-left:6px solid var(--cd,var(--jaune));min-height:96px;
-  --c1:14px;--c2:8px;--c3:26px;--c4:12px;}
-.s-prog__detail [hidden]{display:none;}
-.s-prog__detail p{margin:0;}
-.s-prog__detail-repos{font-family:var(--texte);font-size:var(--t-s);
-  line-height:1.5;color:var(--sur-nuit-doux);}
-.s-prog__detail-repos b{color:var(--blanc);font-weight:900;}
-.s-prog__detail .s-prog__detail-meta{display:flex;flex-wrap:wrap;gap:.6em 1em;align-items:baseline;
-  font-family:var(--texte);font-weight:900;font-size:var(--t-xs);
-  text-transform:uppercase;letter-spacing:.14em;margin-bottom:.5em;}
-/* le nom du lieu reste blanc : plusieurs couleurs de lieu (rouge atrium,
-   magenta pyramide) ne passent pas en petit texte sur le bleu nuit.
-   La couleur est portée par le jeton et le liseré. */
-.s-prog__detail-lieu{color:var(--blanc);display:inline-flex;align-items:center;gap:.6em;}
-.s-prog__detail-lieu::before{content:"";width:11px;height:11px;flex:0 0 auto;
-  background:var(--cd,var(--jaune));
-  clip-path:polygon(3px 0,100% 0,100% 70%,70% 100%,0 100%,0 3px);}
-.s-prog__detail-creneau{color:var(--sur-nuit-doux);}
-.s-prog__detail-titre{font-family:var(--texte);font-weight:700;
-  font-size:var(--t-m);line-height:1.25;color:var(--blanc);}
-.s-prog__detail .s-prog__detail-note{font-family:var(--texte);font-size:var(--t-s);line-height:1.5;
-  color:var(--sur-nuit-doux);margin-top:.35em;}
-.s-prog__detail-note:empty{display:none;}
-
 /* ---------- pied du cadre ---------- */
 .s-prog__pied{margin-top:16px;padding-top:13px;border-top:1px solid var(--trait);
   display:grid;grid-template-columns:1fr;gap:10px 30px;align-items:baseline;}
@@ -593,7 +567,6 @@ body{background:#141C3B;-webkit-font-smoothing:antialiased;}
     clip:auto;white-space:normal;}
   .s-prog__bloc--billet .s-prog__titre{font-size:.9rem;}
 
-  .s-prog__detail{display:none;}
   .s-prog__pied{margin-top:20px;}
 }
 
@@ -1091,6 +1064,144 @@ body{background:#141C3B;-webkit-font-smoothing:antialiased;}
 }
 /* ---------- jeux ---------- */
 /* ==========================================================
+   LES TOURNOIS ET LE COSPLAY : #tournois / .s-trn
+
+   Une fiche par tournoi, chacune sur un bloc blanc coiffé d'une
+   plaque bleu nuit. La couleur de lieu (`--c`, posée en style
+   inline par le composant) ne porte jamais de texte : elle tient
+   la pastille de la plaque et le trait du fil des étapes. C'est ce
+   qui permet de garder l'atrium rouge et l'amphi 45B jaune sans
+   tomber sous le seuil AA.
+   ========================================================== */
+.s-trn{--trn-gap:clamp(14px,1.8vw,22px);}
+
+/* ---------- décors ---------- */
+.s-trn__deco{height:auto;}
+.s-trn__deco--epee{width:112px;top:-38px;right:6%;color:var(--jaune);opacity:.5;
+  transform:rotate(15deg);}
+.s-trn__deco--console{width:132px;left:2%;bottom:8%;color:var(--rose);opacity:.42;
+  transform:rotate(-9deg);}
+.s-trn__deco--eclair{width:76px;right:2%;bottom:12%;color:var(--cyan);opacity:.5;
+  transform:rotate(8deg);}
+.s-trn__deco--etoile{width:64px;left:3%;top:10%;color:var(--jaune);opacity:.55;}
+
+/* ---------- en-tête ---------- */
+.s-trn__oeil{color:var(--jaune);margin-bottom:.9rem;}
+.s-trn__h2{color:var(--blanc);max-width:22ch;}
+.s-trn__chapo{max-width:70ch;margin-top:clamp(14px,1.8vw,20px);
+  font-family:var(--texte);font-size:clamp(1rem,1.3vw,1.12rem);line-height:1.55;
+  color:var(--sur-nuit-doux);}
+
+/* ---------- la liste des fiches ---------- */
+.s-trn__l{list-style:none;margin:clamp(28px,3.6vw,46px) 0 0;padding:0;
+  display:grid;gap:var(--trn-gap);
+  grid-template-columns:repeat(auto-fit,minmax(310px,1fr));align-items:start;}
+/* l'ancre d'une fiche ne doit pas passer sous l'en-tête collante */
+.s-trn__item{scroll-margin-top:calc(var(--entete) + 18px);min-width:0;}
+.s-trn__carte{background:var(--blanc);color:var(--encre);
+  display:flex;flex-direction:column;height:100%;
+  transition:transform .18s ease;}
+.s-trn__item:hover .s-trn__carte,
+.s-trn__carte:focus-within{transform:translateY(-3px);}
+
+/* ---------- la plaque de lieu ---------- */
+.s-trn__plaque{display:flex;align-items:center;flex-wrap:wrap;gap:.45em .7em;
+  margin:0;padding:.78em clamp(16px,2vw,22px);
+  background:var(--bleu-nuit);color:var(--sur-nuit);
+  font-family:var(--texte);font-weight:900;font-size:var(--t-xs);
+  text-transform:uppercase;letter-spacing:.13em;}
+.s-trn__pastille{width:12px;height:12px;flex:0 0 auto;background:var(--c);
+  clip-path:polygon(0 0,100% 0,100% 72%,72% 100%,0 100%);}
+.s-trn__plage{margin-left:auto;color:var(--jaune);letter-spacing:.1em;
+  white-space:nowrap;}
+
+/* ---------- corps de fiche ---------- */
+.s-trn__dedans{display:flex;flex-direction:column;flex:1 1 auto;
+  padding:clamp(16px,2vw,22px) clamp(16px,2vw,22px) clamp(18px,2.2vw,24px);}
+.s-trn__nom{font-family:var(--titre);font-size:clamp(1.3rem,1.9vw,1.7rem);
+  line-height:1.02;text-transform:uppercase;margin:0;color:var(--bleu-nuit);
+  text-wrap:balance;}
+.s-trn__accroche{margin:.7em 0 0;font-family:var(--texte);font-size:var(--t-s);
+  line-height:1.5;color:var(--encre);}
+
+/* ---------- les faits : places, format, récompense ---------- */
+.s-trn__faits{margin:1.05em 0 0;display:grid;
+  grid-template-columns:auto minmax(0,1fr);gap:.3em .8em;align-items:baseline;}
+.s-trn__faits dt{font-family:var(--texte);font-weight:900;font-size:var(--t-xs);
+  text-transform:uppercase;letter-spacing:.11em;color:var(--magenta-profond);
+  white-space:nowrap;}
+.s-trn__faits dd{margin:0;font-family:var(--texte);font-size:var(--t-s);
+  line-height:1.45;color:var(--encre-douce);}
+
+/* ---------- le fil des étapes ----------
+   Le trait vertical prend la couleur du lieu : il est décoratif, et
+   c'est la seule place où cette couleur tient sur du blanc. */
+.s-trn__fil{list-style:none;margin:1.15em 0 0;padding:0 0 0 1.05em;
+  position:relative;display:flex;flex-direction:column;gap:.45em;}
+.s-trn__fil::before{content:"";position:absolute;left:3px;top:.55em;bottom:.55em;
+  width:3px;background:var(--c);}
+.s-trn__etape{display:grid;grid-template-columns:auto minmax(0,1fr);
+  gap:.2em .7em;align-items:baseline;}
+.s-trn__h{display:inline-flex;align-items:baseline;gap:.22em;
+  background:var(--bleu-nuit);color:var(--blanc);
+  font-family:var(--titre);font-size:.86rem;line-height:1;letter-spacing:.02em;
+  padding:.42em .58em .38em;white-space:nowrap;
+  --c1:7px;--c2:4px;--c3:8px;--c4:4px;
+  clip-path:polygon(var(--c1) 0,100% 0,100% calc(100% - var(--c2)),
+    calc(100% - var(--c3)) 100%,0 100%,0 var(--c4));}
+.s-trn__h i{font-style:normal;color:var(--jaune);}
+.s-trn__quoi{font-family:var(--texte);font-size:var(--t-s);line-height:1.4;
+  color:var(--encre);}
+
+/* ---------- notes et manques ---------- */
+.s-trn__note,.s-trn__manque{margin:1em 0 0;font-family:var(--texte);
+  font-size:var(--t-xs);line-height:1.5;letter-spacing:.005em;}
+.s-trn__note{color:var(--encre-douce);}
+.s-trn__manque{color:var(--encre);background:var(--jaune);padding:.7em .85em;
+  --c1:9px;--c2:6px;--c3:11px;--c4:5px;
+  clip-path:polygon(var(--c1) 0,100% 0,100% calc(100% - var(--c2)),
+    calc(100% - var(--c3)) 100%,0 100%,0 var(--c4));}
+.s-trn__manque b{font-weight:900;text-transform:uppercase;letter-spacing:.11em;}
+
+/* ---------- l'appel à l'inscription ---------- */
+.s-trn__act{margin-top:auto;padding-top:clamp(16px,2vw,22px);
+  display:flex;align-items:center;flex-wrap:wrap;gap:.6em .9em;}
+.s-trn__btn{background:var(--bleu-nuit);color:var(--blanc);}
+.s-trn__btn:focus-visible{outline:3px solid var(--magenta-profond);outline-offset:3px;}
+.s-trn__fleche{width:19px;height:9px;flex:0 0 auto;}
+.s-trn__hote{margin:0;font-family:var(--texte);font-size:var(--t-xs);
+  color:var(--encre-douce);}
+
+/* ---------- le pied de section ---------- */
+.s-trn__pied{display:flex;align-items:flex-start;gap:clamp(12px,1.6vw,20px);
+  margin:clamp(26px,3.4vw,42px) 0 0;padding:clamp(18px,2.2vw,26px) clamp(18px,2.4vw,28px);}
+.s-trn__de{width:44px;height:48px;flex:0 0 auto;color:var(--jaune);}
+.s-trn__pied-p{font-family:var(--texte);font-size:var(--t-s);line-height:1.55;
+  color:var(--sur-nuit-doux);max-width:82ch;}
+.s-trn__pied-p b{font-weight:900;text-transform:uppercase;letter-spacing:.13em;
+  color:var(--jaune);margin-right:.4em;}
+
+/* ---------- points de rupture ---------- */
+@media (max-width:1080px){
+  .s-trn__deco--eclair,.s-trn__deco--etoile{display:none;}
+}
+@media (max-width:560px){
+  .s-trn__l{grid-template-columns:1fr;}
+  .s-trn__plage{margin-left:0;width:100%;}
+  .s-trn__deco--console{display:none;}
+  .s-trn__deco--epee{width:84px;top:-24px;}
+  .s-trn__act .btn{flex:1 1 100%;justify-content:center;}
+  .s-trn__pied{flex-direction:column;}
+}
+
+/* ---------- mouvement réduit ---------- */
+@media (prefers-reduced-motion:reduce){
+  .s-trn__carte{transition:none;}
+  .s-trn__item:hover .s-trn__carte,
+  .s-trn__carte:focus-within{transform:none;}
+}
+
+/* ==========================================================
    LES JEUX ET LES STUDIOS : #jeux / .s-jeux
    ========================================================== */
 .s-jeux{
@@ -1327,6 +1438,13 @@ body{background:#141C3B;-webkit-font-smoothing:antialiased;}
 .s-prg__onglet[aria-selected="true"]{background:var(--blanc);color:var(--bleu-nuit);
   box-shadow:none;}
 .s-prg__onglet[aria-selected="true"]:focus-visible{outline-color:var(--bleu-nuit);}
+/* onglet inerte : le programme de sa scène n'est pas publié, il ne s'ouvre
+   pas. Seul le liseré s'efface — le texte garde sa couleur, c'est lui qui
+   porte l'état « programme à venir » et il doit rester lisible. */
+.s-prg__onglet[aria-disabled="true"]{cursor:default;
+  box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--sur-nuit-doux) 20%,transparent);}
+.s-prg__onglet[aria-disabled="true"]:hover{color:var(--sur-nuit-doux);
+  box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--sur-nuit-doux) 20%,transparent);}
 .s-prg__onglet-etat{font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;
   color:var(--jaune);opacity:.85;}
 .s-prg__onglet[aria-selected="true"] .s-prg__onglet-etat{color:var(--magenta-profond);

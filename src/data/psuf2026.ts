@@ -13,6 +13,12 @@
  * l'affiche du programme : ils sont justes au quart d'heure près, pas plus.
  * À corriger dès qu'une grille horaire chiffrée est disponible.
  *
+ * <!> Les tournois (`tournois`, plus bas) ne viennent pas des affiches :
+ * horaires, formats et liens d'inscription ont été transmis par les
+ * organisateurs de chaque tournoi. Là où ils prévalent sur l'affiche, ce
+ * sont eux qui font foi, et les créneaux de la frise ont été recalés
+ * dessus (TETR.IO finit à 17h45, Pokémon commence son check-in à 15h).
+ *
  * <!> Deux documents n'existent pas encore : le programme détaillé de la
  * scène Pyramide, et celui de l'auditorium au-delà des deux sessions de JDR.
  * Les volets correspondants portent leur propre message d'attente ; il suffit
@@ -36,7 +42,7 @@ export const festival = {
     "https://www.helloasso.com/associations/play-sorbonne-universite/evenements/play-sorbonne-festival-2026",
   surface: "14 000 m²",
   exposants: 150,
-  affiche: "Affiche 2026 : Lou Cardon",
+  affiche: "Design : Lou Cardon",
 } as const;
 
 /* ------------------------------------------------------------------ */
@@ -76,6 +82,8 @@ export type Creneau = {
   variante?: "billet";
   /* renvoie vers un volet de la programmation, plus bas dans la page */
   volet?: string;
+  /* renvoie vers une fiche de tournoi, plus bas dans la page */
+  ancre?: string;
 };
 
 export const programme: Creneau[] = [
@@ -84,7 +92,8 @@ export const programme: Creneau[] = [
     debut: "10:00",
     fin: "16:30",
     titre: "Tournoi osu! et osu!mania 7K",
-    note: "Check-in jusqu'à 10h30. 32 places osu! et 16 places osu!mania 7K.",
+    note: "Check-in jusqu'à 10h30. 32 places osu! et 16 places osu!mania 7K. Inscription en ligne.",
+    ancre: "#tournoi-osu",
   },
   {
     lieu: "pyramide",
@@ -105,22 +114,26 @@ export const programme: Creneau[] = [
   {
     lieu: "amphi45a",
     debut: "10:00",
-    fin: "18:00",
+    fin: "17:45",
     titre: "Tournoi & freeplay TETR.IO",
-    note: "Check-in jusqu'à 10h50. 32 places.",
+    note: "Check-in de 10h à 11h. Poules, bracket, top 8 puis finales, remise des prix à 17h45. 32 places, inscription en ligne.",
+    ancre: "#tournoi-tetrio",
   },
   {
     lieu: "amphi45b",
-    debut: "16:00",
-    fin: "18:30",
+    debut: "15:00",
+    fin: "18:40",
     titre: "Tournoi Pokémon Close Combat",
+    note: "Check-in de 15h à 15h30, tournoi de 16h à 18h40. 16 joueurs, inscription en ligne.",
+    ancre: "#tournoi-pokemon",
   },
   {
     lieu: "atrium",
     debut: "10:00",
     fin: "18:30",
     titre: "Tournois Mario Kart World, Super Smash Bros. Ultimate, TFT",
-    note: "Début des tournois à 11h. Check-in variables entre 10h et 10h30 ou 10h et 10h50, rendez-vous sur place. Entre 32 et 96 places selon le jeu.",
+    note: "Check-in dès 10h, début des trois tournois à 11h. Inscription en ligne, et sur place à 10h30 pour Mario Kart World. Entre 32 et 96 places selon le jeu.",
+    ancre: "#tournois",
   },
   {
     lieu: "auditorium",
@@ -159,6 +172,147 @@ export const programme: Creneau[] = [
 ];
 
 /* ------------------------------------------------------------------ */
+/* Les tournois et le concours cosplay : ce qui se joue sur            */
+/* inscription                                                         */
+/*                                                                     */
+/* Chacun ouvre ses inscriptions sur sa propre plateforme : c'est le   */
+/* lien `inscription` qui fait foi, pas cette page. `manque` dit ce    */
+/* qui n'a pas encore été annoncé, au lieu de le deviner.              */
+/* ------------------------------------------------------------------ */
+
+export type EtapeTournoi = {
+  debut: string;
+  /* absent = un instant, pas une plage (« 17h45, remise des prix ») */
+  fin?: string;
+  quoi: string;
+};
+
+export type Tournoi = {
+  id: string;
+  nom: string;
+  /* le lieu de la frise : la fiche reprend sa couleur */
+  lieuId: string;
+  plage: string;
+  inscription: string;
+  /* la plateforme qui porte les inscriptions, nommée en clair */
+  hote: string;
+  /* inscription sur place, quand elle est annoncée */
+  surPlace?: string;
+  places?: string;
+  format?: string;
+  recompense?: string;
+  chapo?: string;
+  etapes: EtapeTournoi[];
+  note?: string;
+  /* ce qui n'est pas encore annoncé */
+  manque?: string;
+};
+
+export const tournois: Tournoi[] = [
+  {
+    id: "smash",
+    nom: "Super Smash Bros. Ultimate",
+    lieuId: "atrium",
+    plage: "10h00 → 18h30",
+    inscription: "https://www.start.gg/tournament/play-sorbonne-2026/details",
+    hote: "start.gg",
+    etapes: [
+      { debut: "10:00", fin: "10:50", quoi: "Check-in" },
+      { debut: "11:00", quoi: "Début du tournoi" },
+      { debut: "18:30", quoi: "Fin du tournoi et remise des prix" },
+    ],
+  },
+  {
+    id: "tft",
+    nom: "Teamfight Tactics",
+    lieuId: "atrium",
+    plage: "11h00 → fin à confirmer",
+    inscription:
+      "https://play.toornament.com/fr/tournaments/2539147707801890815/",
+    hote: "Toornament",
+    etapes: [
+      { debut: "10:00", quoi: "Check-in des joueurs pré-inscrits" },
+      { debut: "11:00", quoi: "Début du tournoi" },
+    ],
+  },
+  {
+    id: "mariokart",
+    nom: "Mario Kart World",
+    lieuId: "atrium",
+    plage: "11h00 → fin à confirmer",
+    inscription:
+      "https://play.toornament.com/fr/tournaments/2539147973964118015/",
+    hote: "Toornament",
+    etapes: [
+      { debut: "10:00", quoi: "Check-in des joueurs pré-inscrits" },
+      { debut: "10:30", quoi: "Ouverture des inscriptions sur place" },
+      { debut: "11:00", quoi: "Début du tournoi" },
+    ],
+  },
+  {
+    id: "tetrio",
+    nom: "TETR.IO",
+    lieuId: "amphi45a",
+    plage: "10h00 → 17h45",
+    inscription: "https://parry.gg/fscup-psu-3",
+    hote: "parry.gg",
+    places: "32 places",
+    etapes: [
+      { debut: "10:00", fin: "11:00", quoi: "Check-in" },
+      { debut: "11:00", fin: "12:30", quoi: "Phases de poules" },
+      { debut: "13:30", fin: "15:30", quoi: "Bracket principal" },
+      { debut: "15:30", fin: "17:00", quoi: "Top 8" },
+      { debut: "17:00", fin: "17:45", quoi: "Finales" },
+      { debut: "17:45", quoi: "Remise des prix" },
+    ],
+    note: "L'amphi 45A reste ouvert en freeplay en dehors des phases de tournoi.",
+  },
+  {
+    id: "pokemon",
+    nom: "Pokémon Close Combat",
+    lieuId: "amphi45b",
+    plage: "15h00 → 18h40",
+    inscription:
+      "https://docs.google.com/forms/d/e/1FAIpQLSeyf2YtqP4rZHg82d2tdaT2DAZBEKENWfHJCKesxd9AARs_KA/viewform?usp=dialog",
+    hote: "formulaire Google",
+    places: "16 joueurs",
+    etapes: [
+      { debut: "15:00", fin: "15:30", quoi: "Check-in" },
+      { debut: "16:00", fin: "16:40", quoi: "Phases de poules" },
+      { debut: "16:40", fin: "16:50", quoi: "Pause" },
+      { debut: "16:50", fin: "17:40", quoi: "Demi-finales" },
+      { debut: "17:40", fin: "18:30", quoi: "Finale" },
+      { debut: "18:30", fin: "18:40", quoi: "Remise des prix" },
+    ],
+    note: "Trois heures de tournoi, de 16h à 18h40.",
+  },
+  {
+    id: "osu",
+    nom: "osu! et osu!mania 7K",
+    lieuId: "foyer",
+    plage: "10h00 → 16h30",
+    inscription: "https://osu.ppy.sh/community/forums/topics/2239179?n=1",
+    hote: "forum osu!",
+    places: "32 places osu!, 16 places osu!mania 7K",
+    etapes: [
+      { debut: "10:00", fin: "10:30", quoi: "Check-in" },
+      { debut: "10:30", fin: "16:30", quoi: "Tournoi" },
+    ],
+  },
+  {
+    id: "cosplay",
+    nom: "Concours Cosplay",
+    lieuId: "pyramide",
+    plage: "10h00 → 19h00",
+    inscription: "https://inscription.epic-asso.com/news/29",
+    hote: "EPIC",
+    etapes: [],
+    manque:
+      "L'heure de passage du concours n'est pas encore annoncée",
+  },
+];
+
+/* ------------------------------------------------------------------ */
 /* La programmation : trois scènes, trois frises, un jeu d'onglets     */
 /* ------------------------------------------------------------------ */
 
@@ -180,6 +334,9 @@ export type Volet = {
   label: string;
   /* état affiché sur l'onglet quand le programme n'est pas complet */
   etat?: string;
+  /* onglet non ouvrable : le volet est prêt, mais rien n'y est encore
+     publié — il n'y a rien à aller voir tant que ça dure */
+  inerte?: boolean;
   lieu: string;
   lieuId: string;
   plage: string;
@@ -197,58 +354,57 @@ export const volets: Volet[] = [
     label: "Conférences",
     lieu: "Scène Conférences",
     lieuId: "conf",
-    plage: "10h30 → 17h15",
+    plage: "10h30 → 17h30",
     titre: "Les conférences",
     chapo:
-      "Sept interventions de quarante-cinq minutes s'enchaînent sur la scène Conférences, avec un quart d'heure de battement entre chacune. Au programme : cryptographie, sémiotique, représentation animale, réalité virtuelle et adaptation littéraire.",
+      "Sept interventions s'enchaînent sur la scène Conférences. Au programme : cryptographie, sémiotique, représentation animale, réalité virtuelle et adaptation littéraire.",
     reperes: [
       { v: "7", l: "interventions" },
-      { v: "45 min", l: "chacune" },
-      { v: "10h30 → 17h15", l: "en continu" },
+      { v: "10h30 → 17h30", l: "en continu" },
     ],
     seances: [
       {
         debut: "10:30",
-        fin: "11:15",
+        fin: "11:30",
         titre: "Représentation animale dans le jeu vidéo",
         par: "Florian Verdier",
       },
       {
         debut: "11:30",
-        fin: "12:15",
+        fin: "12:30",
         titre:
           "Comment les nouvelles productions inspirent-elles les jeunes artistes à casser les codes de la 3D ?",
         par: "Marion Valls et Siheme Bouaou",
       },
       {
         debut: "12:30",
-        fin: "13:15",
+        fin: "13:30",
         titre:
           "Jouer à des jeux de société sans craindre les tricheurs grâce à la cryptographie",
         par: "Xavier Bultel",
       },
       {
         debut: "13:30",
-        fin: "14:15",
+        fin: "14:30",
         titre: "Mentir honteusement aux joueurs sur leurs villes",
         par: "Hugo Saal",
       },
       {
         debut: "14:30",
-        fin: "15:15",
+        fin: "15:30",
         titre: "Adapter Émile Zola en jeu vidéo",
         par: "Alina Gonzalez Mediano et Samuel Freche",
       },
       {
         debut: "15:30",
-        fin: "16:15",
+        fin: "16:30",
         titre:
           "Lire entre les pixels : la sémiotique au cœur de la conception de jeux",
         par: "Gwendolyn Garan",
       },
       {
         debut: "16:30",
-        fin: "17:15",
+        fin: "17:30",
         titre: "La rééducation gamifiée en réalité virtuelle",
         par: "Olivier Pons, Théo Combe, Eulalie Verhulst",
       },
@@ -263,7 +419,7 @@ export const volets: Volet[] = [
     plage: "10h00 → 18h00",
     titre: "Jeu de rôle interactif",
     chapo:
-      "Neuf invités montent sur la scène de l'auditorium pour jouer une partie devant la salle. FibreTigre anime les deux parties ; autour de la table, le casting change d'une session à l'autre. Les billets se retirent session par session : on peut ne venir que l'après-midi.",
+      "Neuf invités montent sur la scène de l'auditorium pour jouer une partie devant la salle. FibreTigre anime les deux parties avec un casting qui change d'une session à l'autre. Pensez à récupérer les billets !",
     reperes: [
       { v: "9", l: "invités" },
       { v: "2 × 2h30", l: "de partie" },
@@ -272,10 +428,10 @@ export const volets: Volet[] = [
     seances: [
       {
         debut: "10:00",
-        fin: "10:45",
+        fin: "11:00",
         titre: "Retrait des billets",
         tag: "Billets",
-        note: "Pour les deux sessions de la journée. Le guichet ferme à 10h45.",
+        note: "500 billets gratuits pour la session du matin, 500 pour celle de l'après-midi. Premiers arrivés, premiers servis !",
       },
       {
         debut: "11:00",
@@ -289,7 +445,7 @@ export const volets: Volet[] = [
         fin: "15:20",
         titre: "Retrait des billets",
         tag: "Billets",
-        note: "Pour l'après-midi seulement. Le guichet ferme à 15h20.",
+        note: "Pour l'après-midi uniquement",
       },
       {
         debut: "15:30",
@@ -299,14 +455,13 @@ export const volets: Volet[] = [
         session: "aprem",
       },
     ],
-    attente:
-      "L'auditorium occupe un autre bâtiment du campus : il ne figure pas sur le plan général.",
   },
 
   {
     id: "pyramide",
     label: "Scène Pyramide",
     etat: "programme à venir",
+    inerte: true,
     lieu: "Scène Pyramide",
     lieuId: "pyramide",
     plage: "10h00 → 19h00",
