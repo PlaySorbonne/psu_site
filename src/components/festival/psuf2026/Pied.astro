@@ -1,0 +1,134 @@
+---
+/*
+ * Pied de page du festival : le bandeau blanc des partenaires, comme en
+ * pied d'affiche, puis les réseaux et les crédits sur le bleu nuit.
+ *
+ * Le dégradé part de la couleur de fin de la dernière bande : aucune
+ * ligne de séparation n'apparaît.
+ */
+import { Image } from "astro:assets";
+import { extLogos } from "@/assets/logos/ext";
+import { festival } from "@/data/psuf2026";
+
+import Insta from "@/assets/social/insta.svg";
+import Discord from "@/assets/social/discord.svg";
+import Bluesky from "@/assets/social/bluesky.svg";
+import Twitter from "@/assets/social/twitter.svg";
+import Twitch from "@/assets/social/twitch.svg";
+import Youtube from "@/assets/social/youtube.svg";
+
+const partenaires = [
+  { logo: extLogos.su, alt: "Sorbonne Université" },
+  { logo: extLogos.paris, alt: "Paris étudiante" },
+  { logo: extLogos.cvec, alt: "Financé par la CVEC" },
+  { logo: extLogos.crous, alt: "Crous de Paris" },
+];
+
+const reseaux = [
+  { icone: Discord, nom: "Discord", url: "https://discord.gg/be5X7qMNSQ", evt: "Footer Discord" },
+  { icone: Insta, nom: "Instagram", url: "https://www.instagram.com/play_sorbonne_u/", evt: "Footer insta" },
+  { icone: Bluesky, nom: "Bluesky", url: "https://bsky.app/profile/playsorbonne.fr", evt: "Footer Bluesky" },
+  { icone: Twitter, nom: "Twitter", url: "https://twitter.com/PlaySorbonneU", evt: "Footer twitter" },
+  { icone: Youtube, nom: "YouTube", url: "https://www.youtube.com/@PlaySorbonne", evt: "Footer Youtube" },
+  { icone: Twitch, nom: "Twitch", url: "https://www.twitch.tv/play_sorbonne", evt: "Footer twitch" },
+];
+---
+
+<footer class="pied">
+  <div class="pied__part">
+    <span>Avec le soutien de</span>
+    {
+      partenaires.map((p) => (
+        <Image src={p.logo} alt={p.alt} height={46} loading="lazy" />
+      ))
+    }
+  </div>
+
+  <div class="pied__in">
+    <div>
+      <svg class="pied__de" aria-hidden="true"><use href="#psuf-champsu"></use></svg>
+      <p class="pied__t">Play Sorbonne Festival</p>
+      <p>
+        {festival.dateTexte}, {festival.horaires}<br />
+        4 place Jussieu, Paris 5<sup>e</sup> · {festival.acces}<br />
+        <a href={festival.inscription} target="_blank" rel="noopener noreferrer"
+          >{festival.prix}</a
+        >
+      </p>
+    </div>
+
+    <div>
+      <ul class="pied__reseaux">
+        {
+          reseaux.map((r) => (
+            <li>
+              <a
+                href={r.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={r.nom}
+                data-umami-event={r.evt}
+              >
+                <img src={r.icone.src} alt="" loading="lazy" width="26" height="26" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p>
+        <a href="mailto:contact@playsorbonne.fr" data-umami-event="Footer mail"
+          >contact@playsorbonne.fr</a
+        ><br />
+        <a href="/">playsorbonne.fr</a>
+      </p>
+      <p class="pied__mention">
+        {festival.affiche} · Organisé par Play Sorbonne Université
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  /* Le reste du pied vient de src/styles/psuf2026.css ; seules les deux
+     listes ajoutées ici ont besoin de leurs propres règles. */
+  .pied__reseaux {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 0 0 1em;
+    padding: 0;
+    list-style: none;
+  }
+  .pied__reseaux a {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    background: rgba(255, 255, 255, 0.1);
+    clip-path: polygon(
+      9px 0,
+      100% 0,
+      100% calc(100% - 6px),
+      calc(100% - 10px) 100%,
+      0 100%,
+      0 5px
+    );
+    transition:
+      background 0.16s ease,
+      transform 0.16s ease;
+  }
+  .pied__reseaux a:hover,
+  .pied__reseaux a:focus-visible {
+    background: var(--jaune);
+    transform: translateY(-2px);
+  }
+  .pied__reseaux img {
+    width: 24px;
+    height: 24px;
+    filter: invert(1);
+  }
+  .pied__reseaux a:hover img,
+  .pied__reseaux a:focus-visible img {
+    filter: none;
+  }
+</style>

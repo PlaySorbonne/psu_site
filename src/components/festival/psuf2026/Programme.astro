@@ -1,0 +1,405 @@
+---
+/*
+ * La frise de la journée : une grille de Gantt en CSS, sept lieux sur
+ * neuf heures, graduée au quart d'heure. Ce n'est pas une image, donc
+ * modifiable, lisible au lecteur d'écran, et repliée en liste par lieu
+ * sous 820 px.
+ *
+ * Un créneau qui renvoie vers un volet de la programmation est un lien :
+ * il ouvre le bon onglet plus bas dans la page.
+ */
+import {
+  festival,
+  lieux,
+  programme,
+  colonnes,
+  plage,
+  NB_COLONNES,
+} from "@/data/psuf2026";
+
+/* la règle des heures : une étiquette toutes les quatre colonnes,
+   la dernière heure étant posée à droite de la règle */
+const heures = Array.from({ length: NB_COLONNES / 4 }, (_, i) => ({
+  label: `${10 + i}H`,
+  colonne: 2 + i * 4,
+}));
+
+const parLieu = lieux.map((lieu) => ({
+  lieu,
+  creneaux: programme.filter((c) => c.lieu === lieu.id),
+}));
+
+const nbCreneaux = programme.length;
+---
+
+<section class="bande s-prog" id="programme" data-jour={festival.dateIso}>
+  <svg class="deco s-prog__deco s-prog__deco--eclair" aria-hidden="true"
+    ><use href="#psuf-eclair-large"></use></svg
+  >
+  <svg class="deco s-prog__deco s-prog__deco--etoile" aria-hidden="true"
+    ><use href="#psuf-etoile"></use></svg
+  >
+  <svg class="deco s-prog__deco s-prog__deco--tri" aria-hidden="true"
+    ><use href="#psuf-triangle-jaune2"></use></svg
+  >
+  <svg class="deco s-prog__deco s-prog__deco--manette" aria-hidden="true"
+    ><use href="#psuf-doodle-manette"></use></svg
+  >
+
+  <div class="enveloppe">
+    <header class="s-prog__tete">
+      <p class="oeil s-prog__oeil">
+        <span>{festival.dateTexte} · {festival.horaires}</span>
+      </p>
+      <h2 class="h-sec s-prog__h2">Le programme de la journée</h2>
+      <p class="s-prog__chapo">
+        Sept lieux, dix créneaux, neuf heures de programme&nbsp;: le tournoi <em
+          >osu!</em
+        > et ceux de l&rsquo;atrium ouvrent à 10h00, la scène Pyramide referme la
+        journée à 19h00. Chaque créneau porte son détail&nbsp;: check-in, nombre
+        de places, retrait des billets.
+      </p>
+    </header>
+
+    <div class="s-prog__cadre bloc bloc--b">
+      <div class="s-prog__zone">
+        <div class="s-prog__axe" aria-hidden="true">
+          <p class="s-prog__axe-coin">Lieu</p>
+          {
+            heures.map((h) => (
+              <div class="s-prog__h" style={`grid-column:${h.colonne}/span 4`}>
+                {h.label}
+              </div>
+            ))
+          }
+          <div class="s-prog__hfin">19H</div>
+        </div>
+
+        <div class="s-prog__corps">
+          {
+            parLieu.map(({ lieu, creneaux }) => (
+              <div
+                class="s-prog__ligne"
+                data-lieu={lieu.id}
+                style={
+                  lieu.encreClaire
+                    ? `--c:var(--l-${lieu.id});--cb:var(--l-${lieu.id}-fonce);--ct:var(--blanc)`
+                    : `--c:var(--l-${lieu.id})`
+                }
+              >
+                <button class="s-prog__etiq" type="button" aria-pressed="false">
+                  <span class="s-prog__pastille" aria-hidden="true" />
+                  <span class="s-prog__nom">{lieu.nom}</span>
+                  <span class="lecteur-seul">, mettre ce lieu en avant</span>
+                </button>
+                <span class="s-prog__piste" aria-hidden="true" />
+                {creneaux.map((c) => {
+                  const { grille, rogne } = colonnes(c.debut, c.fin);
+                  const style = `grid-column:${grille}${rogne ? `;--rogne:${rogne}` : ""}`;
+                  const classes = [
+                    "s-prog__bloc",
+                    c.variante === "billet" && "s-prog__bloc--billet",
+                    c.volet && "s-prog__bloc--lien",
+                  ]
+                    .filter(Boolean)
+                    .join(" ");
+                  const dedans = (
+                    <Fragment>
+                      {c.variante === "billet" && (
+                        <Fragment>
+                          <span class="s-prog__jeton" aria-hidden="true" />
+                          <span class="s-prog__court" aria-hidden="true">
+                            Billets
+                          </span>
+                        </Fragment>
+                      )}
+                      <span class="s-prog__creneau">
+                        {plage(c.debut, c.fin)}
+                      </span>
+                      <span class="s-prog__titre">{c.titre}</span>
+                      {c.note && <span class="s-prog__note">{c.note}</span>}
+                    </Fragment>
+                  );
+                  return c.volet ? (
+                    <a
+                      class={classes}
+                      href="#programmation"
+                      data-volet={c.volet}
+                      style={style}
+                      data-creneau={plage(c.debut, c.fin)}
+                    >
+                      {dedans}
+                    </a>
+                  ) : (
+                    <button
+                      class={classes}
+                      type="button"
+                      style={style}
+                      data-creneau={plage(c.debut, c.fin)}
+                    >
+                      {dedans}
+                    </button>
+                  );
+                })}
+              </div>
+            ))
+          }
+        </div>
+
+        <div class="s-prog__maintenant" hidden aria-hidden="true">
+          <span class="s-prog__maintenant-etiq"></span>
+        </div>
+      </div>
+
+      <p class="s-prog__legende">
+        <span class="s-prog__leg-item"
+          ><span class="s-prog__leg s-prog__leg--act" aria-hidden="true"
+          ></span>Créneau d&rsquo;activité</span
+        >
+        <span class="s-prog__leg-item"
+          ><span class="s-prog__leg s-prog__leg--bil" aria-hidden="true"
+          ></span>Retrait des billets</span
+        >
+        <span class="s-prog__leg-item"
+          ><span class="s-prog__leg s-prog__leg--fle" aria-hidden="true">↗</span
+          >Ouvre la programmation détaillée</span
+        >
+      </p>
+
+      <div class="s-prog__detail bloc bloc--c" aria-hidden="true">
+        <p class="s-prog__detail-repos">
+          <b>{nbCreneaux} créneaux, {lieux.length} lieux, 9 heures.</b> Survolez
+          la frise, ou sélectionnez un créneau au clavier, pour afficher ici son
+          détail&nbsp;: check-in, nombre de places, retrait des billets.
+        </p>
+        <div class="s-prog__detail-vif" hidden>
+          <p class="s-prog__detail-meta">
+            <span class="s-prog__detail-lieu"></span>
+            <span class="s-prog__detail-creneau"></span>
+          </p>
+          <p class="s-prog__detail-titre"></p>
+          <p class="s-prog__detail-note"></p>
+        </div>
+      </div>
+
+      <div class="s-prog__pied">
+        <p class="s-prog__avenir">
+          <span class="s-prog__puce" aria-hidden="true"></span>
+          <b>Encore à venir&nbsp;:</b> le programme détaillé de la scène Pyramide
+          n&rsquo;est pas encore publié. Cette frise et le volet Pyramide de la
+          programmation seront complétés dès son annonce.
+        </p>
+        <p class="s-prog__avert">
+          Horaires à confirmer au quart d&rsquo;heure près. La frise est graduée
+          par pas de 15 minutes, de 10h00 à 19h00.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { bus } from "./bus";
+
+  function frise() {
+    const sec = document.getElementById("programme");
+    if (!sec) return;
+
+    const corps = sec.querySelector(".s-prog__corps");
+    const lignes = Array.from(sec.querySelectorAll<HTMLElement>(".s-prog__ligne"));
+    const blocs = Array.from(sec.querySelectorAll<HTMLElement>(".s-prog__bloc"));
+    const etiqs = Array.from(sec.querySelectorAll(".s-prog__etiq"));
+    const detail = sec.querySelector<HTMLElement>(".s-prog__detail");
+    const dRepos = sec.querySelector<HTMLElement>(".s-prog__detail-repos");
+    const dVif = sec.querySelector<HTMLElement>(".s-prog__detail-vif");
+    const dLieu = sec.querySelector(".s-prog__detail-lieu");
+    const dCreneau = sec.querySelector(".s-prog__detail-creneau");
+    const dTitre = sec.querySelector(".s-prog__detail-titre");
+    const dNote = sec.querySelector(".s-prog__detail-note");
+
+    /* le panneau de détail est facultatif : s'il manque une pièce, la frise
+       reste utilisable, chaque note est dans le DOM de son créneau */
+    const aDetail = !!(
+      detail && dRepos && dVif && dLieu && dCreneau && dTitre && dNote
+    );
+
+    let epingle: HTMLElement | null = null;
+
+    const txt = (el: Element, sel: string) =>
+      el.querySelector(sel)?.textContent?.trim() ?? "";
+    const nomLieu = (ligne: Element) => txt(ligne, ".s-prog__nom");
+
+    function peins(id: string | null) {
+      detail?.style.setProperty("--cd", id ? `var(--l-${id})` : "var(--jaune)");
+    }
+
+    function montreBloc(bloc: HTMLElement) {
+      if (!aDetail) return;
+      const ligne = bloc.closest(".s-prog__ligne");
+      peins(ligne?.getAttribute("data-lieu") ?? null);
+      dLieu!.textContent = ligne ? nomLieu(ligne) : "";
+      dCreneau!.textContent = bloc.getAttribute("data-creneau") ?? "";
+      dTitre!.textContent = txt(bloc, ".s-prog__titre");
+      dNote!.textContent = txt(bloc, ".s-prog__note");
+      dRepos!.hidden = true;
+      dVif!.hidden = false;
+    }
+
+    /* résumé d'un lieu : uniquement des valeurs lues dans la frise */
+    function montreLigne(ligne: HTMLElement) {
+      if (!aDetail) return;
+      const b = ligne.querySelectorAll(".s-prog__bloc");
+      if (!b.length) return;
+      const premier = b[0].getAttribute("data-creneau") ?? "";
+      const dernier = b[b.length - 1].getAttribute("data-creneau") ?? "";
+      peins(ligne.getAttribute("data-lieu"));
+      dLieu!.textContent = nomLieu(ligne);
+      dCreneau!.textContent = `${premier.split("→")[0].trim()} → ${dernier
+        .split("→")
+        .pop()!
+        .trim()}`;
+      dTitre!.textContent =
+        b.length > 1
+          ? `${b.length} créneaux sur la journée`
+          : txt(b[0], ".s-prog__titre");
+      dNote!.textContent = b.length > 1 ? "" : txt(b[0], ".s-prog__note");
+      dRepos!.hidden = true;
+      dVif!.hidden = false;
+    }
+
+    function repos() {
+      if (!aDetail) return;
+      if (epingle) {
+        if (epingle.classList.contains("s-prog__bloc")) montreBloc(epingle);
+        else montreLigne(epingle);
+        return;
+      }
+      peins(null);
+      dVif!.hidden = true;
+      dRepos!.hidden = false;
+    }
+
+    function epingleSur(el: HTMLElement | null) {
+      blocs.forEach((b) => b.classList.remove("est-choisi"));
+      etiqs.forEach((e) => e.setAttribute("aria-pressed", "false"));
+      epingle = el;
+      if (el?.classList.contains("s-prog__bloc")) el.classList.add("est-choisi");
+      else el?.querySelector(".s-prog__etiq")?.setAttribute("aria-pressed", "true");
+      repos();
+    }
+
+    /* ---- lignes : survol et focus ---- */
+    lignes.forEach((ligne) => {
+      const id = ligne.getAttribute("data-lieu");
+      const entre = () => {
+        ligne.classList.add("est-actif");
+        bus.emit("lieu:survol", { id });
+      };
+      const sort = () => {
+        ligne.classList.remove("est-actif");
+        bus.emit("lieu:survol", null);
+        repos();
+      };
+      ligne.addEventListener("mouseenter", entre);
+      ligne.addEventListener("mouseleave", sort);
+      ligne.addEventListener("focusin", entre);
+      ligne.addEventListener("focusout", (e) => {
+        if (ligne.contains(e.relatedTarget as Node)) return;
+        sort();
+      });
+
+      const etiq = ligne.querySelector(".s-prog__etiq");
+      etiq?.addEventListener("mouseenter", () => montreLigne(ligne));
+      etiq?.addEventListener("focus", () => montreLigne(ligne));
+      etiq?.addEventListener("click", () => {
+        epingleSur(epingle === ligne ? null : ligne);
+        bus.emit("lieu:choix", { id });
+      });
+    });
+
+    /* ---- créneaux ---- */
+    blocs.forEach((bloc) => {
+      bloc.addEventListener("mouseenter", () => montreBloc(bloc));
+      bloc.addEventListener("mouseleave", repos);
+      bloc.addEventListener("focus", () => montreBloc(bloc));
+      bloc.addEventListener("click", () => {
+        /* Un créneau qui renvoie à la programmation ouvre son volet ; le lien
+           suit son ancre tout seul. Il n'allume rien sur le plan : verrouiller
+           une zone hors de l'écran surprendrait au retour. C'est le bouton de
+           lieu, à gauche de la ligne, qui sert à ça. */
+        const volet = bloc.getAttribute("data-volet");
+        if (volet) bus.emit("prog:volet", { id: volet });
+        else epingleSur(epingle === bloc ? null : bloc);
+      });
+    });
+
+    /* ---- ce que dit le plan ---- */
+    bus.on("plan:survol", (d) => {
+      const id = d ? (d.lieu ?? d.id ?? null) : null;
+      let trouve = false;
+      lignes.forEach((ligne) => {
+        const vise = id !== null && ligne.getAttribute("data-lieu") === id;
+        ligne.classList.toggle("est-vise", vise);
+        if (vise) trouve = true;
+      });
+      corps?.classList.toggle("a-vise", trouve);
+    });
+
+    /* ---- repère « il est telle heure » : rien si ce n'est pas le jour J ---- */
+    const repere = sec.querySelector<HTMLElement>(".s-prog__maintenant");
+    const repereEtiq = sec.querySelector(".s-prog__maintenant-etiq");
+    const jourJ = sec.getAttribute("data-jour");
+    const OUVERTURE = 10 * 60;
+    const FERMETURE = 19 * 60;
+    let attente: number | undefined;
+    let minuterie: number | undefined;
+
+    const deux = (n: number) => (n < 10 ? "0" : "") + n;
+    const jourDe = (d: Date) =>
+      `${d.getFullYear()}-${deux(d.getMonth() + 1)}-${deux(d.getDate())}`;
+
+    function arrete() {
+      clearTimeout(attente);
+      clearInterval(minuterie);
+      attente = minuterie = undefined;
+    }
+
+    function majRepere() {
+      if (!repere) return;
+      const d = new Date();
+      const iso = jourDe(d);
+      const mn = d.getHours() * 60 + d.getMinutes();
+      if (iso !== jourJ || mn < OUVERTURE || mn > FERMETURE) {
+        repere.hidden = true;
+        /* une fois la journée passée, plus rien à compter */
+        if (iso > jourJ! || (iso === jourJ && mn > FERMETURE)) arrete();
+        return;
+      }
+      repere.style.setProperty(
+        "--now",
+        ((mn - OUVERTURE) / (FERMETURE - OUVERTURE)).toFixed(5),
+      );
+      if (repereEtiq)
+        repereEtiq.textContent = `${deux(d.getHours())}H${deux(d.getMinutes())}`;
+      repere.hidden = false;
+    }
+
+    majRepere();
+    /* aucune minuterie les 364 autres jours de l'année */
+    if (repere && jourDe(new Date()) === jourJ) {
+      attente = window.setTimeout(
+        () => {
+          attente = undefined;
+          majRepere();
+          minuterie ??= window.setInterval(majRepere, 60000);
+        },
+        (60 - new Date().getSeconds()) * 1000 + 200,
+      );
+    }
+    document.addEventListener("astro:before-swap", arrete, { once: true });
+
+    repos();
+  }
+
+  document.addEventListener("astro:page-load", frise);
+</script>

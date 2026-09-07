@@ -1,0 +1,93 @@
+---
+/*
+ * Les associations.
+ *
+ * Elles ne sont pas une mention en bas de page : elles tiennent une part
+ * du festival. La légende du plan officiel les situe précisément
+ * (« Espace Jeux vidéos + Bornes + Associations »), d'où le bouton qui
+ * rallume cette zone sur le plan, plus haut, via le bus.
+ */
+import { Image } from "astro:assets";
+import festivalAssets from "@/assets/festival";
+import { associations, zoneAssos } from "@/data/psuf2026";
+import type { ImageMetadata } from "astro";
+
+const logos = festivalAssets.part as Record<string, ImageMetadata>;
+---
+
+<section class="bande s-assos" id="associations">
+  <svg class="deco s-assos__deco s-assos__deco--etoile" aria-hidden="true"
+    ><use href="#psuf-etoile"></use></svg
+  >
+  <svg class="deco s-assos__deco s-assos__deco--p1" aria-hidden="true"
+    ><use href="#psuf-doodle-player1"></use></svg
+  >
+  <svg class="deco s-assos__deco s-assos__deco--console" aria-hidden="true"
+    ><use href="#psuf-doodle-console"></use></svg
+  >
+
+  <div class="enveloppe">
+    <header class="s-assos__tete">
+      <p class="oeil s-assos__oeil">Avec nous sur place</p>
+      <h2 class="h-sec s-assos__h2">Les associations</h2>
+      <p class="s-assos__chapo">
+        <b>{associations.length} associations</b> partagent l&rsquo;espace jeux
+        vidéo, bornes et rétrogaming du bâtiment BDL1, aux côtés des studios
+        indépendants. Elles y font jouer, initient, animent leurs tables,
+        chacune avec ce qu&rsquo;elle sait faire.
+      </p>
+    </header>
+
+    <ul class="s-assos__liste">
+      {
+        associations.map((a) => (
+          <li>
+            <a
+              class="bloc s-assos__carte"
+              href={a.lien}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span class="s-assos__ecu">
+                <Image src={logos[a.img]} alt={`Logo de ${a.nom}`} width={280} loading="lazy" />
+              </span>
+              <h3 class="s-assos__nom">{a.nom}</h3>
+              <span class="s-assos__aller">
+                Voir leur site <i aria-hidden="true">↗</i>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="bloc bloc--b bloc-nuit s-assos__ou">
+      <span class="s-assos__ou-t">
+        <span class="s-assos__pastille" aria-hidden="true"></span>
+        <b>Où les trouver&nbsp;:</b> dans l&rsquo;espace «&nbsp;Jeux vidéos +
+        Bornes + Associations&nbsp;», la grande bande bleue du plan, entre les
+        tours 44&nbsp;et&nbsp;45.
+      </span>
+      <a
+        class="btn btn--jaune"
+        href="#plan"
+        data-zone={zoneAssos}
+        id="assos-vers-plan">Voir sur le plan</a
+      >
+    </p>
+  </div>
+</section>
+
+<script>
+  import { bus } from "./bus";
+
+  function versLePlan() {
+    const lien = document.getElementById("assos-vers-plan");
+    const zone = lien?.dataset.zone;
+    if (!lien || !zone) return;
+    /* l'ancre fait remonter la page, le bus allume la zone en arrivant */
+    lien.addEventListener("click", () => bus.emit("plan:vise", { zone }));
+  }
+
+  document.addEventListener("astro:page-load", versLePlan);
+</script>

@@ -1,0 +1,97 @@
+---
+/*
+ * Héros : le dé « champsu » en entier (le logo officiel, jamais rogné),
+ * puis les blocs polygonaux de la DA (date, horaires, lieu, activités).
+ */
+import { festival } from "@/data/psuf2026";
+
+type Props = { jeux: number; studios: number };
+const { jeux, studios } = Astro.props;
+
+const activites = [
+  "Jeux vidéo",
+  "Jeux de plateau",
+  "Studios indépendants",
+  "Tournois",
+  "Conférences",
+  "Jeu de rôle interactif",
+  "Expositions",
+  "Rétrogaming",
+  "Cosplay",
+];
+---
+
+<section class="bande s-hero ondes" id="hero" style="--ox:22%;--oy:36%">
+  <svg
+    class="deco"
+    aria-hidden="true"
+    style="color:#fff;width:104px;height:104px;top:6%;right:7%;opacity:.95"
+    ><use href="#psuf-etoile"></use></svg
+  >
+  <svg
+    class="deco"
+    aria-hidden="true"
+    style="color:var(--jaune);width:150px;height:74px;top:18%;right:26%;transform:rotate(-16deg)"
+    ><use href="#psuf-triangle-jaune"></use></svg
+  >
+  <svg
+    class="deco"
+    aria-hidden="true"
+    style="color:var(--cyan);width:112px;height:96px;bottom:6%;right:4%;transform:rotate(12deg)"
+    ><use href="#psuf-eclair"></use></svg
+  >
+  <svg
+    class="deco"
+    aria-hidden="true"
+    style="color:var(--rose);width:130px;height:52px;bottom:20%;left:3%;transform:rotate(8deg)"
+    ><use href="#psuf-triangle-rose"></use></svg
+  >
+  <svg
+    class="deco"
+    aria-hidden="true"
+    style="color:rgba(255,255,255,.35);width:76px;height:76px;top:9%;left:47%"
+    ><use href="#psuf-doodle-spaceinvader"></use></svg
+  >
+  <svg
+    class="deco"
+    aria-hidden="true"
+    style="color:rgba(255,255,255,.3);width:66px;height:66px;bottom:12%;left:37%"
+    ><use href="#psuf-doodle-manette"></use></svg
+  >
+
+  <div class="enveloppe">
+    <div class="s-hero__de">
+      <svg aria-hidden="true"><use href="#psuf-champsu"></use></svg>
+    </div>
+    <div class="s-hero__col">
+      <p class="oeil s-hero__oeil">10<sup>e</sup> édition · Sorbonne Université</p>
+      <h1 class="s-hero__titre">
+        <span>Play Sorbonne</span><strong>Festival</strong>
+      </h1>
+      <div class="s-hero__quand">
+        <span class="s-hero__jour">{festival.jourCourt}</span>
+        <span class="s-hero__heure">{festival.horaires}</span>
+        <span class="s-hero__ou">4 place Jussieu, Paris 5<sup>e</sup></span>
+      </div>
+      <ul class="s-hero__quoi">
+        {activites.map((a) => <li>{a}</li>)}
+      </ul>
+      <div class="s-hero__act">
+        <a
+          class="btn btn--jaune"
+          href={festival.inscription}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-umami-event="PSUF26 inscription héros">Entrée libre sur inscription</a
+        >
+        <a class="btn btn--creux" href="#programme">Voir le programme</a>
+      </div>
+      <ul class="s-hero__chiffres">
+        <li><b>{jeux}</b>jeux</li>
+        <li><b>{studios}</b>studios</li>
+        <li><b>{festival.exposants}</b>exposants</li>
+        <li><b>14 000</b>m²</li>
+      </ul>
+    </div>
+  </div>
+</section>

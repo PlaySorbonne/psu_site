@@ -1,0 +1,95 @@
+---
+/*
+ * En-tête collant : le dé, le nom, la jauge « chargement du festival »
+ * et le bouton d'inscription.
+ *
+ * La jauge fait deux choses selon la date du visiteur : avant le 19,
+ * elle compte les jours ; le jour même, entre 10h et 19h, elle suit
+ * l'avancement réel de la journée. Voir le script en bas de fichier.
+ */
+import { festival } from "@/data/psuf2026";
+---
+
+<header class="tete">
+  <div class="tete__in">
+    <a class="tete__marque" href="/" aria-label="Retour à l'accueil de Play Sorbonne Université">
+      <svg class="tete__de" aria-hidden="true"><use href="#psuf-champsu"></use></svg>
+      <span class="tete__nom"
+        >Play Sorbonne Festival<b>10<sup>e</sup> édition · 19.09.2026</b></span
+      >
+    </a>
+    <div class="jauge">
+      <span class="jauge__l" id="jauge-l">Chargement du festival</span>
+      <span
+        class="jauge__b"
+        id="jauge-b"
+        role="img"
+        aria-labelledby="jauge-l"
+        aria-describedby="jauge-v"><i></i></span
+      >
+      <span class="jauge__v" id="jauge-v">…</span>
+    </div>
+    <a
+      class="btn btn--jaune"
+      href={festival.inscription}
+      target="_blank"
+      rel="noopener noreferrer"
+      data-umami-event="PSUF26 inscription en-tête">S'inscrire</a
+    >
+  </div>
+</header>
+
+<script>
+  /*
+   * `astro:page-load` se déclenche au premier chargement comme après chaque
+   * navigation du ClientRouter : c'est le seul point d'accroche qui marche
+   * dans les deux cas. La minuterie est rendue avant chaque échange de page.
+   */
+  let minuterie: number | undefined;
+
+  function jauge() {
+    const b = document.getElementById("jauge-b");
+    const v = document.getElementById("jauge-v");
+    const l = document.getElementById("jauge-l");
+    const barre = b?.querySelector("i");
+    if (!b || !v || !l || !(barre instanceof HTMLElement)) return;
+
+    const OUVRE = new Date(2026, 8, 19, 10, 0, 0);
+    const FERME = new Date(2026, 8, 19, 19, 0, 0);
+    /* le remplissage court sur les cent derniers jours avant l'ouverture */
+    const COMPTE = 100 * 864e5;
+    const pad = (n: number) => (n < 10 ? "0" : "") + n;
+
+    function tic() {
+      const n = new Date();
+      let p: number, txt: string, lab = "Chargement du festival";
+      if (n >= FERME) {
+        p = 100;
+        txt = "100%";
+        lab = "Édition terminée, merci";
+      } else if (n >= OUVRE) {
+        p = ((+n - +OUVRE) / (+FERME - +OUVRE)) * 100;
+        txt = pad(n.getHours()) + "H" + pad(n.getMinutes());
+        lab = "Le festival est en cours";
+      } else {
+        const reste = +OUVRE - +n;
+        p = Math.max(0, Math.min(100, ((COMPTE - reste) / COMPTE) * 100));
+        /* J-N compté en jours de calendrier, pas en tranches de 24 h :
+           sinon la veille au soir afficherait J-2 */
+        const aujourdhui = new Date(n.getFullYear(), n.getMonth(), n.getDate());
+        txt = "J-" + Math.round((+new Date(2026, 8, 19) - +aujourdhui) / 864e5);
+      }
+      barre!.style.width = p.toFixed(1) + "%";
+      v!.textContent = txt;
+      l!.textContent = lab;
+      b!.setAttribute("aria-label", `${lab} : ${Math.round(p)} %, ${txt}`);
+    }
+
+    tic();
+    clearInterval(minuterie);
+    minuterie = window.setInterval(tic, 30000);
+  }
+
+  document.addEventListener("astro:page-load", jauge);
+  document.addEventListener("astro:before-swap", () => clearInterval(minuterie));
+</script>

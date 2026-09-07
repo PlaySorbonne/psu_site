@@ -1,0 +1,103 @@
+---
+/*
+ * La dernière bande : ce à quoi ressemble le festival (photos des éditions
+ * précédentes, kit presse de l'agence), puis où, quand, et comment venir.
+ * C'est là que se prend l'inscription.
+ */
+import { Image } from "astro:assets";
+import { festival, photos } from "@/data/psuf2026";
+
+import ph0 from "@/assets/festival/psuf2026/photos/ph0.webp";
+import ph1 from "@/assets/festival/psuf2026/photos/ph1.webp";
+import ph2 from "@/assets/festival/psuf2026/photos/ph2.webp";
+import ph3 from "@/assets/festival/psuf2026/photos/ph3.webp";
+import ph4 from "@/assets/festival/psuf2026/photos/ph4.webp";
+
+const pellicule = { ph0, ph1, ph2, ph3, ph4 };
+---
+
+<section class="bande s-rdv ondes" id="rendez-vous" style="--ox:82%;--oy:24%">
+  <svg class="deco s-rdv__deco s-rdv__deco--etoile" aria-hidden="true"
+    ><use href="#psuf-etoile"></use></svg
+  >
+  <svg class="deco s-rdv__deco s-rdv__deco--eclair" aria-hidden="true"
+    ><use href="#psuf-eclair-large"></use></svg
+  >
+
+  <div class="enveloppe">
+    <div class="s-rdv__avant">
+      <p class="oeil">Ce à quoi ça ressemble&nbsp;: éditions précédentes</p>
+      <ul class="s-rdv__photos">
+        {
+          photos.map((p) => (
+            <li>
+              <figure>
+                <Image
+                  src={pellicule[p.f as keyof typeof pellicule]}
+                  alt={p.alt}
+                  width={520}
+                  height={360}
+                  loading="lazy"
+                />
+                <figcaption>
+                  {p.legende}
+                  {p.credit && <small>{p.credit}</small>}
+                </figcaption>
+              </figure>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="s-rdv__glisse">Faites glisser la bande pour voir les cinq photos.</p>
+    </div>
+
+    <div class="bloc bloc--c bloc-blanc s-rdv__carton">
+      <div>
+        <p class="oeil s-rdv__oeil">{festival.prix}</p>
+        <h2 class="h-sec s-rdv__h2">Rendez-vous<br />le 19 septembre</h2>
+        <p class="s-rdv__quand">
+          <span class="s-rdv__jour">{festival.jourCourt}</span>
+          <span class="s-rdv__heure">{festival.horaires}</span>
+        </p>
+
+        <dl class="s-rdv__dl">
+          <dt>Adresse</dt>
+          <dd>4 place Jussieu, Paris 5<sup>e</sup>, {festival.campus}</dd>
+          <dt>Y aller</dt>
+          <dd>
+            {festival.acces}. Le festival occupe {festival.surface} du campus&nbsp;:
+            entrée par la place, puis suivez les flèches. <a href="#plan"
+              >Voir le plan</a
+            >.
+          </dd>
+          <dt>Entrée</dt>
+          <dd>
+            Gratuite, sur inscription en ligne. Seul le jeu de rôle de
+            l&rsquo;auditorium demande un billet, à retirer sur place le matin.
+          </dd>
+        </dl>
+
+        <p class="s-rdv__actes">
+          <a
+            class="btn btn--jaune"
+            href={festival.inscription}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-umami-event="PSUF26 inscription rendez-vous"
+            >Je réserve ma place</a
+          >
+          <a class="btn s-rdv__btn--nuit" href="#programme">Revoir le programme</a>
+        </p>
+        <p class="s-rdv__ps">
+          Une question&nbsp;? <a href="mailto:contact@playsorbonne.fr"
+            >contact@playsorbonne.fr</a
+          >
+        </p>
+      </div>
+
+      <div class="s-rdv__de">
+        <svg aria-hidden="true"><use href="#psuf-champsu"></use></svg>
+      </div>
+    </div>
+  </div>
+</section>

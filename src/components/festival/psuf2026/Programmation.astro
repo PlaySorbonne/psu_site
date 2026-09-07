@@ -1,0 +1,399 @@
+---
+/*
+ * La programmation : trois scènes, trois frises, un jeu d'onglets.
+ *
+ * Les conférences, l'auditorium et la scène Pyramide ont chacun leur
+ * frise, avec la même grammaire : une chaîne de blocs magenta, chacun avec sa
+ * pastille horaire blanche. Les onglets choisissent la scène ouverte.
+ *
+ * Le volet de l'auditorium porte en plus la rangée des neuf têtes
+ * d'affiche, dont le casting suit la session choisie.
+ *
+ * La frise de la journée, plus haut dans la page, sait ouvrir un volet
+ * précis : ses créneaux émettent `prog:volet` sur le bus.
+ */
+import { Image } from "astro:assets";
+import {
+  festival,
+  volets,
+  invites,
+  sessions,
+  expositions,
+  heure,
+} from "@/data/psuf2026";
+
+/* les portraits détourés des têtes d'affiche */
+import angledroit from "@/assets/festival/psuf2026/invites/angledroit.webp";
+import daz from "@/assets/festival/psuf2026/invites/daz.webp";
+import fibretigre from "@/assets/festival/psuf2026/invites/fibretigre.webp";
+import lam from "@/assets/festival/psuf2026/invites/lam.webp";
+import lesadpanda from "@/assets/festival/psuf2026/invites/lesadpanda.webp";
+import lexi from "@/assets/festival/psuf2026/invites/lexi.webp";
+import lydia from "@/assets/festival/psuf2026/invites/lydia.webp";
+import mistermv from "@/assets/festival/psuf2026/invites/mistermv.webp";
+import pressea from "@/assets/festival/psuf2026/invites/pressea.webp";
+
+const portraits = {
+  angledroit, daz, fibretigre, lam, lesadpanda, lexi, lydia, mistermv, pressea,
+};
+
+/* les quatre découpes de bloc de la DA, en alternance le long de la frise */
+const COUPES = ["", "bloc--b", "bloc--c", "bloc--d"];
+const coupe = (i: number) => COUPES[i % COUPES.length];
+const coupeInverse = (i: number) => COUPES[(i + 3) % COUPES.length];
+
+const rang = [...invites].sort((a, b) => a.ordre - b.ordre);
+const compte = (id: string) =>
+  invites.filter((i) => i.sessions.includes(id)).length;
+---
+
+<section class="bande s-prg" id="programmation">
+  <svg
+    class="deco s-prg__deco s-prg__deco--etoile"
+    aria-hidden="true"
+    focusable="false"><use href="#psuf-etoile"></use></svg
+  >
+  <svg
+    class="deco s-prg__deco s-prg__deco--eclair"
+    aria-hidden="true"
+    focusable="false"><use href="#psuf-eclair-large"></use></svg
+  >
+  <svg
+    class="deco s-prg__deco s-prg__deco--tri"
+    aria-hidden="true"
+    focusable="false"><use href="#psuf-triangle-rose2"></use></svg
+  >
+  <svg
+    class="deco s-prg__deco s-prg__deco--tri2"
+    aria-hidden="true"
+    focusable="false"><use href="#psuf-triangle-jaune2"></use></svg
+  >
+
+  <div class="enveloppe s-prg__enveloppe">
+    <header class="s-prg__tete">
+      <p class="oeil s-prg__oeil">Trois scènes · une seule journée</p>
+      <h2 class="h-sec s-prg__h2">La programmation</h2>
+      <p class="s-prg__chapo">
+        Ce qui se joue sur scène, heure par heure&nbsp;: sept conférences, deux
+        parties de jeu de rôle dans l&rsquo;auditorium, et la scène Pyramide
+        ouverte de 10h à 19h. Choisissez la scène, la frise suit.
+      </p>
+    </header>
+
+    <div class="s-prg__barre">
+      <div
+        class="s-prg__onglets"
+        role="tablist"
+        aria-label="Les trois scènes du festival"
+      >
+        {
+          volets.map((v, i) => (
+            <button
+              type="button"
+              class="bloc s-prg__onglet"
+              role="tab"
+              id={`prg-ong-${v.id}`}
+              aria-controls={`prg-vol-${v.id}`}
+              aria-selected={i === 0 ? "true" : "false"}
+              tabindex={i === 0 ? 0 : -1}
+              data-volet={v.id}
+            >
+              {v.label}
+              {v.etat && <span class="s-prg__onglet-etat">{v.etat}</span>}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    {
+      volets.map((v, iv) => (
+        <div
+          class:list={["s-prg__volet", v.id === "auditorium" && "s-audi"]}
+          id={`prg-vol-${v.id}`}
+          role="tabpanel"
+          aria-labelledby={`prg-ong-${v.id}`}
+          /* le volet des conférences ne contient rien de focalisable :
+             il lui faut son propre point d'entrée au clavier */
+          tabindex="0"
+          hidden={iv !== 0}
+        >
+          <header class="s-prg__volet-tete">
+            <p class="oeil s-prg__oeil">
+              {v.lieu} · {v.plage}
+            </p>
+            <h3 class="s-prg__h3">{v.titre}</h3>
+            <p class="s-prg__chapo">{v.chapo}</p>
+            <ul class="s-prg__reperes">
+              {v.reperes.map((r, i) => (
+                <li
+                  class:list={[
+                    "s-prg__repere",
+                    "bloc",
+                    coupe(i + 1),
+                    i === 2 ? "bloc-jaune" : "bloc-nuit",
+                  ]}
+                >
+                  <b>{r.v}</b>
+                  <span>{r.l}</span>
+                </li>
+              ))}
+            </ul>
+          </header>
+
+          <ol class="s-prg__fil">
+            {v.seances.map((s, i) => (
+              <li class="s-prg__item">
+                <article class="s-prg__conf">
+                  <div class:list={["s-prg__carte", "bloc", coupe(i)]}>
+                    <p class="oeil s-prg__num">
+                      {v.id === "conferences"
+                        ? `Conférence ${String(i + 1).padStart(2, "0")} · 45 min`
+                        : `Créneau ${String(i + 1).padStart(2, "0")}`}
+                    </p>
+                    <h4 class="s-prg__titre">{s.titre}</h4>
+                    {s.par && (
+                      <p class="s-prg__par">
+                        <span class="s-prg__avec">avec</span> <em>{s.par}</em>
+                      </p>
+                    )}
+                    {s.note && <p class="s-prg__note">{s.note}</p>}
+                  </div>
+                  <p
+                    class:list={[
+                      "s-prg__horaire",
+                      "bloc",
+                      coupeInverse(i),
+                      "bloc-blanc",
+                    ]}
+                  >
+                    {/* pas de retour à la ligne dans l'heure : le
+                        navigateur y verrait une espace, « 10 h 30 » */}
+                    <span class="s-prg__debut"><span class="lecteur-seul">De </span>{heure(s.debut).split("h")[0]}<i>h</i>{heure(s.debut).split("h")[1]}</span>
+                    <span class="s-prg__fin">
+                      <span class="lecteur-seul">à </span>
+                      <i aria-hidden="true">→</i> {heure(s.fin)}
+                    </span>
+                    {s.tag && <span class="s-prg__tag">{s.tag}</span>}
+                  </p>
+                </article>
+              </li>
+            ))}
+          </ol>
+
+          {v.attente && (
+            <p class="s-prg__attente bloc bloc--c bloc-blanc">
+              <svg class="s-prg__sablier" aria-hidden="true" focusable="false">
+                <use href="#psuf-doodle-de20" />
+              </svg>
+              <span class="s-prg__attente-p">
+                <b>{v.etat ? "Pas encore publié." : "À noter."}</b> {v.attente}
+              </span>
+            </p>
+          )}
+
+          {
+            /* l'auditorium : la rangée des neuf têtes d'affiche */
+            v.id === "auditorium" && (
+              <div class="s-audi__plateau">
+                <div
+                  class="s-audi__onglets s-audi__sessions"
+                  role="group"
+                  aria-label="Casting affiché"
+                >
+                  {sessions.map((se, i) => (
+                    <button
+                      class="s-audi__ong"
+                      type="button"
+                      aria-pressed={i === 0 ? "true" : "false"}
+                      data-session={se.id}
+                    >
+                      <span class="s-audi__ong-l">{se.label}</span>
+                      <span class="s-audi__ong-h">{se.plage}</span>
+                      <span class="s-audi__ong-n">
+                        {compte(se.id)} invités
+                      </span>
+                    </button>
+                  ))}
+                </div>
+
+                <div class="s-audi__scene" data-actif="matin">
+                  <div class="s-audi__rang">
+                    <div class="s-audi__sol bloc bloc--b" aria-hidden="true" />
+                    <ol class="s-audi__cast">
+                      {rang.map((inv) => (
+                        <li
+                          class:list={[
+                            "s-audi__perso",
+                            inv.role === "Anime la partie" && "s-audi__perso--mj",
+                          ]}
+                          data-sessions={inv.sessions.join(" ")}
+                          style={`--r:${inv.ratio};--z:${inv.ordre}`}
+                        >
+                          <div class="s-audi__cadre">
+                            <Image
+                              class="s-audi__img"
+                              src={portraits[inv.id as keyof typeof portraits]}
+                              alt=""
+                              width={inv.ratio}
+                              height={520}
+                              decoding="async"
+                              loading="lazy"
+                              draggable="false"
+                            />
+                          </div>
+                          <p class="s-audi__legende">
+                            <span class="s-audi__nom">{inv.nom}</span>
+                            <span class="s-audi__role">{inv.role}</span>
+                            <span class="s-audi__tags">
+                              {inv.sessions.map((sid) => (
+                                <span class="s-audi__tag" data-t={sid}>
+                                  {sid === "matin" ? "Matin" : "Après-midi"}
+                                </span>
+                              ))}
+                            </span>
+                          </p>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+
+                  <p class="s-audi__pied">
+                    <span>
+                      Les invités en retrait sont à la table de l&rsquo;autre
+                      session.
+                    </span>
+                    <span class="s-audi__pied-b">
+                      Rappel&nbsp;: billets à retirer sur place,
+                      10h00&ndash;10h45 et 14h00&ndash;15h20.
+                    </span>
+                  </p>
+                </div>
+              </div>
+            )
+          }
+        </div>
+      ))
+    }
+
+    <aside
+      class="s-prg__expos bloc bloc--d bloc-nuit"
+      aria-labelledby="prg-expos-titre"
+    >
+      <div class="s-prg__expos-tete">
+        <p class="oeil s-prg__expos-oeil">Sans créneau · toute la journée</p>
+        <h3 class="h-sec s-prg__expos-titre" id="prg-expos-titre">
+          Deux expositions
+        </h3>
+        <p class="s-prg__expos-chapo">
+          Elles ne tiennent dans aucune des trois frises&nbsp;: pas
+          d&rsquo;horaire, pas de file d&rsquo;attente. On y entre et on en sort
+          librement, aux heures du festival.
+        </p>
+      </div>
+
+      <ul class="s-prg__cartes">
+        {
+          expositions.map((e, i) => (
+            <li class:list={["s-prg__expo", "bloc", coupe(i + 2), "bloc-blanc"]}>
+              <p class="s-prg__expo-tag">Accès libre</p>
+              <h4 class="s-prg__expo-nom">{e.nom}</h4>
+              <p class="s-prg__expo-desc">{e.desc}</p>
+              <svg class="s-prg__expo-doodle" aria-hidden="true" focusable="false">
+                <use href={`#${e.doodle}`} />
+              </svg>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="s-prg__pied">
+        Conférences, jeu de rôle et expositions sont comprises dans
+        l&rsquo;entrée du festival&nbsp;:
+        <a class="s-prg__lien" href={festival.inscription} target="_blank" rel="noopener noreferrer"
+          >entrée libre sur inscription</a
+        >. Seul l&rsquo;auditorium demande un billet, à retirer sur place.
+      </p>
+    </aside>
+  </div>
+</section>
+
+<script>
+  import { bus } from "./bus";
+
+  function programmation() {
+    const racine = document.getElementById("programmation");
+    if (!racine) return;
+
+    /* ---- les onglets de scène ---- */
+    const onglets = Array.from(
+      racine.querySelectorAll<HTMLButtonElement>('[role="tab"][data-volet]'),
+    );
+    const volets = onglets.map((o) =>
+      document.getElementById(o.getAttribute("aria-controls")!),
+    );
+
+    function ouvre(i: number, focus: boolean) {
+      if (!onglets[i]) return;
+      onglets.forEach((o, k) => {
+        o.setAttribute("aria-selected", k === i ? "true" : "false");
+        o.tabIndex = k === i ? 0 : -1;
+      });
+      volets.forEach((v, k) => {
+        if (v) v.hidden = k !== i;
+      });
+      if (focus) onglets[i].focus();
+    }
+
+    onglets.forEach((o, i) => {
+      o.addEventListener("click", () => ouvre(i, false));
+      o.addEventListener("keydown", (e) => {
+        let suivant: number | null = null;
+        if (e.key === "ArrowRight" || e.key === "ArrowDown")
+          suivant = (i + 1) % onglets.length;
+        else if (e.key === "ArrowLeft" || e.key === "ArrowUp")
+          suivant = (i - 1 + onglets.length) % onglets.length;
+        else if (e.key === "Home") suivant = 0;
+        else if (e.key === "End") suivant = onglets.length - 1;
+        if (suivant !== null) {
+          e.preventDefault();
+          ouvre(suivant, true);
+        }
+      });
+    });
+
+    /* la frise de la journée peut demander un volet précis */
+    bus.on("prog:volet", (d) => {
+      const i = onglets.findIndex((o) => o.dataset.volet === d?.id);
+      if (i >= 0) ouvre(i, false);
+    });
+
+    /* une ancre du type /festival#programmation:auditorium n'existe pas :
+       on accepte à la place le fragment du volet lui-même */
+    const frag = location.hash.replace("#", "");
+    const direct = onglets.findIndex((o) => `prg-vol-${o.dataset.volet}` === frag);
+    if (direct > 0) ouvre(direct, false);
+
+    /* ---- le casting de l'auditorium ---- */
+    const scene = racine.querySelector<HTMLElement>(".s-audi__scene");
+    const boutons = Array.from(
+      racine.querySelectorAll<HTMLButtonElement>(".s-audi__ong[data-session]"),
+    );
+    if (scene && boutons.length) {
+      boutons.forEach((b) => {
+        b.addEventListener("click", () => {
+          boutons.forEach((autre) =>
+            autre.setAttribute(
+              "aria-pressed",
+              autre === b ? "true" : "false",
+            ),
+          );
+          scene.setAttribute("data-actif", b.dataset.session!);
+        });
+      });
+    }
+
+  }
+
+  document.addEventListener("astro:page-load", programmation);
+</script>

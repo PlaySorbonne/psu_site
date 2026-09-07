@@ -1,0 +1,1553 @@
+/* ============================================================
+   PLAY SORBONNE FESTIVAL 2026 : feuille de la page /festival
+   DA des affiches de Lou Cardon : aplats francs, blocs polygonaux,
+   dé isométrique, grain. Aucun néon, aucun flou : c'est la rupture
+   nette avec l'ancienne charte du site.
+
+   Cette feuille n'est chargée que par src/pages/festival/index.astro.
+   ============================================================ */
+
+/* ---------- raccord avec les styles globaux du site ----------
+   HeaderL pose `p{padding:5px 0;text-align:justify}` et
+   `body{font-size:1.1rem}` sur toutes les pages. Ici la mise en page
+   tient au pixel : on rend aux paragraphes leur état neutre et on
+   ramène le corps de texte à 16 px, la base sur laquelle toute
+   l'échelle typographique ci-dessous a été réglée.
+
+   `:where()` n'ajoute rien à la spécificité : la règle vaut (0,1,0),
+   donc elle passe devant le sélecteur d'élément de HeaderL, et cède
+   devant n'importe quelle classe de section déclarée plus bas. */
+.psuf{font-size:1rem;color:#fff;}
+.psuf :where(p){padding:0;text-align:left;}
+.psuf :where(ul,ol){margin:0;}
+.psuf :where(h1,h2,h3,h4){font-weight:inherit;}
+.psuf :where(sup){line-height:0;}
+
+/* ============================================================
+   SOCLE : tokens et utilitaires partagés par toutes les sections
+   ============================================================ */
+:root{
+  --grain:url("/assets/festival/psuf2026/grain.png");
+
+  /* palette charte, échantillonnée sur "DA festival.png" */
+  --bleu-nuit:#141C3B;
+  --bleu-roi:#284380;
+  --bleu-clair:#2E4F94;
+  --cyan:#29A9E0;
+  --rose:#F494BE;
+  --magenta:#ED1682;
+  --jaune:#FDDE28;
+  --blanc:#FFFFFF;
+  --turquoise:#75CBC4;
+  --orange:#F15A3B;
+  --violet:#42244B;
+  --magenta-fonce:#D4207C;
+
+  /* couleurs de lieu (échantillonnées sur le programme et le plan) */
+  --l-foyer:#F36F25;
+  --l-pyramide:#ED0C7B;
+  --l-conf:#F27FB2;
+  --l-amphi45a:#65BD4D;
+  --l-amphi45b:#FFDA1F;
+  --l-atrium:#EE2B30;
+  --l-auditorium:#00ABEA;
+
+  /* variantes assombries : le blanc y passe l'AA (5,5:1) alors qu'il échoue
+     sur les versions vives (4,2:1). À utiliser dès qu'un aplat de lieu porte
+     du texte courant blanc. */
+  --l-pyramide-fonce:color-mix(in srgb,var(--l-pyramide) 82%,var(--bleu-nuit));
+  --l-atrium-fonce:color-mix(in srgb,var(--l-atrium) 82%,var(--bleu-nuit));
+  --magenta-profond:#C21C79;   /* blanc 5,6:1 */
+
+  /* encre */
+  --encre:#141C3B;          /* texte sur fond clair */
+  --encre-douce:#3A4571;    /* texte secondaire sur fond clair */
+  --sur-nuit:#FFFFFF;       /* texte sur bloc bleu nuit */
+  --sur-nuit-doux:#B9C4E6;  /* secondaire sur bloc bleu nuit */
+
+  /* typo */
+  --titre:"No Continue","Arial Narrow",sans-serif;
+  --texte:"Titillium Web","Segoe UI",system-ui,sans-serif;
+
+  /* échelle */
+  --t-xxl:clamp(2.6rem,7vw,5.6rem);
+  --t-xl:clamp(2rem,4.4vw,3.4rem);
+  --t-l:clamp(1.35rem,2.4vw,2rem);
+  --t-m:1.06rem;
+  --t-s:.92rem;
+  --t-xs:.76rem;
+
+  /* rythme */
+  --gout:min(6vw,84px);      /* gouttière de section */
+  --large:1180px;            /* largeur de contenu */
+  --rail:74px;               /* largeur du rail de gauche (desktop) */
+  --entete:56px;             /* hauteur de l'en-tête collant */
+}
+
+/* ---------- blocs polygonaux : LA signature de la DA ----------
+   Rectangle aux 4 coins coupés de façon inégale. Valeurs en px,
+   jamais en %, pour que la coupe reste constante quelle que soit
+   la taille du bloc. 4 variantes pour éviter la répétition. */
+.bloc{--c1:22px;--c2:11px;--c3:16px;--c4:9px;
+  clip-path:polygon(var(--c1) 0,100% 0,100% calc(100% - var(--c2)),
+    calc(100% - var(--c3)) 100%,0 100%,0 var(--c4));}
+.bloc--b{--c1:9px;--c2:24px;--c3:10px;--c4:18px;}
+.bloc--c{--c1:16px;--c2:8px;--c3:26px;--c4:12px;}
+.bloc--d{--c1:12px;--c2:18px;--c3:8px;--c4:22px;}
+
+.bloc-nuit{background:var(--bleu-nuit);color:var(--sur-nuit);}
+.bloc-blanc{background:var(--blanc);color:var(--encre);}
+.bloc-magenta{background:var(--magenta);color:var(--blanc);}
+.bloc-jaune{background:var(--jaune);color:var(--encre);}
+
+/* ---------- titres ---------- */
+.h-sec{font-family:var(--titre);font-size:var(--t-xl);line-height:.95;
+  text-transform:uppercase;letter-spacing:.01em;margin:0;text-wrap:balance;}
+.oeil{font-family:var(--texte);font-weight:900;font-size:var(--t-xs);
+  text-transform:uppercase;letter-spacing:.16em;margin:0;}
+
+/* ---------- boutons ---------- */
+.btn{display:inline-flex;align-items:center;gap:.5em;font-family:var(--texte);
+  font-weight:900;font-size:var(--t-s);text-transform:uppercase;letter-spacing:.08em;
+  padding:.78em 1.5em;border:0;cursor:pointer;text-decoration:none;
+  --c1:12px;--c2:8px;--c3:14px;--c4:7px;
+  clip-path:polygon(var(--c1) 0,100% 0,100% calc(100% - var(--c2)),
+    calc(100% - var(--c3)) 100%,0 100%,0 var(--c4));
+  transition:transform .16s ease,filter .16s ease;}
+.btn:hover,.btn:focus-visible{transform:translateY(-2px);filter:brightness(1.06);}
+.btn--jaune{background:var(--jaune);color:var(--bleu-nuit);}
+/* les deux variantes suivantes ne sont pas utilisées aujourd'hui ; elles
+   complètent le jeu de boutons de la charte (jaune, magenta, blanc, creux) */
+.btn--magenta{background:var(--magenta);color:#fff;}
+.btn--blanc{background:#fff;color:var(--bleu-nuit);}
+.btn--creux{background:transparent;color:#fff;box-shadow:inset 0 0 0 2px #fff;}
+
+/* ---------- décors ---------- */
+/* couleur via `color:`, tous les symboles du sprite sont en currentColor,
+   sauf #psuf-champsu qui porte ses propres couleurs. */
+.deco{position:absolute;pointer-events:none;user-select:none;z-index:0;}
+
+/* ---------- structure de section ----------
+   Chaque section reçoit son dégradé par --de / --vers (voir la chaîne
+   plus bas) et ne peint jamais son propre fond : c'est ce qui fait que
+   les bandes se succèdent sans aucune ligne de séparation. */
+.bande{position:relative;overflow:visible;
+  background:linear-gradient(180deg,var(--de),var(--vers));
+  padding-block:clamp(56px,9vw,110px);}
+.enveloppe{position:relative;z-index:1;max-width:var(--large);
+  margin-inline:auto;padding-inline:var(--gout);}
+
+/* ---------- accessibilité ---------- */
+.lecteur-seul{position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+
+/* ===================== COQUILLE ===================== */
+html{background:#141C3B;}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;}}
+body{background:#141C3B;-webkit-font-smoothing:antialiased;}
+.psuf{font-family:var(--texte);}
+.psuf img{max-width:100%;}
+.psuf :focus-visible{outline:3px solid var(--jaune);outline-offset:3px;}
+
+/* grain global, 50 % comme dans la charte */
+.grain{position:fixed;inset:0;z-index:60;pointer-events:none;
+  background-image:var(--grain);background-size:128px 128px;
+  opacity:.34;mix-blend-mode:overlay;}
+@media (max-width:560px){.grain{opacity:.24;}}
+
+/* dégradé continu : chaque bande reprend la couleur de fin de la précédente,
+   donc aucune ligne de séparation n'apparaît nulle part. */
+.bande{background:linear-gradient(180deg,var(--de) 0%,
+  var(--mid,color-mix(in oklab,var(--de),var(--vers))) 50%,var(--vers) 100%);}
+#hero          {--de:#2E4F94;--vers:#294583;}
+#programme     {--de:#294583;--vers:#22386E;}
+#plan          {--de:#22386E;--vers:#262E64;}
+#programmation {--de:#262E64;--mid:#6A1C62;--vers:#8E1C74;}
+#jeux          {--de:#8E1C74;--mid:#57267A;--vers:#2A4179;}
+#associations  {--de:#2A4179;--vers:#22335F;}
+#rendez-vous   {--de:#22335F;--vers:#1B2950;}
+
+/* ondes concentriques de la charte (fondcercles.svg), en pur CSS */
+.ondes::before{content:"";position:absolute;inset:-8% 0;z-index:0;pointer-events:none;
+  background:repeating-radial-gradient(circle at var(--ox,18%) var(--oy,30%),
+    rgba(255,255,255,.055) 0 2px,transparent 2px 78px);}
+
+/* ===================== EN-TÊTE ===================== */
+.tete{position:sticky;top:0;z-index:50;background:var(--bleu-nuit);
+  box-shadow:0 10px 30px -18px #000;}
+.tete__in{display:flex;align-items:center;gap:clamp(10px,2vw,26px);
+  height:var(--entete);padding:0 clamp(12px,2.4vw,26px);}
+.tete__marque{display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;flex:0 0 auto;}
+.tete__de{width:26px;height:27px;flex:0 0 auto;}
+.tete__nom{font-family:var(--titre);font-size:1rem;letter-spacing:.02em;
+  text-transform:uppercase;line-height:1;white-space:nowrap;}
+.tete__nom b{display:block;font-weight:400;font-size:.62rem;color:var(--jaune);letter-spacing:.18em;}
+
+.jauge{display:flex;align-items:center;gap:10px;margin-left:auto;min-width:0;}
+.jauge__l{font-weight:900;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--sur-nuit-doux);white-space:nowrap;}
+.jauge__b{width:clamp(84px,17vw,230px);height:13px;flex:0 0 auto;
+  background:rgba(255,255,255,.16);
+  -webkit-mask:repeating-linear-gradient(90deg,#000 0 5px,transparent 5px 8px);
+  mask:repeating-linear-gradient(90deg,#000 0 5px,transparent 5px 8px);}
+.jauge__b i{display:block;height:100%;width:0;background:var(--jaune);}
+.jauge__v{font-family:var(--titre);font-size:1rem;color:var(--jaune);
+  line-height:1;white-space:nowrap;min-width:3.4em;}
+.tete .btn{padding:.6em 1.1em;font-size:.68rem;flex:0 0 auto;}
+@media (max-width:720px){.jauge__l{display:none;}}
+@media (max-width:460px){.tete__nom b{display:none;}.jauge__b{width:64px;}}
+
+/* ===================== RAIL =====================
+   Une piste de plateau : sept cases numérotées alignées sur un trait pointillé,
+   et le dé du festival comme pion, calé à droite de la case courante. */
+.rail{position:fixed;left:0;top:var(--entete);bottom:0;width:var(--rail);z-index:40;
+  display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
+  pointer-events:none;}
+.rail__piste{position:absolute;left:28px;top:9%;bottom:9%;width:2px;
+  background:repeating-linear-gradient(180deg,rgba(255,255,255,.45) 0 5px,transparent 5px 12px);}
+.rail__l{list-style:none;margin:0;padding:0;position:relative;z-index:1;
+  display:flex;flex-direction:column;gap:clamp(13px,2.2vh,24px);}
+.rail__l li{display:block;}
+.rail__l a{position:relative;display:block;width:30px;margin-left:14px;
+  text-decoration:none;color:#fff;pointer-events:auto;}
+.rail__n{display:grid;place-items:center;width:30px;height:30px;
+  font-family:var(--titre);font-size:.82rem;line-height:1;
+  background:var(--bleu-nuit);color:#fff;box-shadow:inset 0 0 0 2px rgba(255,255,255,.24);
+  --c1:8px;--c2:5px;--c3:9px;--c4:4px;
+  clip-path:polygon(var(--c1) 0,100% 0,100% calc(100% - var(--c2)),
+    calc(100% - var(--c3)) 100%,0 100%,0 var(--c4));
+  transition:background .18s,color .18s,box-shadow .18s;}
+.rail__l a:hover .rail__n{box-shadow:inset 0 0 0 2px var(--jaune);}
+.rail__t{position:absolute;left:66px;top:50%;
+  font-weight:900;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--bleu-nuit);color:#fff;padding:.5em .85em;white-space:nowrap;
+  --c1:9px;--c2:5px;--c3:10px;--c4:5px;
+  clip-path:polygon(var(--c1) 0,100% 0,100% calc(100% - var(--c2)),
+    calc(100% - var(--c3)) 100%,0 100%,0 var(--c4));
+  opacity:0;transform:translate(-8px,-50%);
+  transition:opacity .18s,transform .18s;}
+.rail__l a:hover .rail__t,.rail__l a:focus-visible .rail__t{opacity:1;transform:translate(0,-50%);}
+.rail__l a[aria-current="true"] .rail__n{background:var(--jaune);color:var(--bleu-nuit);
+  box-shadow:inset 0 0 0 2px var(--jaune);}
+.rail__pion{position:absolute;left:46px;top:0;width:28px;height:30px;
+  transition:transform .38s cubic-bezier(.4,1.3,.5,1);pointer-events:none;
+  filter:drop-shadow(0 5px 8px rgba(0,0,0,.45));opacity:0;}
+.rail__pion.vu{opacity:1;}
+@media (max-width:1080px){.rail__l{gap:11px;}}
+@media (max-width:820px){.rail{display:none;}}
+
+/* décalage du contenu par le rail */
+@media (min-width:821px){
+  .tete__in,main,.pied__in{padding-left:var(--rail);}
+  .tete__in{padding-left:calc(var(--rail) + 8px);}
+}
+
+/* ===================== HÉROS ===================== */
+.s-hero{padding-block:clamp(40px,6vw,78px) clamp(56px,9vw,110px);}
+.s-hero .enveloppe{display:grid;gap:clamp(20px,3.4vw,52px);align-items:center;
+  grid-template-columns:minmax(0,42%) minmax(0,58%);}
+.s-hero__de{position:relative;z-index:1;}
+.s-hero__de svg{display:block;width:100%;height:auto;aspect-ratio:4230/4458;
+  filter:drop-shadow(0 24px 44px rgba(10,16,44,.5));
+  animation:hero-flotte 9s ease-in-out infinite;}
+@keyframes hero-flotte{0%,100%{transform:translateY(0) rotate(-1.4deg);}
+  50%{transform:translateY(-16px) rotate(1.2deg);}}
+.s-hero__col{display:flex;flex-direction:column;align-items:flex-start;gap:14px;min-width:0;}
+.s-hero__oeil{background:var(--jaune);color:var(--bleu-nuit);padding:.42em .9em;
+  --c1:10px;--c2:6px;--c3:12px;--c4:5px;
+  clip-path:polygon(var(--c1) 0,100% 0,100% calc(100% - var(--c2)),
+    calc(100% - var(--c3)) 100%,0 100%,0 var(--c4));}
+.s-hero__titre{margin:0;padding:.3em .58em .34em;background:var(--bleu-nuit);color:#fff;
+  font-family:var(--titre);font-weight:400;line-height:.88;text-transform:uppercase;
+  --c1:26px;--c2:13px;--c3:19px;--c4:10px;
+  clip-path:polygon(var(--c1) 0,100% 0,100% calc(100% - var(--c2)),
+    calc(100% - var(--c3)) 100%,0 100%,0 var(--c4));
+  transform:rotate(-.9deg);}
+.s-hero__titre span{display:block;font-size:clamp(1.5rem,3.4vw,2.6rem);letter-spacing:.03em;}
+.s-hero__titre strong{display:block;font-weight:400;font-size:var(--t-xxl);letter-spacing:.01em;}
+.s-hero__quand{display:flex;flex-wrap:wrap;gap:8px;}
+.s-hero__quand>*{font-weight:900;font-size:.86rem;letter-spacing:.09em;text-transform:uppercase;
+  padding:.62em 1em;--c1:12px;--c2:7px;--c3:13px;--c4:6px;
+  clip-path:polygon(var(--c1) 0,100% 0,100% calc(100% - var(--c2)),
+    calc(100% - var(--c3)) 100%,0 100%,0 var(--c4));}
+.s-hero__jour{background:var(--bleu-nuit);color:#fff;}
+.s-hero__heure{background:var(--magenta);color:#fff;}
+.s-hero__ou{background:#fff;color:var(--bleu-nuit);}
+.s-hero__quoi{background:#fff;color:var(--encre);padding:1em 1.25em;max-width:58ch;
+  margin:0;list-style:none;display:flex;flex-wrap:wrap;gap:.3em 0;
+  font-weight:700;font-size:.98rem;line-height:1.45;transform:rotate(.5deg);
+  --c1:14px;--c2:20px;--c3:11px;--c4:16px;
+  clip-path:polygon(var(--c1) 0,100% 0,100% calc(100% - var(--c2)),
+    calc(100% - var(--c3)) 100%,0 100%,0 var(--c4));}
+.s-hero__quoi li{white-space:nowrap;}
+.s-hero__quoi li:not(:last-child)::after{content:"·";color:var(--magenta-profond);
+  padding:0 .5em;font-weight:900;}
+.s-hero__act{display:flex;flex-wrap:wrap;gap:10px;margin-top:2px;}
+.s-hero__chiffres{display:flex;flex-wrap:wrap;gap:.35em 1.4em;margin:6px 0 0;padding:0;
+  list-style:none;font-weight:700;font-size:.84rem;color:#DCE4FA;}
+.s-hero__chiffres b{font-family:var(--titre);font-weight:400;font-size:1.16rem;
+  color:var(--jaune);margin-right:.34em;}
+@media (max-width:900px){
+  .s-hero .enveloppe{grid-template-columns:1fr;}
+  .s-hero__de{max-width:320px;margin-inline:auto;order:-1;}
+}
+
+
+/* ===================== PIED ===================== */
+.pied{background:linear-gradient(180deg,#1B2950,var(--bleu-nuit));position:relative;}
+.pied__part{background:#fff;padding:34px clamp(16px,4vw,40px) 22px;
+  clip-path:polygon(0 18px,7% 4px,26% 12px,52% 0,74% 10px,92% 3px,100% 14px,100% 100%,0 100%);
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+  gap:clamp(20px,5vw,58px);}
+.pied__part img{height:46px;width:auto;}
+.pied__part span{font-weight:900;font-size:.66rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--encre-douce);width:100%;text-align:center;}
+.pied__in{max-width:var(--large);margin-inline:auto;padding:clamp(30px,5vw,52px) var(--gout);
+  display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end;justify-content:space-between;}
+.pied__de{width:64px;height:67px;}
+.pied__t{font-family:var(--titre);font-size:1.5rem;text-transform:uppercase;margin:0 0 .3em;}
+.pied p{margin:0;color:var(--sur-nuit-doux);font-size:.9rem;line-height:1.6;}
+.pied a{color:var(--jaune);}
+
+/* ---------- programme ---------- */
+/* ===== LE PROGRAMME DE LA JOURNÉE : frise de Gantt ===== */
+
+.s-prog{
+  --lab:clamp(96px,12.6vw,166px);   /* colonne des lieux */
+  --axe-h:34px;                      /* hauteur de la règle des heures */
+  /* voiles d'encre : dérivés du token bleu nuit, aucun gris en dur */
+  --trait:color-mix(in srgb,var(--bleu-nuit) 14%,transparent);
+  --regle:color-mix(in srgb,var(--bleu-nuit) 34%,transparent);
+  --piste:color-mix(in srgb,var(--bleu-nuit) 4.5%,transparent);
+  --piste-alt:color-mix(in srgb,var(--bleu-nuit) 8.5%,transparent);
+  --grad-h:color-mix(in srgb,var(--bleu-nuit) 16%,transparent);
+  --grad-q:color-mix(in srgb,var(--bleu-nuit) 7%,transparent);
+  scroll-margin-top:calc(var(--entete) + 12px);
+  /* les décors débordent en haut et en bas, jamais sur les côtés :
+     `clip` (et non `hidden`) ne crée pas de conteneur de défilement,
+     la règle des heures reste donc collante au fil de la page. */
+  overflow-x:clip;
+}
+
+/* ---------- décors (derrière, débordent volontiers) ---------- */
+.s-prog__deco{color:var(--blanc);opacity:.13;}
+.s-prog__deco--eclair{width:min(30vw,330px);height:min(30vw,330px);
+  top:-70px;right:-40px;transform:rotate(14deg);}
+.s-prog__deco--etoile{width:min(18vw,180px);height:min(18vw,180px);
+  bottom:-60px;left:-70px;opacity:.16;transform:rotate(-12deg);}
+.s-prog__deco--tri{width:min(14vw,150px);height:min(14vw,150px);
+  color:var(--jaune);opacity:.3;top:36%;right:-56px;}
+.s-prog__deco--manette{width:min(16vw,170px);height:min(16vw,170px);
+  bottom:8%;right:4%;opacity:.1;transform:rotate(9deg);}
+
+/* ---------- en-tête ---------- */
+.s-prog__tete{max-width:66ch;margin:0 0 clamp(22px,3.4vw,40px);}
+.s-prog__oeil{margin:0 0 14px;}
+.s-prog__oeil span{display:inline-block;background:var(--jaune);color:var(--bleu-nuit);
+  padding:.5em .95em .42em;
+  --c1:10px;--c2:6px;--c3:12px;--c4:5px;
+  clip-path:polygon(var(--c1) 0,100% 0,100% calc(100% - var(--c2)),
+    calc(100% - var(--c3)) 100%,0 100%,0 var(--c4));}
+.s-prog__h2{color:var(--blanc);margin:0 0 .5em;}
+.s-prog__chapo{font-family:var(--texte);font-size:var(--t-m);line-height:1.5;
+  color:var(--blanc);margin:0;max-width:58ch;}
+.s-prog__chapo em{font-style:italic;}
+
+/* ---------- le grand bloc blanc ---------- */
+.s-prog__cadre{background:var(--blanc);color:var(--encre);
+  padding:clamp(14px,2.2vw,26px);
+  --c1:26px;--c2:14px;--c3:20px;--c4:11px;}
+
+.s-prog__zone{position:relative;}
+
+/* ---------- règle des heures (collante dans le flux de la page) ---------- */
+.s-prog__axe{
+  display:grid;grid-template-columns:var(--lab) repeat(36,minmax(0,1fr));
+  height:var(--axe-h);position:sticky;top:var(--entete);z-index:5;
+  background:var(--blanc);border-bottom:2px solid var(--bleu-nuit);
+}
+.s-prog__axe-coin{grid-column:1;align-self:end;margin:0 0 6px;
+  font-family:var(--texte);font-weight:900;font-size:var(--t-xs);
+  letter-spacing:.16em;text-transform:uppercase;color:var(--encre-douce);}
+.s-prog__h{align-self:end;display:block;padding:0 0 5px 6px;
+  border-left:2px solid var(--regle);
+  font-family:var(--texte);font-weight:900;font-size:.7rem;line-height:1;
+  letter-spacing:.09em;color:var(--encre-douce);}
+.s-prog__hfin{position:absolute;right:0;bottom:5px;padding:0 6px 0 0;
+  border-right:2px solid var(--regle);
+  font-family:var(--texte);font-weight:900;font-size:.7rem;line-height:1;
+  letter-spacing:.09em;color:var(--encre-douce);}
+
+/* ---------- lignes ---------- */
+.s-prog__corps{padding-top:6px;}
+.s-prog__ligne{
+  display:grid;grid-template-columns:var(--lab) repeat(36,minmax(0,1fr));
+  min-height:54px;position:relative;
+  transition:opacity .18s ease;
+}
+.s-prog__corps.a-vise .s-prog__ligne:not(.est-vise){opacity:.35;}
+
+/* piste de fond + graduations */
+.s-prog__piste{grid-column:2/-1;grid-row:1;align-self:stretch;
+  margin:3px 0;background-color:var(--piste);
+  background-image:
+    repeating-linear-gradient(to right,var(--grad-h) 0,var(--grad-h) 1px,
+      transparent 1px,transparent calc(100% / 9)),
+    repeating-linear-gradient(to right,var(--grad-q) 0,var(--grad-q) 1px,
+      transparent 1px,transparent calc(100% / 36));
+  transition:background-color .18s ease;}
+.s-prog__ligne:nth-child(even) .s-prog__piste{background-color:var(--piste-alt);}
+.s-prog__ligne.est-actif .s-prog__piste,
+.s-prog__ligne.est-vise .s-prog__piste{
+  background-color:color-mix(in srgb,var(--c) 22%,transparent);}
+
+/* ---------- étiquette de lieu ---------- */
+.s-prog__etiq{grid-column:1;grid-row:1;
+  display:flex;align-items:center;gap:.5em;text-align:left;
+  background:none;border:0;cursor:pointer;padding:4px 12px 4px 0;
+  font-family:var(--texte);color:var(--encre);
+  -webkit-tap-highlight-color:transparent;}
+.s-prog__pastille{flex:0 0 auto;width:16px;height:16px;background:var(--c);
+  clip-path:polygon(4px 0,100% 0,100% calc(100% - 3px),calc(100% - 5px) 100%,0 100%,0 3px);
+  transition:transform .16s ease;}
+.s-prog__nom{font-weight:900;font-size:.74rem;line-height:1.1;
+  letter-spacing:.05em;text-transform:uppercase;
+  border-bottom:2px solid transparent;padding-bottom:1px;}
+.s-prog__etiq:hover .s-prog__pastille,
+.s-prog__etiq:focus-visible .s-prog__pastille{transform:scale(1.28) rotate(-6deg);}
+.s-prog__etiq:hover .s-prog__nom{border-bottom-color:var(--c);}
+.s-prog__etiq:focus-visible{outline:3px solid var(--bleu-nuit);outline-offset:2px;}
+.s-prog__etiq[aria-pressed="true"] .s-prog__pastille{transform:scale(1.28) rotate(-6deg);}
+.s-prog__etiq[aria-pressed="true"] .s-prog__nom{border-bottom-color:var(--c);}
+.s-prog__ligne.est-vise .s-prog__nom{border-bottom-color:var(--c);}
+
+/* ---------- blocs d'activité ----------
+   --cb / --ct : les lieux dont l'aplat vif ne porte aucun texte courant
+   (pyramide 3,9:1 · atrium 4,0:1) passent par leur variante assombrie,
+   texte blanc, 5,6:1. Les autres gardent l'aplat vif + encre bleu nuit. */
+.s-prog__bloc{
+  grid-row:1;position:relative;z-index:1;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:center;gap:2px;
+  margin:3px calc(var(--rogne,0px) + 4px) 3px 0;
+  padding:6px 9px;border:0;text-align:left;text-decoration:none;cursor:pointer;
+  background:var(--cb,var(--c));color:var(--ct,var(--bleu-nuit));
+  font-family:var(--texte);
+  --c1:9px;--c2:5px;--c3:11px;--c4:4px;
+  clip-path:polygon(var(--c1) 0,100% 0,100% calc(100% - var(--c2)),
+    calc(100% - var(--c3)) 100%,0 100%,0 var(--c4));
+  transition:transform .15s ease,filter .15s ease,box-shadow .15s ease;
+  -webkit-tap-highlight-color:transparent;}
+/* pas d'opacité sur le créneau : à .6rem, un voile à 72 % faisait tomber
+   le rapport sous 4,5:1 sur l'orange, le cyan, le rose et le vert. */
+.s-prog__creneau{font-weight:900;font-size:.6rem;letter-spacing:.08em;
+  text-transform:uppercase;white-space:nowrap;}
+.s-prog__titre{font-weight:700;font-size:.82rem;line-height:1.15;
+  overflow:hidden;}
+.s-prog__court{display:none;font-weight:900;font-size:.58rem;letter-spacing:.04em;
+  text-transform:uppercase;white-space:nowrap;}
+.s-prog__jeton{flex:0 0 auto;width:9px;height:9px;background:var(--c);
+  clip-path:polygon(0 0,100% 0,100% 68%,68% 100%,0 100%);}
+/* la note existe toujours pour le clavier et les lecteurs d'écran ;
+   elle s'affiche en clair dans le panneau de détail et en liste étroite */
+.s-prog__note{position:absolute;width:1px;height:1px;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;}
+
+.s-prog__bloc:hover,.s-prog__bloc:focus-visible{transform:translateY(-2px);
+  filter:brightness(1.05);}
+.s-prog__bloc:focus-visible{outline:0;
+  box-shadow:inset 0 0 0 3px var(--bleu-nuit),inset 0 0 0 6px var(--blanc);}
+/* l'anneau reprend l'encre du bloc : bleu nuit sur aplat clair,
+   blanc sur aplat assombri (il tombait à 2,9:1 en bleu nuit). */
+.s-prog__bloc.est-choisi{box-shadow:inset 0 0 0 3px var(--ct,var(--bleu-nuit));}
+.s-prog__bloc--lien .s-prog__titre::after{content:" ↗";font-weight:900;}
+
+/* créneaux de billetterie : pas une activité */
+.s-prog__bloc--billet{background:var(--blanc);color:var(--encre);
+  align-self:center;min-height:0;padding:5px 6px;
+  flex-direction:row;align-items:center;justify-content:center;gap:5px;
+  box-shadow:inset 0 0 0 2px var(--c);}
+/* le mot « Billets » ne tient que si la colonne est assez large ;
+   en dessous, le jeton blanc suffit et la légende l'explique. */
+@media (min-width:1180px){
+  .s-prog__bloc--billet .s-prog__court{display:block;}
+  .s-prog__bloc--billet .s-prog__jeton{display:none;}
+}
+.s-prog__bloc--billet .s-prog__creneau,
+.s-prog__bloc--billet .s-prog__titre{position:absolute;width:1px;height:1px;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+.s-prog__bloc--billet:focus-visible{
+  box-shadow:inset 0 0 0 3px var(--bleu-nuit),inset 0 0 0 5px var(--blanc);}
+.s-prog__bloc--billet.est-choisi{box-shadow:inset 0 0 0 3px var(--bleu-nuit);}
+
+/* ---------- repère « il est telle heure » ---------- */
+.s-prog__maintenant{position:absolute;top:var(--axe-h);bottom:0;z-index:3;
+  width:2px;background:var(--bleu-nuit);pointer-events:none;
+  left:calc(var(--lab) + var(--now,0) * (100% - var(--lab)));}
+.s-prog__maintenant[hidden]{display:none;}
+.s-prog__maintenant::before{content:"";position:absolute;top:-5px;left:-4px;
+  width:10px;height:10px;background:var(--magenta);
+  clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);
+  animation:prog-battement 2.6s ease-in-out infinite;}
+.s-prog__maintenant-etiq{position:absolute;top:8px;left:50%;
+  transform:translateX(-50%);background:var(--bleu-nuit);color:var(--blanc);
+  font-family:var(--texte);font-weight:900;font-size:.6rem;letter-spacing:.1em;
+  padding:.34em .6em .28em;white-space:nowrap;
+  clip-path:polygon(5px 0,100% 0,100% calc(100% - 4px),calc(100% - 6px) 100%,0 100%,0 3px);}
+@keyframes prog-battement{0%,100%{transform:scale(1)}50%{transform:scale(1.5)}}
+
+/* ---------- légende ---------- */
+.s-prog__legende{display:flex;flex-wrap:wrap;align-items:center;gap:7px 22px;
+  margin:15px 0 0;font-family:var(--texte);font-weight:900;font-size:var(--t-xs);
+  text-transform:uppercase;letter-spacing:.1em;color:var(--encre-douce);}
+.s-prog__leg-item{display:inline-flex;align-items:center;gap:7px;}
+.s-prog__leg--act{width:17px;height:11px;background:var(--l-amphi45a);
+  clip-path:polygon(4px 0,100% 0,100% 72%,72% 100%,0 100%,0 3px);}
+.s-prog__leg--bil{width:17px;height:11px;background:var(--blanc);
+  box-shadow:inset 0 0 0 2px var(--l-auditorium);}
+.s-prog__leg--fle{color:var(--encre);font-size:.9rem;line-height:1;}
+
+/* ---------- panneau de détail ---------- */
+.s-prog__detail{margin-top:16px;padding:14px 18px 15px;
+  background:var(--bleu-nuit);color:var(--sur-nuit);
+  border-left:6px solid var(--cd,var(--jaune));min-height:96px;
+  --c1:14px;--c2:8px;--c3:26px;--c4:12px;}
+.s-prog__detail [hidden]{display:none;}
+.s-prog__detail p{margin:0;}
+.s-prog__detail-repos{font-family:var(--texte);font-size:var(--t-s);
+  line-height:1.5;color:var(--sur-nuit-doux);}
+.s-prog__detail-repos b{color:var(--blanc);font-weight:900;}
+.s-prog__detail .s-prog__detail-meta{display:flex;flex-wrap:wrap;gap:.6em 1em;align-items:baseline;
+  font-family:var(--texte);font-weight:900;font-size:var(--t-xs);
+  text-transform:uppercase;letter-spacing:.14em;margin-bottom:.5em;}
+/* le nom du lieu reste blanc : plusieurs couleurs de lieu (rouge atrium,
+   magenta pyramide) ne passent pas en petit texte sur le bleu nuit.
+   La couleur est portée par le jeton et le liseré. */
+.s-prog__detail-lieu{color:var(--blanc);display:inline-flex;align-items:center;gap:.6em;}
+.s-prog__detail-lieu::before{content:"";width:11px;height:11px;flex:0 0 auto;
+  background:var(--cd,var(--jaune));
+  clip-path:polygon(3px 0,100% 0,100% 70%,70% 100%,0 100%,0 3px);}
+.s-prog__detail-creneau{color:var(--sur-nuit-doux);}
+.s-prog__detail-titre{font-family:var(--texte);font-weight:700;
+  font-size:var(--t-m);line-height:1.25;color:var(--blanc);}
+.s-prog__detail .s-prog__detail-note{font-family:var(--texte);font-size:var(--t-s);line-height:1.5;
+  color:var(--sur-nuit-doux);margin-top:.35em;}
+.s-prog__detail-note:empty{display:none;}
+
+/* ---------- pied du cadre ---------- */
+.s-prog__pied{margin-top:16px;padding-top:13px;border-top:1px solid var(--trait);
+  display:grid;grid-template-columns:1fr;gap:10px 30px;align-items:baseline;}
+.s-prog__avenir{margin:0;font-family:var(--texte);font-size:var(--t-s);
+  line-height:1.45;color:var(--encre);max-width:62ch;}
+.s-prog__avenir b{font-weight:900;}
+.s-prog__puce{display:inline-block;width:9px;height:9px;margin-right:7px;
+  background:var(--magenta);vertical-align:baseline;
+  clip-path:polygon(0 0,100% 0,100% 68%,68% 100%,0 100%);}
+.s-prog__avert{margin:0;font-family:var(--texte);font-size:var(--t-xs);
+  line-height:1.45;color:var(--encre-douce);}
+
+@media (min-width:1081px){
+  .s-prog__pied{grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);}
+}
+
+/* ---------- écrans moyens ---------- */
+@media (max-width:1080px){
+  .s-prog{--lab:clamp(88px,13vw,132px);}
+  .s-prog__titre{font-size:.76rem;}
+  .s-prog__creneau{font-size:.56rem;}
+  .s-prog__nom{font-size:.7rem;}
+  /* la règle se resserre pour que 18H et 19H ne se touchent pas */
+  .s-prog__h,.s-prog__hfin{font-size:.62rem;letter-spacing:.02em;}
+  .s-prog__h{padding-left:4px;}
+  .s-prog__hfin{padding-right:4px;}
+}
+
+/* ---------- écran étroit : la frise devient une liste par lieu ---------- */
+@media (max-width:819px){
+  .s-prog__axe,.s-prog__hfin,.s-prog__piste,.s-prog__maintenant,
+  .s-prog__court,.s-prog__jeton{display:none;}
+  .s-prog__corps{display:flex;flex-direction:column;gap:20px;padding-top:0;}
+  .s-prog__ligne{display:block;min-height:0;}
+  .s-prog__corps.a-vise .s-prog__ligne:not(.est-vise){opacity:1;}
+
+  .s-prog__etiq{width:100%;padding:0 0 6px;margin-bottom:9px;
+    border-bottom:3px solid var(--c);}
+  .s-prog__pastille{width:20px;height:20px;}
+  .s-prog__nom{font-size:.92rem;letter-spacing:.06em;border-bottom:0;padding:0;}
+  .s-prog__etiq[aria-pressed="true"] .s-prog__nom{border-bottom:0;}
+
+  .s-prog__bloc{display:block;width:100%;margin:0 0 9px;padding:11px 13px 12px;
+    grid-column:auto!important;grid-row:auto;
+    --c1:14px;--c2:8px;--c3:16px;--c4:6px;}
+  .s-prog__bloc:last-child{margin-bottom:0;}
+  .s-prog__bloc:hover,.s-prog__bloc:focus-visible{transform:none;}
+  .s-prog__creneau{display:block;font-size:.66rem;margin-bottom:3px;}
+  .s-prog__titre{font-size:1rem;line-height:1.22;}
+  .s-prog__note{position:static;width:auto;height:auto;clip:auto;
+    white-space:normal;display:block;margin-top:5px;
+    font-size:.84rem;line-height:1.42;}
+  .s-prog__bloc--billet{box-shadow:inset 0 0 0 2px var(--c);}
+  .s-prog__bloc--billet .s-prog__creneau,
+  .s-prog__bloc--billet .s-prog__titre{position:static;width:auto;height:auto;
+    clip:auto;white-space:normal;}
+  .s-prog__bloc--billet .s-prog__titre{font-size:.9rem;}
+
+  .s-prog__detail{display:none;}
+  .s-prog__pied{margin-top:20px;}
+}
+
+@media (max-width:560px){
+  .s-prog__cadre{padding:14px 13px 16px;--c1:18px;--c2:10px;--c3:14px;--c4:8px;}
+  .s-prog__legende{gap:6px 16px;}
+}
+
+/* ---------- mouvement réduit ---------- */
+@media (prefers-reduced-motion:reduce){
+  .s-prog__bloc,.s-prog__pastille,.s-prog__piste,.s-prog__ligne{transition:none;}
+  .s-prog__bloc:hover,.s-prog__bloc:focus-visible{transform:none;}
+  .s-prog__maintenant::before{animation:none;}
+}
+/* ---------- plan ---------- */
+/* ===== LE PLAN DU FESTIVAL ===================================== */
+
+.s-plan{--plan-mini:520px;
+  /* teintes dérivées des tokens, utilisées comme filets et survols */
+  --plan-filet:color-mix(in srgb,var(--sur-nuit-doux) 42%,transparent);
+  --plan-filet-doux:color-mix(in srgb,var(--sur-nuit-doux) 26%,transparent);
+  --plan-eteint:color-mix(in srgb,var(--sur-nuit-doux) 80%,transparent);
+  --plan-rail:color-mix(in srgb,var(--bleu-clair) 12%,var(--blanc));}
+.s-plan .s-plan__enveloppe{display:grid;gap:clamp(22px,3vw,34px);}
+
+/* --- en-tête --- */
+.s-plan__entete{display:grid;gap:12px;max-width:62ch;}
+.s-plan__oeil{color:var(--jaune);}
+.s-plan__titre{color:var(--blanc);}
+.s-plan__chapo{margin:0;font-family:var(--texte);font-size:var(--t-m);
+  line-height:1.5;color:var(--sur-nuit-doux);max-width:56ch;}
+
+/* --- barre : onglets + annonce --- */
+.s-plan__barre{display:flex;flex-wrap:wrap;align-items:center;gap:12px 22px;}
+.s-plan__annonce{flex:1 1 260px;min-width:0;margin:0;
+  font-family:var(--texte);font-size:var(--t-s);line-height:1.45;
+  color:var(--sur-nuit-doux);border-left:3px solid var(--plan-filet);
+  padding-left:.9em;transition:color .16s ease,border-color .16s ease;}
+.s-plan__annonce b{color:var(--blanc);font-weight:700;}
+.s-plan--allume .s-plan__annonce{color:var(--blanc);border-left-color:var(--jaune);}
+.s-plan__annonce[data-ton="hors-plan"]{border-left-color:var(--l-auditorium);color:var(--blanc);}
+
+/* --- mise en page plan + légende --- */
+.s-plan__scene{display:grid;grid-template-columns:minmax(0,1fr) minmax(276px,326px);
+  gap:clamp(16px,2vw,26px);align-items:stretch;}
+.s-plan__colonne{display:grid;gap:12px;align-content:start;min-width:0;}
+
+/* --- cadre blanc du plan --- */
+.s-plan__vue{position:relative;padding:12px;min-width:0;}
+.s-plan__vue::before,.s-plan__vue::after{content:"";position:absolute;top:0;bottom:0;
+  width:44px;opacity:0;transition:opacity .2s ease;pointer-events:none;}
+.s-plan__vue::before{left:0;background:linear-gradient(90deg,var(--blanc) 20%,transparent);}
+.s-plan__vue::after{right:0;background:linear-gradient(270deg,var(--blanc) 20%,transparent);}
+.s-plan__vue[data-glissable="oui"][data-pos="debut"]::after,
+.s-plan__vue[data-glissable="oui"][data-pos="milieu"]::after{opacity:1;}
+.s-plan__vue[data-glissable="oui"][data-pos="milieu"]::before,
+.s-plan__vue[data-glissable="oui"][data-pos="fin"]::before{opacity:1;}
+
+.s-plan__cadre{overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;
+  scrollbar-width:thin;scrollbar-color:var(--bleu-clair) var(--plan-rail);}
+.s-plan__cadre:focus-visible{outline:3px solid var(--magenta);outline-offset:2px;}
+.s-plan__cadre::-webkit-scrollbar{height:9px;}
+.s-plan__cadre::-webkit-scrollbar-track{background:var(--plan-rail);}
+.s-plan__cadre::-webkit-scrollbar-thumb{background:var(--bleu-clair);}
+
+.s-plan__carte{position:relative;width:100%;min-width:var(--plan-mini);
+  aspect-ratio:1207/1157;}
+.s-plan__image{display:block;width:100%;height:auto;}
+.s-plan__calque{position:absolute;inset:0;width:100%;height:100%;}
+
+/* --- le projecteur : voile percé par un masque, liseré blanc --- */
+.s-plan__voile{fill:var(--bleu-nuit);opacity:0;pointer-events:none;
+  transition:opacity .22s ease;}
+.s-plan--allume .s-plan__voile{opacity:.76;}
+/* #fff / #000 ne sont pas des couleurs ici mais les valeurs de luminance
+   du masque : opaque au repos, percé quand la zone est allumée. */
+.s-plan__trou{fill:#fff;}
+.s-plan__trou[data-etat="on"]{fill:#000;}
+
+.s-plan__zone{fill:transparent;stroke:transparent;stroke-width:3.5;
+  stroke-linejoin:round;vector-effect:non-scaling-stroke;
+  pointer-events:all;cursor:pointer;}
+.s-plan__zone[data-etat="on"]{stroke:var(--blanc);
+  animation:s-plan-liseret 1.5s ease-in-out infinite;}
+
+@keyframes s-plan-liseret{
+  0%,100%{stroke-width:3.5;}
+  50%{stroke-width:6;}
+}
+
+/* --- indication de défilement --- */
+.s-plan__glisser{display:flex;align-items:center;gap:.65em;margin:0;
+  font-family:var(--texte);font-weight:900;font-size:var(--t-xs);
+  text-transform:uppercase;letter-spacing:.14em;color:var(--jaune);}
+.s-plan__glisser[hidden]{display:none;}
+.s-plan__fleche{display:block;width:34px;height:9px;flex:none;
+  background:var(--jaune);
+  clip-path:polygon(0 3px,24px 3px,24px 0,34px 4.5px,24px 9px,24px 6px,0 6px);
+  animation:s-plan-glisse 1.6s ease-in-out infinite;}
+@keyframes s-plan-glisse{
+  0%,100%{transform:translateX(0);}
+  50%{transform:translateX(7px);}
+}
+
+/* --- légende --- */
+.s-plan__legende{display:flex;flex-direction:column;min-width:0;
+  padding:clamp(16px,2vw,24px);align-self:stretch;}
+.s-plan__legende-titre{font-family:var(--texte);font-weight:900;font-size:var(--t-xs);
+  text-transform:uppercase;letter-spacing:.16em;color:var(--jaune);margin:0 0 12px;}
+.s-plan__liste{list-style:none;margin:0;padding:0;display:grid;gap:2px;
+  flex:1 1 auto;align-content:space-between;}
+
+.s-plan__entree{--c1:10px;--c2:5px;--c3:12px;--c4:5px;
+  display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;
+  padding:8px 11px;border:0;cursor:pointer;background:transparent;
+  color:var(--sur-nuit);font-family:var(--texte);font-size:var(--t-s);
+  line-height:1.28;transition:background .14s ease,color .14s ease;}
+.s-plan__entree:hover{background:color-mix(in srgb,var(--blanc) 10%,transparent);}
+.s-plan__entree:focus-visible{outline:3px solid var(--jaune);outline-offset:-3px;}
+.s-plan__entree[data-etat="on"]{background:color-mix(in srgb,var(--blanc) 16%,transparent);}
+.s-plan__entree[aria-pressed="true"]{background:var(--blanc);color:var(--bleu-nuit);}
+/* sur l'entrée verrouillée (fond blanc) le jaune ne se voit plus */
+.s-plan__entree[aria-pressed="true"]:focus-visible{outline-color:var(--bleu-nuit);}
+
+.s-plan__pastille{flex:none;width:16px;height:16px;margin-top:1px;background:var(--zc);
+  clip-path:polygon(4px 0,100% 0,100% calc(100% - 3px),calc(100% - 5px) 100%,0 100%,0 3px);}
+.s-plan__nom{display:block;min-width:0;}
+.s-plan__ou{display:block;font-weight:900;font-size:var(--t-xs);
+  text-transform:uppercase;letter-spacing:.11em;color:var(--sur-nuit-doux);
+  margin-top:3px;}
+.s-plan__entree[aria-pressed="true"] .s-plan__ou{color:var(--bleu-clair);}
+
+.s-plan__aide{margin:14px 0 0;padding-top:12px;font-family:var(--texte);
+  font-size:var(--t-xs);line-height:1.5;color:var(--sur-nuit-doux);
+  border-top:1px solid var(--plan-filet-doux);}
+
+/* --- accès --- */
+.s-plan__acces{margin:0;font-family:var(--texte);font-size:var(--t-s);line-height:1.75;
+  color:var(--sur-nuit-doux);}
+.s-plan__acces strong{color:var(--blanc);font-weight:900;text-transform:uppercase;
+  letter-spacing:.09em;font-size:var(--t-xs);margin-right:.15em;}
+.s-plan__fait + .s-plan__fait::before{content:"";display:inline-block;
+  width:9px;height:9px;margin:0 .85em 0 .55em;vertical-align:.05em;
+  background:var(--magenta);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);}
+
+/* --- décors --- */
+.s-plan__deco--etoile{top:-42px;right:2%;width:clamp(72px,9vw,132px);
+  height:clamp(72px,9vw,132px);color:var(--jaune);opacity:.85;}
+.s-plan__deco--triangle{bottom:-60px;right:11%;width:clamp(64px,8vw,116px);
+  height:clamp(64px,8vw,116px);color:var(--rose);opacity:.5;}
+.s-plan__deco--de{top:28%;right:0;width:clamp(70px,7vw,110px);
+  height:clamp(70px,7vw,110px);color:var(--cyan);opacity:.4;}
+
+/* --- ruptures --- */
+@media (max-width:1180px){
+  .s-plan__scene{grid-template-columns:minmax(0,1fr);}
+  .s-plan__liste{grid-template-columns:1fr 1fr;gap:2px 10px;}
+}
+@media (max-width:560px){
+  .s-plan__liste{grid-template-columns:1fr;}
+  .s-plan__barre{align-items:flex-start;flex-direction:column;gap:14px;}
+  .s-plan__annonce{flex:1 1 auto;}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .s-plan__zone[data-etat="on"]{animation:none;stroke-width:4;}
+  .s-plan__fleche{animation:none;}
+  .s-plan__voile{transition:none;}
+  .s-plan__vue::before,.s-plan__vue::after{transition:none;}
+}
+/* ---------- conferences ---------- */
+/* ============ LA PROGRAMMATION : la frise commune aux trois scènes ====
+   Conférences, auditorium et scène Pyramide partagent la même grammaire :
+   une chaîne de blocs magenta, chacun avec sa pastille horaire blanche.
+   ==================================================================== */
+.s-prg{--prg-ancre:var(--bleu-nuit);
+  --prg-ombre:color-mix(in srgb,var(--bleu-nuit) 92%,transparent);}
+/* seuls les éléments de la frise portent une largeur explicite */
+.s-prg__carte,.s-prg__horaire,.s-prg__fin{box-sizing:border-box;}
+
+/* ---- décors (derrière les blocs, débordent sur les sections voisines) ---- */
+.s-prg__deco{opacity:.92;}
+.s-prg__deco--etoile{--w:clamp(120px,13vw,206px);width:var(--w);height:calc(var(--w) * .948);
+  color:var(--cyan);top:-64px;right:clamp(16px,2vw,40px);transform:rotate(-9deg);}
+.s-prg__deco--eclair{--w:clamp(84px,8.4vw,138px);width:var(--w);height:calc(var(--w) * 1.145);
+  color:var(--jaune);top:31%;left:clamp(10px,1.4vw,26px);transform:rotate(11deg);}
+.s-prg__deco--tri{--w:clamp(52px,5.4vw,86px);width:var(--w);height:calc(var(--w) * 2.569);
+  color:var(--turquoise);top:57%;right:clamp(14px,1.6vw,28px);transform:rotate(6deg);opacity:.8;}
+.s-prg__deco--tri2{--w:clamp(34px,3.4vw,54px);width:var(--w);height:calc(var(--w) * 4.709);
+  color:var(--rose);bottom:-74px;left:9%;transform:rotate(-14deg);opacity:.78;}
+
+@media (prefers-reduced-motion:no-preference){
+  .s-prg__deco--etoile{animation:prg-derive-etoile 9s ease-in-out infinite alternate;}
+  .s-prg__deco--eclair{animation:prg-derive-eclair 11s ease-in-out infinite alternate;}
+}
+@keyframes prg-derive-etoile{
+  from{transform:rotate(-9deg) translateY(0);}
+  to{transform:rotate(-13deg) translateY(-16px);}
+}
+@keyframes prg-derive-eclair{
+  from{transform:rotate(11deg) translateY(0);}
+  to{transform:rotate(7deg) translateY(18px);}
+}
+
+/* ---- en-tête ---- */
+.s-prg__tete{margin-bottom:clamp(38px,5vw,64px);}
+.s-prg__oeil{color:var(--jaune);margin-bottom:.85em;}
+.s-prg__h2{color:var(--blanc);margin-bottom:.34em;max-width:14ch;}
+.s-prg__chapo{font-family:var(--texte);font-weight:400;font-size:clamp(1rem,.94rem + .28vw,1.16rem);
+  line-height:1.55;color:var(--sur-nuit-doux);margin:0;max-width:56ch;text-wrap:pretty;}
+
+.s-prg__reperes{list-style:none;display:flex;flex-wrap:wrap;gap:10px;margin:clamp(22px,2.6vw,30px) 0 0;padding:0;}
+.s-prg__repere{display:flex;flex-direction:column;justify-content:center;gap:1px;
+  padding:9px 16px 10px;min-width:96px;}
+.s-prg__repere b{font-family:var(--texte);font-weight:900;font-size:1.16rem;line-height:1.05;
+  font-variant-numeric:tabular-nums;letter-spacing:-.01em;}
+.s-prg__repere span{font-family:var(--texte);font-weight:700;font-size:.7rem;text-transform:uppercase;
+  letter-spacing:.13em;opacity:.74;}
+
+/* ---- le fil de la journée ---- */
+.s-prg__fil{
+  --pw:clamp(104px,11vw,128px);      /* largeur de la pastille */
+  --deb:clamp(14px,2.4vw,30px);      /* débord de la pastille à droite */
+  --maille:clamp(28px,3.2vw,40px);   /* longueur du trait de chaîne */
+  list-style:none;margin:0;padding:0;
+  display:flex;flex-direction:column;gap:var(--maille);}
+
+.s-prg__item{position:relative;}
+.s-prg__item::after{content:"";position:absolute;top:100%;height:var(--maille);width:8px;
+  right:calc(var(--pw) / 2 - var(--deb));transform:translateX(50%);
+  background:var(--prg-ancre);}
+.s-prg__item:last-child::after{display:none;}
+
+.s-prg__conf{position:relative;transition:transform .18s ease;}
+.s-prg__item:nth-child(even) .s-prg__conf{margin-left:clamp(14px,4vw,56px);}
+
+/* magenta profond, pas magenta vif : le vif ne porte aucun texte courant
+   (4,2 en blanc, 4,0 en bleu nuit) ; le profond passe l'AA à 5,6 en blanc */
+.s-prg__carte{
+  background:var(--magenta-profond);color:var(--blanc);
+  padding:clamp(20px,2.5vw,28px) calc(var(--pw) - var(--deb) + clamp(22px,3vw,42px))
+          clamp(20px,2.5vw,28px) clamp(24px,2.8vw,34px);
+  min-height:150px;display:flex;flex-direction:column;justify-content:center;gap:.42em;
+  box-shadow:inset 10px 0 0 0 var(--l-conf);
+  filter:drop-shadow(7px 8px 0 var(--prg-ombre));
+  transition:background-color .18s ease,box-shadow .18s ease;}
+
+.s-prg__num{color:var(--blanc);}
+.s-prg__titre{font-family:var(--texte);font-weight:700;
+  font-size:clamp(1.5rem,1.06rem + 1.28vw,1.82rem);line-height:1.17;letter-spacing:-.005em;
+  color:var(--blanc);margin:0;text-wrap:pretty;overflow-wrap:break-word;}
+.s-prg__par{font-family:var(--texte);font-size:1rem;line-height:1.35;margin:.1em 0 0;
+  color:var(--blanc);}
+.s-prg__par em{font-style:italic;font-weight:600;}
+.s-prg__avec{font-style:normal;font-weight:900;font-size:.66em;text-transform:uppercase;
+  letter-spacing:.15em;margin-right:.28em;}
+
+/* pastille horaire, hors du bloc magenta, sinon le clip-path la rognerait */
+.s-prg__horaire{position:absolute;top:clamp(18px,2.2vw,26px);right:calc(-1 * var(--deb));
+  width:var(--pw);margin:0;display:flex;flex-direction:column;align-items:flex-start;
+  padding:12px 12px 11px;filter:drop-shadow(5px 6px 0 var(--prg-ombre));
+  transition:background-color .18s ease;}
+.s-prg__debut{font-family:var(--texte);font-weight:900;line-height:1;letter-spacing:-.02em;
+  font-size:clamp(1.55rem,1.05rem + 1.5vw,2.1rem);font-variant-numeric:tabular-nums;
+  color:var(--bleu-nuit);}
+.s-prg__debut i{font-style:normal;font-weight:700;font-size:.5em;margin-inline:.04em;
+  vertical-align:.12em;}
+.s-prg__fin{font-family:var(--texte);font-weight:700;font-size:.8rem;letter-spacing:.03em;
+  font-variant-numeric:tabular-nums;color:var(--encre-douce);
+  width:100%;margin-top:.4em;padding-top:.36em;
+  border-top:2px solid color-mix(in srgb,var(--encre-douce) 26%,var(--blanc));}
+.s-prg__fin i{font-style:normal;}
+
+/* survol : décor pur, aucune de ces cartes n'est cliquable ;
+   magenta foncé garde le blanc à 4,9 */
+.s-prg__conf:hover{transform:translateY(-3px);}
+.s-prg__conf:hover .s-prg__carte{background:var(--magenta-fonce);box-shadow:inset 14px 0 0 0 var(--jaune);}
+.s-prg__conf:hover .s-prg__horaire{background:var(--jaune);}
+
+/* ---- les deux expositions : un couple à part, hors du fil ---- */
+.s-prg__expos{margin-top:clamp(52px,6.4vw,84px);
+  padding:clamp(26px,3.4vw,44px) clamp(24px,3.4vw,44px) clamp(28px,3.6vw,44px);}
+.s-prg__expos-tete{max-width:62ch;}
+.s-prg__expos-oeil{color:var(--jaune);margin-bottom:.8em;}
+.s-prg__expos-titre{font-size:clamp(1.75rem,3.2vw,2.5rem);color:var(--blanc);margin-bottom:.4em;}
+.s-prg__expos-chapo{font-family:var(--texte);font-size:1.02rem;line-height:1.55;margin:0;
+  color:var(--sur-nuit-doux);text-wrap:pretty;}
+
+.s-prg__cartes{list-style:none;margin:clamp(22px,2.8vw,32px) 0 0;padding:0;
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(14px,1.8vw,22px);}
+.s-prg__expo{position:relative;padding:clamp(18px,2.2vw,24px) clamp(18px,2.2vw,24px) clamp(20px,2.4vw,26px);
+  display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:16px;align-content:start;
+  box-shadow:inset 0 -10px 0 0 var(--turquoise);
+  transition:box-shadow .18s ease,transform .18s ease;}
+.s-prg__expo:hover{transform:translateY(-3px);box-shadow:inset 0 -14px 0 0 var(--cyan);}
+.s-prg__expo-tag{grid-column:1;justify-self:start;margin:0 0 .7em;
+  font-family:var(--texte);font-weight:900;font-size:.68rem;text-transform:uppercase;
+  letter-spacing:.12em;background:var(--jaune);color:var(--bleu-nuit);padding:5px 11px 5px 12px;
+  --c1:8px;--c2:6px;--c3:9px;--c4:5px;
+  clip-path:polygon(var(--c1) 0,100% 0,100% calc(100% - var(--c2)),calc(100% - var(--c3)) 100%,0 100%,0 var(--c4));}
+.s-prg__expo-nom{grid-column:1;margin:0 0 .34em;font-family:var(--texte);font-weight:700;
+  font-size:clamp(1.22rem,1.02rem + .62vw,1.44rem);line-height:1.18;color:var(--bleu-nuit);
+  text-wrap:pretty;}
+.s-prg__expo-desc{grid-column:1;margin:0;font-family:var(--texte);font-size:.98rem;line-height:1.5;
+  color:var(--encre-douce);}
+.s-prg__expo-doodle{grid-column:2;grid-row:1 / span 3;align-self:center;
+  width:clamp(46px,5.2vw,68px);height:clamp(46px,5.2vw,68px);color:var(--l-conf);}
+
+.s-prg__pied{margin:clamp(20px,2.4vw,28px) 0 0;font-family:var(--texte);font-size:.94rem;
+  line-height:1.55;color:var(--sur-nuit-doux);}
+.s-prg__lien{color:var(--jaune);font-weight:700;text-decoration:underline;
+  text-underline-offset:3px;text-decoration-thickness:2px;}
+.s-prg__lien:hover{color:var(--blanc);}
+.s-prg__lien:focus-visible{outline:3px solid var(--jaune);outline-offset:3px;color:var(--blanc);
+  text-decoration:none;background:color-mix(in srgb,var(--jaune) 16%,transparent);}
+
+/* ---- 1080px : on resserre, les décors se font discrets ---- */
+@media (max-width:1080px){
+  .s-prg__deco--tri{display:none;}
+  .s-prg__deco--eclair{opacity:.72;}
+}
+
+/* ---- 820px : une seule colonne, la pastille passe au-dessus du bloc ---- */
+@media (max-width:820px){
+  .s-prg__deco--eclair,.s-prg__deco--tri2{display:none;}
+  .s-prg__deco--etoile{--w:clamp(96px,17vw,150px);top:-40px;right:clamp(10px,2.6vw,26px);}
+
+  .s-prg__fil{--maille:clamp(24px,4.4vw,34px);}
+  .s-prg__item:nth-child(even) .s-prg__conf{margin-left:0;}
+  .s-prg__item::after{right:auto;left:22px;transform:none;}
+
+  .s-prg__conf{display:flex;flex-direction:column-reverse;align-items:flex-start;}
+  .s-prg__carte{width:100%;min-height:0;gap:.5em;
+    padding:clamp(40px,7vw,50px) clamp(20px,4.4vw,28px) clamp(20px,4vw,26px);}
+  .s-prg__horaire{position:relative;z-index:2;width:auto;max-width:100%;
+    flex-direction:row;align-items:baseline;gap:.55em;padding:8px 14px 9px;
+    margin-left:16px;margin-bottom:-12px;}
+  .s-prg__debut{font-size:1.5rem;}
+  .s-prg__fin{width:auto;margin-top:0;padding-top:0;border-top:0;font-size:.82rem;}
+
+  .s-prg__cartes{grid-template-columns:minmax(0,1fr);}
+}
+
+/* ---- 560px ---- */
+@media (max-width:560px){
+  .s-prg__titre{font-size:1.5rem;}
+  .s-prg__repere{flex:1 1 auto;min-width:0;}
+  .s-prg__expo{grid-template-columns:minmax(0,1fr);}
+  .s-prg__expo-doodle{grid-column:1;grid-row:auto;justify-self:start;margin-top:.9em;}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .s-prg__conf,.s-prg__carte,.s-prg__horaire,.s-prg__expo{transition:none;}
+  .s-prg__conf:hover,.s-prg__expo:hover{transform:none;}
+}
+/* ---------- auditorium ---------- */
+/* ===== LE VOLET AUDITORIUM : la rangée des têtes d'affiche =====
+   Les neuf portraits détourés sont posés sur une ligne de sol commune,
+   chacun avec un flex-grow égal à sa largeur native : ils tombent tous
+   à la même hauteur, sans déformation, quelle que soit la place. ===== */
+.s-audi *,.s-audi *::before,.s-audi *::after{box-sizing:border-box;}
+
+.s-audi{
+  --leg:74px;                     /* hauteur de la plaque de crédits */
+  --sol:calc(var(--leg) + 16px);  /* le plateau dépasse sous les pieds */
+  --recouvre:3.2%;                /* chevauchement des personnages */
+  --nuit-retrait:color-mix(in srgb,var(--bleu-nuit) 88%,var(--sur-nuit-doux));
+  color:var(--sur-nuit);          /* le volet est lavé de magenta : encre blanche */
+}
+
+
+/* ---- plateau ---- */
+.s-audi__plateau{position:relative;z-index:1;max-width:1400px;margin:clamp(38px,5vw,68px) auto 0;
+  padding-inline:var(--gout);}
+
+/* onglets */
+.s-audi__onglets{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:clamp(16px,2vw,26px);}
+.s-audi__ong{position:relative;display:grid;gap:2px;text-align:left;cursor:pointer;border:0;
+  font-family:var(--texte);padding:.85em 1.5em .9em;background:var(--bleu-nuit);color:var(--sur-nuit);
+  --c1:14px;--c2:9px;--c3:16px;--c4:7px;
+  clip-path:polygon(var(--c1) 0,100% 0,100% calc(100% - var(--c2)),
+    calc(100% - var(--c3)) 100%,0 100%,0 var(--c4));
+  transition:transform .18s ease,background-color .18s ease,color .18s ease;}
+.s-audi__ong-l{font-family:var(--titre);text-transform:uppercase;font-size:clamp(1.05rem,1.5vw,1.35rem);
+  line-height:1;}
+.s-audi__ong-h{font-weight:900;font-size:var(--t-s);letter-spacing:.05em;
+  font-variant-numeric:tabular-nums;}
+.s-audi__ong-n{font-weight:700;font-size:var(--t-xs);text-transform:uppercase;letter-spacing:.14em;
+  opacity:.78;}
+.s-audi__ong:hover,.s-audi__ong:focus-visible{transform:translateY(-2px);}
+/* le clip-path rogne un outline extérieur : on le pose à l'intérieur du bouton */
+.s-audi__ong:focus-visible{outline:3px solid var(--jaune);outline-offset:-7px;}
+.s-audi__ong[aria-pressed="true"]:focus-visible{outline-color:var(--bleu-nuit);}
+.s-audi__ong[aria-pressed="true"]{background:var(--jaune);color:var(--bleu-nuit);}
+.s-audi__ong[aria-pressed="true"] .s-audi__ong-n{opacity:.85;}
+
+
+/* rangée de personnages : chaque slot reçoit un flex-grow égal à la largeur
+   native du portrait, donc tous les portraits tombent à la même hauteur
+   quelle que soit la largeur disponible, sans déformation. */
+.s-audi__rang{position:relative;padding-top:6px;}
+.s-audi__sol{position:absolute;left:-14px;right:-14px;bottom:0;height:var(--sol);
+  background:var(--bleu-nuit);border-top:4px solid var(--l-auditorium);z-index:0;}
+.s-audi__cast{position:relative;z-index:1;list-style:none;margin:0;padding:0;
+  display:flex;align-items:flex-end;}
+
+.s-audi__perso{position:relative;flex:var(--r,300) 1 0%;min-width:0;z-index:var(--z,1);
+  display:flex;flex-direction:column;}
+.s-audi__perso + .s-audi__perso{margin-left:calc(var(--recouvre) * -1);}
+
+.s-audi__cadre{transform-origin:50% 100%;
+  transform:scale(var(--sc,1)) translateY(var(--dz,0px));
+  transition:transform .5s cubic-bezier(.2,.75,.3,1),filter .5s ease;}
+.s-audi__img{display:block;width:100%;height:auto;transition:transform .28s ease;}
+.s-audi__perso:hover .s-audi__img{transform:translateY(-9px);}
+
+/* légendes, posées sur le plateau */
+.s-audi__legende{position:relative;height:var(--leg);margin:0;padding:9px 4px 0;
+  display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;
+  font-family:var(--texte);color:var(--sur-nuit);transition:opacity .4s ease;}
+.s-audi__nom{font-family:var(--titre);font-weight:400;text-transform:uppercase;
+  font-size:clamp(.78rem,1.05vw,1.02rem);line-height:1;letter-spacing:.01em;}
+.s-audi__role{font-weight:700;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--sur-nuit-doux);line-height:1.2;}
+.s-audi__tags{display:flex;flex-wrap:wrap;justify-content:center;gap:3px 4px;margin-top:3px;}
+.s-audi__tag{font-weight:900;font-size:.6rem;text-transform:uppercase;letter-spacing:.07em;
+  padding:.26em .46em .2em;white-space:nowrap;line-height:1;
+  color:var(--sur-nuit-doux);box-shadow:inset 0 0 0 1.5px currentColor;}
+.s-audi__perso--mj .s-audi__nom{color:var(--jaune);}
+.s-audi__perso--mj .s-audi__role{color:var(--jaune);opacity:.85;}
+
+/* état : casting de la session affichée / casting en retrait */
+.s-audi__scene[data-actif="matin"] .s-audi__tag[data-t="matin"],
+.s-audi__scene[data-actif="aprem"] .s-audi__tag[data-t="aprem"]{
+  background:var(--jaune);color:var(--bleu-nuit);box-shadow:none;}
+
+.s-audi__scene[data-actif="matin"] .s-audi__perso:not([data-sessions~="matin"]),
+.s-audi__scene[data-actif="aprem"] .s-audi__perso:not([data-sessions~="aprem"]){z-index:0;}
+.s-audi__scene[data-actif="matin"] .s-audi__perso:not([data-sessions~="matin"]) .s-audi__cadre,
+.s-audi__scene[data-actif="aprem"] .s-audi__perso:not([data-sessions~="aprem"]) .s-audi__cadre{
+  --sc:.66;--dz:-18px;filter:grayscale(.94) contrast(.8) opacity(.6);}
+.s-audi__scene[data-actif="matin"] .s-audi__perso:not([data-sessions~="matin"]) .s-audi__legende,
+.s-audi__scene[data-actif="aprem"] .s-audi__perso:not([data-sessions~="aprem"]) .s-audi__legende{
+  opacity:.75;}
+
+.s-audi__pied{margin:1.1em 0 0;font-family:var(--texte);font-size:var(--t-s);
+  color:var(--sur-nuit);display:flex;flex-wrap:wrap;gap:.2em .7em;}
+.s-audi__pied-b{font-weight:700;}
+
+/* ---- écrans moyens : la rangée devient une grille de bustes ---- */
+@media (max-width:1080px){
+  .s-audi__sol{display:none;}
+  .s-audi__rang{padding-top:0;}
+  .s-audi__cast{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;
+    align-items:stretch;}
+  .s-audi__perso{flex:none;margin-left:0;background:var(--bleu-nuit);
+    --c1:14px;--c2:9px;--c3:16px;--c4:7px;
+    clip-path:polygon(var(--c1) 0,100% 0,100% calc(100% - var(--c2)),
+      calc(100% - var(--c3)) 100%,0 100%,0 var(--c4));
+    transition:transform .4s ease;}
+  .s-audi__perso + .s-audi__perso{margin-left:0;}
+  .s-audi__cadre{--sc:1 !important;--dz:0px !important;}
+  .s-audi__img{aspect-ratio:6/5;object-fit:cover;object-position:50% 5%;}
+  .s-audi__legende{height:auto;padding:10px 12px 13px;align-items:flex-start;text-align:left;}
+  .s-audi__tags{justify-content:flex-start;}
+  .s-audi__nom{font-size:1.05rem;}
+  .s-audi__role{font-size:.74rem;}
+  .s-audi__tag{font-size:.66rem;}
+  .s-audi__perso:hover .s-audi__img{transform:none;}
+  .s-audi__scene[data-actif="matin"] .s-audi__perso:not([data-sessions~="matin"]),
+  .s-audi__scene[data-actif="aprem"] .s-audi__perso:not([data-sessions~="aprem"]){
+    background:var(--nuit-retrait);}
+  .s-audi__scene[data-actif="matin"] .s-audi__perso:not([data-sessions~="matin"]) .s-audi__cadre,
+  .s-audi__scene[data-actif="aprem"] .s-audi__perso:not([data-sessions~="aprem"]) .s-audi__cadre{
+    filter:grayscale(.92) contrast(.82) opacity(.5);}
+  .s-audi__scene[data-actif="matin"] .s-audi__perso:not([data-sessions~="matin"]) .s-audi__legende,
+  .s-audi__scene[data-actif="aprem"] .s-audi__perso:not([data-sessions~="aprem"]) .s-audi__legende{
+    opacity:1;color:var(--sur-nuit-doux);}
+}
+
+@media (max-width:560px){
+  /* deux colonnes : la table d'animation prend la largeur, sinon le neuvième
+     portrait resterait seul sur la dernière ligne */
+  .s-audi__cast{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+  .s-audi__perso--mj{grid-column:1 / -1;}
+  .s-audi__perso--mj .s-audi__img{aspect-ratio:16/9;object-position:50% 12%;}
+  .s-audi__onglets{gap:8px;}
+  .s-audi__ong{flex:1 1 100%;}
+  .s-audi__legende{padding:9px 10px 12px;}
+  .s-audi__nom{font-size:.95rem;}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .s-audi__cadre,.s-audi__img,.s-audi__ong,.s-audi__legende,.s-audi__perso{transition-duration:.01ms;}
+}
+/* ---------- jeux ---------- */
+/* ==========================================================
+   LES JEUX ET LES STUDIOS : #jeux / .s-jeux
+   ========================================================== */
+.s-jeux{
+  --jeux-tuile:194px;
+  --jeux-gap:14px;
+  --jeux-cut:clamp(26px,7vw,92px);
+}
+
+/* ---------- décors (derrière tout, débordent en haut et en bas) ---------- */
+.s-jeux__deco{height:auto;}
+.s-jeux__deco--de20{width:136px;top:-52px;right:4%;color:var(--jaune);opacity:.5;
+  transform:rotate(14deg);animation:jeux-derive 17s ease-in-out infinite;}
+.s-jeux__deco--etoile{width:72px;left:1.5%;top:14%;color:var(--cyan);opacity:.85;
+  animation:jeux-pivote 26s linear infinite;}
+.s-jeux__deco--eclair{width:74px;right:1.5%;bottom:17%;color:var(--jaune);opacity:.5;
+  transform:rotate(-9deg);}
+.s-jeux__deco--pacman{width:124px;left:2%;bottom:9%;color:var(--rose);opacity:.5;
+  transform:rotate(-13deg);animation:jeux-derive-b 21s ease-in-out infinite;}
+.s-jeux__deco--triangle{width:74px;right:1%;bottom:-46px;color:var(--rose);opacity:.45;}
+
+/* ---------- en-tête ---------- */
+.s-jeux__oeil{color:var(--jaune);margin-bottom:.9rem;}
+.s-jeux__titrage{display:grid;gap:clamp(20px,3.2vw,46px);
+  grid-template-columns:minmax(240px,.95fr) minmax(0,1.2fr);align-items:start;}
+.s-jeux__colonne{display:flex;flex-direction:column;align-items:flex-start;
+  gap:clamp(18px,2.2vw,26px);}
+.s-jeux__titre{color:var(--blanc);}
+.s-jeux__slogan{font-family:var(--titre);font-size:clamp(1.5rem,2.2vw,2rem);
+  line-height:1.02;text-transform:uppercase;margin:0;padding:.5em .72em .58em;}
+.s-jeux__intro{padding:clamp(18px,2.4vw,26px) clamp(20px,2.6vw,30px);}
+.s-jeux__lead{font-family:var(--texte);font-size:clamp(1rem,1.35vw,1.14rem);
+  line-height:1.5;margin:0;color:var(--encre);}
+.s-jeux__lead b{font-weight:900;}
+.s-jeux__lead-bis{font-family:var(--texte);font-size:var(--t-s);line-height:1.5;
+  margin:.7em 0 0;color:var(--encre-douce);}
+
+/* ---------- compteurs ---------- */
+.s-jeux__compteurs{list-style:none;margin:clamp(26px,3.4vw,42px) 0 0;padding:0;
+  display:grid;gap:var(--jeux-gap);
+  grid-template-columns:1.25fr 1.25fr 1fr 1fr;align-items:stretch;}
+.s-jeux__nb{position:relative;padding:clamp(14px,1.8vw,20px) clamp(16px,2vw,22px) clamp(12px,1.6vw,17px);
+  display:flex;flex-direction:column;justify-content:flex-end;min-width:0;
+  min-height:150px;overflow:hidden;}
+/* Le magenta vif ne porte pas de texte courant (4,0 en bleu nuit, 4,2 en blanc) :
+   la variante profonde du socle passe l'AA en blanc (5,6). */
+.s-jeux__nb--un{background:var(--magenta-profond);color:var(--blanc);
+  transform:rotate(-1deg);}
+.s-jeux__nb--deux{transform:rotate(.75deg);}
+.s-jeux__nb--plateau{background:var(--jaune);color:var(--bleu-nuit);transform:rotate(1.2deg);}
+.s-jeux__nb--video{background:var(--cyan);color:var(--bleu-nuit);transform:rotate(-.7deg);}
+.s-jeux__chiffre{font-family:var(--titre);line-height:.82;letter-spacing:-.01em;
+  font-size:clamp(3.1rem,6.4vw,5.2rem);}
+.s-jeux__nb--plateau .s-jeux__chiffre,.s-jeux__nb--video .s-jeux__chiffre{font-size:clamp(2.5rem,4.6vw,3.7rem);}
+.s-jeux__etiq{font-family:var(--texte);font-weight:900;text-transform:uppercase;
+  letter-spacing:.14em;font-size:var(--t-xs);margin-top:.7em;}
+.s-jeux__nb--un .s-jeux__etiq{color:var(--blanc);}
+.s-jeux__nb--deux .s-jeux__etiq{color:var(--sur-nuit-doux);}
+.s-jeux__marque{position:absolute;top:12px;right:12px;width:34px;height:auto;
+  color:var(--bleu-nuit);opacity:.3;}
+.s-jeux__puce{margin:var(--jeux-gap) 0 0;padding:.85em 1.15em;max-width:60ch;
+  font-family:var(--texte);font-size:var(--t-s);line-height:1.45;color:var(--sur-nuit-doux);}
+
+/* ---------- bandes défilantes ---------- */
+.s-jeux__bandes{position:relative;z-index:1;margin-top:clamp(46px,6vw,82px);}
+.s-jeux__annonce{max-width:var(--large);margin:0 auto clamp(14px,2vw,20px);
+  padding-inline:var(--gout);}
+.s-jeux__annonce-txt{display:inline-block;padding:.72em 1.15em;
+  font-family:var(--texte);font-weight:400;font-size:var(--t-s);line-height:1.45;
+  color:var(--sur-nuit-doux);max-width:76ch;}
+.s-jeux__annonce-txt b{font-weight:900;text-transform:uppercase;letter-spacing:.14em;
+  font-size:var(--t-xs);color:var(--jaune);margin-right:.6em;}
+
+.s-jeux__cadre{position:relative;}
+.s-jeux__cadre+.s-jeux__cadre{margin-top:var(--jeux-gap);}
+.s-jeux__cadre:focus-within{outline:3px solid var(--jaune);outline-offset:5px;}
+
+/* État de repos, et repli si le JS ne passe pas : la bande ne bouge pas
+   et se fait défiler à la main. */
+.s-jeux__rail{overflow-x:auto;overflow-y:hidden;max-width:100%;padding-block:6px;
+  scroll-snap-type:x proximity;scrollbar-color:var(--jaune) rgba(255,255,255,.16);}
+.s-jeux__rail:focus{outline:none;}
+/* Le JS a doublé la liste : la boucle peut tourner sans couture. */
+.s-jeux__rail[data-boucle="1"]{overflow:hidden;scroll-snap-type:none;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 var(--jeux-cut),
+    #000 calc(100% - var(--jeux-cut)),transparent 100%);
+  mask-image:linear-gradient(90deg,transparent 0,#000 var(--jeux-cut),
+    #000 calc(100% - var(--jeux-cut)),transparent 100%);}
+.s-jeux__piste{display:flex;width:max-content;gap:0;}
+.s-jeux__piste[data-double="1"]{animation:jeux-glisse var(--jeux-duree,83s) linear infinite;}
+.s-jeux__cadre--retour .s-jeux__piste[data-double="1"]{animation-name:jeux-glisse-retour;
+  --jeux-duree:101s;}
+.s-jeux__cadre:hover .s-jeux__piste,
+.s-jeux__cadre:focus-within .s-jeux__piste{animation-play-state:paused;}
+@keyframes jeux-glisse{from{transform:translate3d(0,0,0);}to{transform:translate3d(-50%,0,0);}}
+@keyframes jeux-glisse-retour{from{transform:translate3d(-50%,0,0);}to{transform:translate3d(0,0,0);}}
+
+.s-jeux__suite{display:flex;gap:var(--jeux-gap);align-items:stretch;
+  list-style:none;margin:0;padding:0 calc(var(--jeux-gap)/2);}
+
+/* ---------- tuile ---------- */
+.s-jeux__tuile{flex:0 0 auto;scroll-snap-align:start;width:var(--jeux-tuile);
+  background:var(--blanc);color:var(--encre);display:flex;flex-direction:column;
+  transition:transform .18s ease;}
+.s-jeux__cadre:hover .s-jeux__tuile:hover{transform:translateY(-6px);}
+.s-jeux__type{display:flex;align-items:center;gap:.45em;margin:0;
+  padding:.52em .8em;font-family:var(--texte);font-weight:900;font-size:.63rem;
+  text-transform:uppercase;letter-spacing:.11em;}
+.s-jeux__type--plateau{background:var(--jaune);color:var(--bleu-nuit);}
+.s-jeux__type--video{background:var(--cyan);color:var(--bleu-nuit);}
+.s-jeux__pico{width:16px;height:16px;flex:0 0 auto;}
+.s-jeux__vign{display:block;padding:11px 11px 0;background:var(--blanc);}
+.s-jeux__img{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:contain;
+  background:var(--blanc);}
+.s-jeux__nom{display:block;padding:10px 12px 14px;}
+.s-jeux__jeu{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;font-family:var(--texte);font-weight:700;font-size:.92rem;
+  line-height:1.2;min-height:2.4em;color:var(--bleu-nuit);}
+.s-jeux__studio{display:block;margin-top:.25em;font-family:var(--texte);font-weight:400;
+  font-size:.76rem;line-height:1.25;color:var(--encre-douce);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* ---------- pied : règles + sorties ---------- */
+.s-jeux__pied{display:grid;gap:var(--jeux-gap);grid-template-columns:1.08fr 1fr;
+  align-items:start;margin-top:clamp(30px,4vw,50px);}
+.s-jeux__sortie{padding:clamp(20px,2.4vw,28px) clamp(20px,2.6vw,30px);}
+.s-jeux__sortie-oeil{color:var(--magenta-fonce);}
+.s-jeux__maj{font-family:var(--texte);font-size:var(--t-s);line-height:1.5;
+  color:var(--encre-douce);margin:1em 0 0;}
+.s-jeux__boutons{display:flex;flex-wrap:wrap;gap:10px;margin:1.3em 0 0;}
+.s-jeux__btn--nuit{background:var(--bleu-nuit);color:var(--blanc);}
+.s-jeux__btn:focus-visible{outline:3px solid var(--jaune);outline-offset:3px;}
+.s-jeux__fleche{width:19px;height:9px;flex:0 0 auto;}
+
+/* ---------- animations de décor ---------- */
+@keyframes jeux-derive{0%,100%{transform:rotate(14deg) translateY(0);}
+  50%{transform:rotate(14deg) translateY(14px);}}
+@keyframes jeux-derive-b{0%,100%{transform:rotate(-13deg) translateY(0);}
+  50%{transform:rotate(-13deg) translateY(-16px);}}
+@keyframes jeux-pivote{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+/* ---------- points de rupture ---------- */
+@media (max-width:1080px){
+  .s-jeux__titrage{grid-template-columns:1fr;}
+  .s-jeux__compteurs{grid-template-columns:repeat(2,1fr);}
+  .s-jeux__pied{grid-template-columns:1fr;}
+  .s-jeux__deco--eclair,.s-jeux__deco--pacman{display:none;}
+}
+@media (max-width:820px){
+  .s-jeux{--jeux-tuile:170px;--jeux-gap:12px;}
+  .s-jeux__nb{min-height:128px;}
+  .s-jeux__deco--de20{width:104px;top:-30px;right:8%;}
+}
+@media (max-width:560px){
+  .s-jeux{--jeux-tuile:150px;--jeux-gap:10px;}
+  .s-jeux__type{font-size:.58rem;letter-spacing:.08em;padding:.5em .6em;}
+  .s-jeux__jeu{font-size:.85rem;}
+  .s-jeux__vign{padding:9px 9px 0;}
+  .s-jeux__nom{padding:8px 10px 12px;}
+  .s-jeux__deco--etoile{display:none;}
+  .s-jeux__deco--de20{width:88px;}
+  .s-jeux__boutons .btn{flex:1 1 100%;justify-content:center;}
+}
+@media (max-width:400px){
+  .s-jeux__compteurs{grid-template-columns:1fr;}
+}
+
+/* ---------- mouvement réduit ---------- */
+@media (prefers-reduced-motion:reduce){
+  .s-jeux__piste,.s-jeux__piste[data-double="1"],
+  .s-jeux__cadre--retour .s-jeux__piste[data-double="1"]{animation:none;transform:none;}
+  .s-jeux__rail,.s-jeux__rail[data-boucle="1"]{overflow-x:auto;overflow-y:hidden;
+    scroll-snap-type:x proximity;-webkit-mask-image:none;mask-image:none;}
+  .s-jeux__suite[aria-hidden="true"]{display:none;}
+  .s-jeux__tuile{transition:none;}
+  .s-jeux__cadre:hover .s-jeux__tuile:hover{transform:none;}
+  .s-jeux__deco--de20,.s-jeux__deco--etoile,.s-jeux__deco--pacman{animation:none;}
+}
+
+/* ---------- pause hors champ (JS) ---------- */
+.s-jeux--hors .s-jeux__piste{animation-play-state:paused;}
+/* ---------- corrections finales ---------- */
+/* ============================================================
+   CORRECTIONS FINALES : appliquées après relecture, sur mesure
+   de contraste réelle prise dans le navigateur.
+   ============================================================ */
+
+/* L'auditorium : les légendes étaient posées à même le champ magenta
+   (#C21C79). `--sur-nuit-doux` y donnait 3,24:1 et le jaune 3,35:1, sous le
+   seuil AA. Elles reçoivent chacune leur plaque bleu nuit (c'est la grammaire
+   de la DA, le texte y vit sur un bloc) et tout remonte à 9,6 et 12,4:1.
+   L'opacité de mise en retrait est retirée des légendes : c'est le portrait,
+   désaturé, qui porte le signal de session, pas le nom, qui doit rester lisible. */
+.s-audi__legende,
+.s-audi__scene[data-actif] .s-audi__perso .s-audi__legende{
+  opacity:1;
+  background:var(--bleu-nuit);
+  --c1:9px;--c2:5px;--c3:11px;--c4:4px;
+  clip-path:polygon(var(--c1) 0,100% 0,100% calc(100% - var(--c2)),
+    calc(100% - var(--c3)) 100%,0 100%,0 var(--c4));
+}
+.s-audi__role{opacity:1;}
+.s-audi__tag{color:var(--sur-nuit-doux);}   /* 9,6:1 sur bleu nuit */
+
+/* Héros : le bloc horaire en blanc sur magenta vif donnait 4,17:1 à 14 px.
+   Magenta profond → 5,62:1, la teinte bouge à peine. */
+.s-hero__heure{background:var(--magenta-profond);}
+
+/* Pied : la ligne de mention était à opacity .6 sur bleu nuit → 4,32:1. */
+.pied__mention{opacity:.82;}
+
+
+/* ============================================================
+   LA PROGRAMMATION : le jeu d'onglets
+
+   Trois scènes ont chacune leur frise : les conférences, l'auditorium
+   et la scène Pyramide. Les onglets choisissent laquelle est ouverte ;
+   les blocs de la frise de la journée, plus haut dans la page, savent
+   ouvrir directement le bon volet.
+   ============================================================ */
+.s-prg__barre{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;
+  margin-bottom:clamp(26px,3.4vw,40px);}
+.s-prg__onglets{display:flex;flex-wrap:wrap;gap:8px;}
+.s-prg__onglet{--c1:12px;--c2:8px;--c3:14px;--c4:7px;
+  display:inline-flex;flex-wrap:wrap;align-items:baseline;gap:.6em;max-width:100%;
+  font-family:var(--texte);font-weight:900;font-size:var(--t-s);
+  text-transform:uppercase;letter-spacing:.08em;
+  padding:.7em 1.35em;border:0;cursor:pointer;
+  background:transparent;color:var(--sur-nuit-doux);
+  box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--sur-nuit-doux) 42%,transparent);
+  transition:background .16s ease,color .16s ease,box-shadow .16s ease;}
+.s-prg__onglet:hover{color:var(--blanc);box-shadow:inset 0 0 0 2px var(--blanc);}
+/* le clip rogne l'extérieur du bouton : l'anneau de focus doit être intérieur */
+.s-prg__onglet:focus-visible{outline:3px solid var(--jaune);outline-offset:-4px;}
+.s-prg__onglet[aria-selected="true"]{background:var(--blanc);color:var(--bleu-nuit);
+  box-shadow:none;}
+.s-prg__onglet[aria-selected="true"]:focus-visible{outline-color:var(--bleu-nuit);}
+.s-prg__onglet-etat{font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--jaune);opacity:.85;}
+.s-prg__onglet[aria-selected="true"] .s-prg__onglet-etat{color:var(--magenta-profond);
+  opacity:1;}
+/* un seul volet ouvert à la fois ; sans JS, tous restent lisibles à la suite */
+.s-prg__volet[hidden]{display:none;}
+.s-prg__volet:focus-visible{outline:3px solid var(--jaune);outline-offset:6px;}
+
+/* la pastille horaire porte parfois une étiquette au lieu d'une heure de fin
+   (« Billets », « Toute la journée ») */
+.s-prg__tag{display:inline-block;margin-top:.4em;padding:.3em .55em .24em;
+  font-family:var(--texte);font-weight:900;font-size:.6rem;line-height:1;
+  letter-spacing:.1em;text-transform:uppercase;
+  background:var(--bleu-nuit);color:var(--jaune);
+  clip-path:polygon(5px 0,100% 0,100% calc(100% - 4px),calc(100% - 6px) 100%,0 100%,0 3px);}
+
+/* la note d'un créneau, sous son titre */
+.s-prg__note{margin:.45em 0 0;font-family:var(--texte);font-size:.92rem;line-height:1.45;
+  color:color-mix(in srgb,var(--blanc) 86%,transparent);}
+
+/* ce qui n'est pas encore publié le dit lui-même */
+.s-prg__attente{display:flex;gap:.85em;align-items:flex-start;
+  margin:clamp(22px,3vw,34px) 0 0;padding:clamp(16px,2.2vw,22px) clamp(18px,2.4vw,26px);}
+.s-prg__attente-p{margin:0;font-family:var(--texte);font-size:var(--t-s);line-height:1.5;
+  color:var(--encre);}
+.s-prg__attente-p b{font-weight:900;}
+.s-prg__sablier{flex:0 0 auto;width:26px;height:26px;color:var(--magenta-profond);}
+
+/* ============================================================
+   LES ASSOCIATIONS : #associations / .s-assos
+
+   La légende du plan les situe : « Espace Jeux vidéos + Bornes +
+   Associations ». Le bouton « voir sur le plan » rallume cette zone
+   plus haut dans la page, par le même bus que la frise.
+   ============================================================ */
+.s-assos{overflow-x:clip;}
+.s-assos__deco{color:var(--blanc);opacity:.12;}
+.s-assos__deco--etoile{width:min(16vw,168px);height:min(16vw,160px);top:-46px;left:-40px;
+  transform:rotate(-10deg);}
+.s-assos__deco--p1{width:min(11vw,116px);height:min(11vw,132px);bottom:8%;right:2%;
+  opacity:.16;transform:rotate(7deg);}
+.s-assos__deco--console{width:min(15vw,158px);height:min(15vw,98px);top:12%;right:-34px;
+  color:var(--cyan);opacity:.4;transform:rotate(-8deg);}
+
+.s-assos__tete{max-width:64ch;}
+.s-assos__oeil{color:var(--jaune);margin-bottom:.9em;}
+.s-assos__h2{color:var(--blanc);margin-bottom:.42em;}
+.s-assos__chapo{margin:0;font-family:var(--texte);font-size:var(--t-m);line-height:1.55;
+  color:var(--blanc);max-width:58ch;}
+.s-assos__chapo b{font-weight:900;}
+
+.s-assos__liste{list-style:none;margin:clamp(26px,3.6vw,44px) 0 0;padding:0;
+  display:grid;gap:clamp(14px,1.8vw,20px);
+  grid-template-columns:repeat(3,minmax(0,1fr));}
+.s-assos__carte{display:flex;flex-direction:column;gap:14px;height:100%;
+  padding:clamp(18px,2.2vw,24px) clamp(18px,2.2vw,24px) clamp(16px,2vw,20px);
+  background:var(--blanc);color:var(--encre);text-decoration:none;
+  transition:transform .18s ease,box-shadow .18s ease;}
+.s-assos__carte:hover,.s-assos__carte:focus-visible{transform:translateY(-4px);
+  box-shadow:inset 0 -9px 0 0 var(--magenta);}
+.s-assos__carte:focus-visible{outline:3px solid var(--jaune);outline-offset:3px;}
+.s-assos__ecu{display:grid;place-items:center;height:88px;}
+.s-assos__ecu img{max-height:88px;width:auto;max-width:100%;object-fit:contain;}
+.s-assos__nom{font-family:var(--titre);font-weight:400;font-size:1.18rem;line-height:1;
+  text-transform:uppercase;color:var(--bleu-nuit);margin:0;}
+.s-assos__aller{margin:auto 0 0;font-family:var(--texte);font-weight:900;font-size:.68rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--magenta-profond);
+  display:flex;align-items:baseline;gap:.5em;}
+.s-assos__aller i{font-style:normal;}
+
+.s-assos__ou{display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;
+  margin:clamp(24px,3vw,36px) 0 0;padding:clamp(18px,2.2vw,24px) clamp(20px,2.6vw,28px);}
+.s-assos__ou-t{margin:0;flex:1 1 320px;min-width:0;
+  font-family:var(--texte);font-size:var(--t-s);line-height:1.5;
+  color:var(--sur-nuit-doux);}
+.s-assos__ou-t b{color:var(--blanc);font-weight:900;}
+.s-assos__pastille{display:inline-block;width:13px;height:13px;margin-right:.5em;
+  vertical-align:baseline;background:#00ABEA;
+  clip-path:polygon(3px 0,100% 0,100% 70%,70% 100%,0 100%,0 3px);}
+
+@media (max-width:1080px){
+  .s-assos__liste{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .s-assos__deco--console{display:none;}
+}
+@media (max-width:560px){
+  .s-assos__liste{grid-template-columns:minmax(0,1fr);}
+  .s-assos__carte{flex-direction:row;align-items:center;gap:16px;flex-wrap:wrap;}
+  .s-assos__ecu{height:62px;flex:0 0 40%;}
+  .s-assos__ecu img{max-height:62px;}
+  .s-assos__aller{margin:0;flex:1 1 100%;}
+}
+
+/* ============================================================
+   RENDEZ-VOUS : #rendez-vous / .s-rdv
+   La dernière bande : ce à quoi ça ressemble, puis où et quand.
+   ============================================================ */
+.s-rdv__deco{color:var(--blanc);}
+.s-rdv__deco--etoile{width:86px;height:82px;top:6%;left:4%;opacity:.3;}
+.s-rdv__deco--eclair{width:74px;height:85px;bottom:11%;right:5%;color:var(--jaune);
+  opacity:.5;transform:rotate(-11deg);}
+
+/* --- la pellicule des éditions précédentes --- */
+.s-rdv__avant{margin:0 0 clamp(34px,4.6vw,58px);}
+.s-rdv__avant .oeil{color:var(--jaune);margin:0 0 .9em;}
+.s-rdv__photos{display:flex;gap:14px;margin:0;padding:0 0 12px;list-style:none;
+  overflow-x:auto;scroll-snap-type:x proximity;overscroll-behavior-x:contain;
+  scrollbar-color:var(--jaune) rgba(255,255,255,.14);scrollbar-width:thin;}
+.s-rdv__photos li{flex:0 0 clamp(196px,25vw,286px);scroll-snap-align:start;}
+.s-rdv__photos figure{margin:0;}
+.s-rdv__photos img{display:block;width:100%;aspect-ratio:520/360;object-fit:cover;
+  --c1:16px;--c2:9px;--c3:20px;--c4:8px;
+  clip-path:polygon(var(--c1) 0,100% 0,100% calc(100% - var(--c2)),
+    calc(100% - var(--c3)) 100%,0 100%,0 var(--c4));}
+.s-rdv__photos figcaption{font-family:var(--texte);font-weight:900;font-size:.7rem;
+  letter-spacing:.11em;text-transform:uppercase;color:#fff;margin-top:.65em;}
+.s-rdv__photos small{display:block;font-weight:400;font-size:.68rem;letter-spacing:0;
+  text-transform:none;color:var(--sur-nuit-doux);margin-top:.25em;}
+.s-rdv__glisse{font-family:var(--texte);font-size:.78rem;color:var(--sur-nuit-doux);
+  margin:.2em 0 0;}
+
+/* --- le bloc où & quand --- */
+.s-rdv__carton{display:grid;gap:clamp(24px,3.4vw,48px);
+  grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);align-items:center;
+  padding:clamp(26px,3.6vw,46px) clamp(24px,3.6vw,48px);}
+.s-rdv__oeil{color:var(--magenta-profond);margin:0 0 1em;}
+.s-rdv__h2{color:var(--bleu-nuit);margin:0 0 .5em;font-size:clamp(2.1rem,4.8vw,3.5rem);}
+.s-rdv__quand{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 1.15em;}
+.s-rdv__quand>*{font-family:var(--texte);font-weight:900;font-size:.86rem;
+  letter-spacing:.09em;text-transform:uppercase;padding:.62em 1em;
+  --c1:12px;--c2:7px;--c3:13px;--c4:6px;
+  clip-path:polygon(var(--c1) 0,100% 0,100% calc(100% - var(--c2)),
+    calc(100% - var(--c3)) 100%,0 100%,0 var(--c4));}
+.s-rdv__jour{background:var(--bleu-nuit);color:#fff;}
+.s-rdv__heure{background:var(--magenta-profond);color:#fff;}
+.s-rdv__dl{margin:0 0 1.35em;display:grid;grid-template-columns:auto minmax(0,1fr);
+  gap:.55em .95em;font-family:var(--texte);font-size:.96rem;}
+.s-rdv__dl dt{margin:0;font-weight:900;font-size:.68rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--magenta-profond);align-self:baseline;
+  padding-top:.15em;}
+.s-rdv__dl dd{margin:0;color:var(--encre);line-height:1.45;}
+.s-rdv__dl a{color:var(--bleu-nuit);font-weight:700;text-decoration:underline;
+  text-underline-offset:3px;text-decoration-thickness:2px;}
+.s-rdv__dl a:hover{color:var(--magenta-profond);}
+.s-rdv__actes{display:flex;flex-wrap:wrap;gap:12px;margin:0;}
+.s-rdv__btn--nuit{background:var(--bleu-nuit);color:#fff;}
+.s-rdv__ps{margin:1.1em 0 0;font-family:var(--texte);font-size:.82rem;line-height:1.5;
+  color:var(--encre-douce);}
+
+/* le dé, en pion de fin de partie */
+.s-rdv__de{position:relative;display:grid;place-items:center;}
+.s-rdv__de svg{display:block;width:100%;max-width:270px;height:auto;
+  aspect-ratio:4230/4458;filter:drop-shadow(0 20px 34px rgba(10,16,44,.34));}
+@media (prefers-reduced-motion:no-preference){
+  .s-rdv__de svg{animation:rdv-flotte 11s ease-in-out infinite;}
+}
+@keyframes rdv-flotte{0%,100%{transform:translateY(0) rotate(2deg);}
+  50%{transform:translateY(-13px) rotate(-2deg);}}
+
+@media (max-width:900px){
+  .s-rdv__carton{grid-template-columns:minmax(0,1fr);}
+  .s-rdv__de{order:-1;max-width:190px;}
+}
+
+/* ============================================================
+   RETOUCHES liées aux changements de contenu
+   ============================================================ */
+
+/* Les jeux : le pied ne porte plus que la sortie vers les deux listes. */
+.s-jeux__pied{grid-template-columns:minmax(0,660px);}
+
+/* Chaque tuile est maintenant un lien vers la fiche du jeu. */
+.s-jeux__tuile{text-decoration:none;}
+.s-jeux__tuile:focus-visible{outline:3px solid var(--jaune);outline-offset:-3px;}
+.s-jeux__plus{display:flex;align-items:center;justify-content:space-between;gap:.5em;
+  margin:auto 0 0;padding:0 12px 12px;
+  font-family:var(--texte);font-weight:900;font-size:.63rem;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--magenta-profond);}
+.s-jeux__plus i{font-style:normal;font-size:1.05em;}
+.s-jeux__tuile:hover .s-jeux__plus,.s-jeux__tuile:focus-visible .s-jeux__plus{
+  color:var(--bleu-nuit);}
+.s-jeux__nom{padding-bottom:8px;}
+
+/* ---- l'en-tête de chaque volet, sous la barre d'onglets ---- */
+.s-prg__volet{position:relative;}
+.s-prg__volet-tete{max-width:64ch;margin:0 0 clamp(30px,4vw,50px);}
+.s-prg__h3{font-family:var(--titre);font-weight:400;text-transform:uppercase;
+  font-size:clamp(1.8rem,3.6vw,2.9rem);line-height:.95;letter-spacing:.01em;
+  color:var(--blanc);margin:0 0 .36em;text-wrap:balance;}
+
+/* Le volet de l'auditorium se réchauffe vers le magenta de l'affiche
+   « têtes d'affiche ». Le lavis s'éteint sur ses deux bords : la bande
+   garde son dégradé continu, aucune couture n'apparaît. */
+.s-prg__volet.s-audi::before{content:"";position:absolute;
+  inset:-40px calc(var(--gout) * -1) -40px;z-index:-1;pointer-events:none;
+  background:linear-gradient(180deg,transparent,
+    color-mix(in srgb,#C21C79 62%,transparent) 34%,
+    color-mix(in srgb,#C21C79 62%,transparent) 74%,transparent);}
+
+/* le plateau des portraits vit dans l'enveloppe du volet */
+.s-prg__volet .s-audi__plateau{max-width:none;padding-inline:0;
+  margin-top:clamp(30px,4vw,54px);}
+
+/* le sélecteur de session est un groupe de deux boutons, pas un jeu d'onglets :
+   il choisit un casting, pas un panneau */
+.s-audi__sessions{margin-bottom:clamp(16px,2vw,26px);}
+
+/* Chaque tuile est un lien : c'est le <li> qui tient la place dans la
+   bande, le lien remplit sa case. */
+.s-jeux__suite > li{flex:0 0 auto;display:flex;width:var(--jeux-tuile);
+  scroll-snap-align:start;}
+.s-jeux__tuile{width:100%;}
+
+/* Le rang des portraits reprend les gouttières de l'enveloppe : neuf
+   personnages sur une ligne ont besoin de chaque pixel. Sous 1080 px le
+   rang devient une grille, et la marge négative n'a plus lieu d'être. */
+@media (min-width:1081px){
+  .s-prg__volet .s-audi__plateau{margin-inline:calc(var(--gout) * -1);}
+}
+
+/* Un nom plus large que sa plaque doit se replier, pas se faire rogner par
+   le clip-path : sans max-width, l'élément flexible garde sa largeur de
+   contenu et débord. */
+.s-audi__nom,
+.s-audi__role{max-width:100%;overflow-wrap:break-word;}

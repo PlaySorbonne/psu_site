@@ -1,0 +1,347 @@
+---
+/*
+ * Les jeux et les studios.
+ *
+ * Les chiffres viennent de l'API gamedevs, relevés au build. Les deux
+ * bandes défilent en continu, dans les deux sens, et s'arrêtent dès que
+ * la souris ou le clavier s'y pose, c'est ce qui rend les tuiles
+ * cliquables : chacune mène à la fiche du jeu sur la page du studio.
+ */
+import { Image } from "astro:assets";
+
+export type Tuile = {
+  jeu: string;
+  studio: string;
+  plateau: boolean;
+  /* une URL de l'API gamedevs ; les domaines autorisés sont dans astro.config */
+  image: string;
+  lien: string;
+};
+
+type Props = {
+  jeux: number;
+  studios: number;
+  plateau: number;
+  video: number;
+  /* les deux bandes, déjà réparties par la page */
+  bandes: [Tuile[], Tuile[]];
+  releve: string;
+};
+
+const { jeux, studios, plateau, video, bandes, releve } = Astro.props;
+
+/* 48 + 62 = 110 pour 108 jeux : deux jeux relèvent des deux familles */
+const chevauchement = plateau + video - jeux;
+
+const COUPES = ["", "bloc--b", "bloc--c", "bloc--d"];
+---
+
+<section class="bande s-jeux" id="jeux">
+  <svg
+    class="deco s-jeux__deco s-jeux__deco--de20"
+    viewBox="0 0 178 199"
+    aria-hidden="true"
+    focusable="false"><use href="#psuf-doodle-de20"></use></svg
+  >
+  <svg
+    class="deco s-jeux__deco s-jeux__deco--etoile"
+    viewBox="0 0 598 567"
+    aria-hidden="true"
+    focusable="false"><use href="#psuf-etoile"></use></svg
+  >
+  <svg
+    class="deco s-jeux__deco s-jeux__deco--eclair"
+    viewBox="0 0 523 599"
+    aria-hidden="true"
+    focusable="false"><use href="#psuf-eclair-large"></use></svg
+  >
+  <svg
+    class="deco s-jeux__deco s-jeux__deco--pacman"
+    viewBox="0 0 198 161"
+    aria-hidden="true"
+    focusable="false"><use href="#psuf-doodle-pacman"></use></svg
+  >
+  <svg
+    class="deco s-jeux__deco s-jeux__deco--triangle"
+    viewBox="0 0 232 596"
+    aria-hidden="true"
+    focusable="false"><use href="#psuf-triangle-rose2"></use></svg
+  >
+
+  <div class="enveloppe s-jeux__tete">
+    <p class="oeil s-jeux__oeil">Les studios de la 10<sup>e</sup> édition</p>
+    <div class="s-jeux__titrage">
+      <div class="s-jeux__colonne">
+        <h2 class="h-sec s-jeux__titre">Les jeux<br />et les studios</h2>
+        <p class="bloc bloc--c bloc-magenta s-jeux__slogan">
+          Tout est jouable,<br />tout est indé
+        </p>
+      </div>
+      <div class="bloc bloc--b bloc-blanc s-jeux__intro">
+        <p class="s-jeux__lead">
+          Ici, les équipes tiennent elles-mêmes leur table. Pour cette dixième
+          édition, <b>{studios}&nbsp;studios indépendants</b> présentent <b
+            >{jeux}&nbsp;jeux</b
+          > jouables toute la journée&nbsp;: {plateau} jeux de plateau et {video}
+          jeux vidéo, à essayer avec leurs équipes.
+        </p>
+        <p class="s-jeux__lead-bis">
+          Vous jouez, vous posez vos questions, et l&rsquo;équipe en face repart
+          avec un avis de plus. C&rsquo;est tout l&rsquo;intérêt du festival.
+        </p>
+      </div>
+    </div>
+
+    <ul class="s-jeux__compteurs">
+      <li class="bloc s-jeux__nb s-jeux__nb--un">
+        <span class="s-jeux__chiffre">{jeux}</span>
+        <span class="s-jeux__etiq">jeux inscrits</span>
+      </li>
+      <li class="bloc bloc--b bloc-nuit s-jeux__nb s-jeux__nb--deux">
+        <span class="s-jeux__chiffre">{studios}</span>
+        <span class="s-jeux__etiq">studios présents</span>
+      </li>
+      <li class="bloc bloc--c s-jeux__nb s-jeux__nb--plateau">
+        <svg
+          class="s-jeux__marque"
+          viewBox="0 0 200 200"
+          aria-hidden="true"
+          focusable="false"><use href="#psuf-doodle-meeple"></use></svg
+        >
+        <span class="s-jeux__chiffre">{plateau}</span>
+        <span class="s-jeux__etiq">jeux de plateau</span>
+      </li>
+      <li class="bloc bloc--d s-jeux__nb s-jeux__nb--video">
+        <svg
+          class="s-jeux__marque"
+          viewBox="0 0 200 200"
+          aria-hidden="true"
+          focusable="false"><use href="#psuf-doodle-manette"></use></svg
+        >
+        <span class="s-jeux__chiffre">{video}</span>
+        <span class="s-jeux__etiq">jeux vidéo</span>
+      </li>
+    </ul>
+
+    {
+      chevauchement > 0 && (
+        <p class="bloc bloc--d bloc-nuit s-jeux__puce">
+          {plateau} jeux de plateau et {video} jeux vidéo pour {jeux} jeux
+          inscrits&nbsp;: {chevauchement === 1 ? "un jeu relève" : `${chevauchement} jeux relèvent`}
+          {" "}des deux familles et {chevauchement === 1 ? "compte" : "comptent"} dans
+          chacune.
+        </p>
+      )
+    }
+  </div>
+
+  <div class="s-jeux__bandes">
+    <p class="s-jeux__annonce">
+      <span class="bloc bloc--c bloc-nuit s-jeux__annonce-txt"
+        ><b>Aperçu</b> {bandes[0].length + bandes[1].length} des {jeux} jeux inscrits.
+        Les deux bandes défilent en continu, dans les deux sens, et
+        s&rsquo;arrêtent dès que la souris ou le clavier s&rsquo;y pose&nbsp;:
+        chaque vignette mène à la fiche du jeu.</span
+      >
+    </p>
+
+    {
+      bandes.map((bande, ib) => (
+        <div class:list={["s-jeux__cadre", ib === 1 && "s-jeux__cadre--retour"]}>
+          <div
+            class="s-jeux__rail"
+            tabindex="0"
+            role="group"
+            aria-label={`Aperçu des jeux inscrits, ${ib === 0 ? "première" : "seconde"} bande`}
+            data-vitesse={ib === 0 ? "40" : "33"}
+          >
+            <div class="s-jeux__piste">
+              <ul class="s-jeux__suite">
+                {bande.map((t, i) => (
+                  <li>
+                    <a
+                      class:list={["bloc", COUPES[i % 4], "s-jeux__tuile"]}
+                      href={t.lien}
+                    >
+                      <p
+                        class:list={[
+                          "s-jeux__type",
+                          t.plateau ? "s-jeux__type--plateau" : "s-jeux__type--video",
+                        ]}
+                      >
+                        <svg
+                          class="s-jeux__pico"
+                          viewBox="0 0 200 200"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <use
+                            href={
+                              t.plateau
+                                ? "#psuf-doodle-meeple"
+                                : "#psuf-doodle-manette"
+                            }
+                          />
+                        </svg>
+                        <span>{t.plateau ? "Jeu de plateau" : "Jeu vidéo"}</span>
+                      </p>
+                      <span class="s-jeux__vign">
+                        <Image
+                          class="s-jeux__img"
+                          src={t.image}
+                          alt={`Visuel du jeu ${t.jeu}`}
+                          width={344}
+                          height={344}
+                          decoding="async"
+                          loading="lazy"
+                        />
+                      </span>
+                      <span class="s-jeux__nom">
+                        <span class="s-jeux__jeu">{t.jeu}</span>
+                        <span class="s-jeux__studio">{t.studio}</span>
+                      </span>
+                      <span class="s-jeux__plus">
+                        En savoir plus <i aria-hidden="true">→</i>
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="enveloppe s-jeux__pied">
+    <div class="bloc bloc--c bloc-blanc s-jeux__sortie">
+      <p class="oeil s-jeux__sortie-oeil">Les listes complètes</p>
+      <p class="s-jeux__maj">
+        Chiffres relevés le {releve}. Les listes complètes des studios et des
+        jeux, avec leurs visuels et leurs liens, sont sur les deux pages
+        dédiées.
+      </p>
+      <p class="s-jeux__boutons">
+        <a class="btn btn--jaune s-jeux__btn" href="/festival/devs"
+          >Les {studios} studios<svg
+            class="s-jeux__fleche"
+            viewBox="0 0 24 12"
+            aria-hidden="true"
+            focusable="false"
+            ><path d="M0 4.7h16.4V0L24 6l-7.6 6V7.3H0z" fill="currentColor"></path
+            ></svg
+          ></a
+        >
+        <a class="btn s-jeux__btn s-jeux__btn--nuit" href="/festival/jeux"
+          >Les {jeux} jeux<svg
+            class="s-jeux__fleche"
+            viewBox="0 0 24 12"
+            aria-hidden="true"
+            focusable="false"
+            ><path d="M0 4.7h16.4V0L24 6l-7.6 6V7.3H0z" fill="currentColor"></path
+            ></svg
+          ></a
+        >
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  function bandesDeJeux() {
+    const sec = document.getElementById("jeux");
+    if (!sec) return;
+    const cadres = Array.from(sec.querySelectorAll<HTMLElement>(".s-jeux__cadre"));
+    if (!cadres.length) return;
+
+    const sobre = window.matchMedia?.("(prefers-reduced-motion: reduce)") ?? {
+      matches: false,
+      addEventListener: undefined,
+    };
+
+    /* La boucle sans couture demande la liste en double : le second exemplaire
+       est un clone, muet pour les lecteurs d'écran et hors du parcours clavier
+       (ses liens sont les mêmes que ceux du premier). */
+    function double(cadre: HTMLElement) {
+      const piste = cadre.querySelector<HTMLElement>(".s-jeux__piste");
+      const rail = cadre.querySelector<HTMLElement>(".s-jeux__rail");
+      const suite = piste?.firstElementChild;
+      if (!piste || !rail || !suite || piste.dataset.double === "1") return;
+      const clone = suite.cloneNode(true) as HTMLElement;
+      clone.setAttribute("aria-hidden", "true");
+      clone.querySelectorAll("img").forEach((img) => img.setAttribute("alt", ""));
+      clone.querySelectorAll("a").forEach((a) => (a.tabIndex = -1));
+      piste.appendChild(clone);
+      piste.dataset.double = "1";
+      rail.dataset.boucle = "1";
+    }
+
+    /* Vitesse constante en px/s quelle que soit la largeur des tuiles :
+       la durée se déduit de la largeur réelle d'un exemplaire de la liste. */
+    function cale() {
+      cadres.forEach((cadre) => {
+        const piste = cadre.querySelector<HTMLElement>(".s-jeux__piste");
+        const rail = cadre.querySelector<HTMLElement>(".s-jeux__rail");
+        const suite = piste?.firstElementChild;
+        if (!piste || !rail || !suite || piste.dataset.double !== "1") return;
+        const w = Math.round(suite.getBoundingClientRect().width);
+        if (!w || String(w) === rail.dataset.mesure) return;
+        rail.dataset.mesure = String(w);
+        const v = parseFloat(rail.dataset.vitesse ?? "") || 38;
+        piste.style.setProperty(
+          "--jeux-duree",
+          `${Math.max(20, Math.round(w / v))}s`,
+        );
+      });
+    }
+
+    function arme() {
+      /* mouvement refusé : la bande reste au repos, défilable à la main */
+      if (sobre.matches) return;
+      cadres.forEach(double);
+      cale();
+    }
+
+    arme();
+    document.fonts?.ready?.then(cale).catch(() => {});
+    sobre.addEventListener?.("change", arme);
+
+    let minuteur: number | undefined;
+    const auRedimensionnement = () => {
+      clearTimeout(minuteur);
+      minuteur = window.setTimeout(cale, 200);
+    };
+    window.addEventListener("resize", auRedimensionnement, { passive: true });
+
+    /* Hors champ, les bandes se mettent en pause : des vignettes qui glissent
+       pour personne, ce n'est pas la peine. */
+    let oeil: IntersectionObserver | undefined;
+    if ("IntersectionObserver" in window) {
+      try {
+        oeil = new IntersectionObserver(
+          (entrees) =>
+            entrees.forEach((e) =>
+              sec.classList.toggle("s-jeux--hors", !e.isIntersecting),
+            ),
+          { rootMargin: "160px 0px" },
+        );
+        oeil.observe(sec);
+      } catch (e) {
+        /* pas de mise en pause hors champ, ce n'est pas grave */
+      }
+    }
+
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        clearTimeout(minuteur);
+        window.removeEventListener("resize", auRedimensionnement);
+        oeil?.disconnect();
+      },
+      { once: true },
+    );
+  }
+
+  document.addEventListener("astro:page-load", bandesDeJeux);
+</script>

@@ -1,0 +1,449 @@
+---
+/*
+ * Le plan du festival : l'image officielle, plus ses dix zones
+ * vectorisées par-dessus.
+ *
+ * L'effet projecteur est un masque SVG : un voile bleu nuit couvre toute
+ * l'image, et la zone allumée y perce un trou. Rien n'est redessiné, donc
+ * le plan reste celui du kit presse au pixel près.
+ *
+ * La légende est faite de vrais boutons : survol pour éclairer, clic pour
+ * verrouiller. Les deux sont relayés à la frise de la journée par le bus.
+ */
+import { Image } from "astro:assets";
+import plan from "@/assets/festival/psuf2026/plan.webp";
+import { festival, lieux, zones } from "@/data/psuf2026";
+import { traces, PLAN_VUE, PLAN_TRANSFORM } from "@/data/psuf2026-plan";
+
+/* lieu de la frise -> zone du plan, pour le script */
+const lieuZone = Object.fromEntries(lieux.map((l) => [l.id, l.zonePlan]));
+const nomLieu = Object.fromEntries(lieux.map((l) => [l.id, l.nom]));
+---
+
+<section class="bande s-plan" id="plan">
+  <svg class="deco s-plan__deco s-plan__deco--etoile" aria-hidden="true"
+    ><use href="#psuf-etoile"></use></svg
+  >
+  <svg class="deco s-plan__deco s-plan__deco--triangle" aria-hidden="true"
+    ><use href="#psuf-triangle-rose"></use></svg
+  >
+  <svg class="deco s-plan__deco s-plan__deco--de" aria-hidden="true"
+    ><use href="#psuf-doodle-de20"></use></svg
+  >
+
+  <div class="enveloppe s-plan__enveloppe">
+    <header class="s-plan__entete">
+      <p class="oeil s-plan__oeil">
+        Sur place · {festival.surface} · campus Jussieu
+      </p>
+      <h2 class="h-sec s-plan__titre">Le plan du festival</h2>
+      <p class="s-plan__chapo">
+        Dix espaces entre les tours 43&nbsp;à&nbsp;56, le Foyer, l&rsquo;Atrium
+        et le bâtiment BDL1. Survolez une entrée de la légende pour
+        l&rsquo;éclairer sur le plan&nbsp;; cliquez pour la garder allumée.
+      </p>
+    </header>
+
+    <div class="s-plan__barre">
+      <p class="s-plan__annonce" id="plan-annonce" aria-live="polite">
+        Aucune zone éclairée pour l&rsquo;instant.
+      </p>
+    </div>
+
+    <div class="s-plan__scene">
+      <div class="s-plan__colonne">
+        <div class="bloc bloc-blanc s-plan__vue" data-pos="debut">
+          <div
+            class="s-plan__cadre"
+            id="plan-cadre"
+            role="group"
+            aria-label="Plan général du campus, défilement horizontal possible"
+          >
+            <div class="s-plan__carte">
+              <Image
+                class="s-plan__image"
+                src={plan}
+                width={PLAN_VUE.l}
+                height={PLAN_VUE.h}
+                decoding="async"
+                alt="Plan vu du dessus du campus Pierre-et-Marie-Curie. Les tours 33, 34, 43, 44, 45, 46, 53, 54, 55, 56, 65 et 66 encadrent les espaces du festival. Le Foyer et l'Atrium occupent le haut du plan, le bâtiment BDL1 le bas, et la flèche d'entrée arrive en bas à gauche, près du repère « Entrée ». Les dix zones colorées sont détaillées dans la légende."
+              />
+              <svg
+                class="s-plan__calque"
+                viewBox={`${PLAN_VUE.x} ${PLAN_VUE.y} ${PLAN_VUE.l} ${PLAN_VUE.h}`}
+                aria-hidden="true"
+              >
+                <defs>
+                  <mask
+                    id="plan-percee"
+                    maskUnits="userSpaceOnUse"
+                    x={PLAN_VUE.x}
+                    y={PLAN_VUE.y}
+                    width={PLAN_VUE.l}
+                    height={PLAN_VUE.h}
+                  >
+                    <rect
+                      x={PLAN_VUE.x}
+                      y={PLAN_VUE.y}
+                      width={PLAN_VUE.l}
+                      height={PLAN_VUE.h}
+                      fill="#fff"
+                    />
+                    <g transform={PLAN_TRANSFORM}>
+                      {
+                        zones.map((z) => (
+                          <path class="s-plan__trou" data-zone={z.id} d={traces[z.id]} />
+                        ))
+                      }
+                    </g>
+                  </mask>
+                </defs>
+
+                <rect
+                  class="s-plan__voile"
+                  x={PLAN_VUE.x}
+                  y={PLAN_VUE.y}
+                  width={PLAN_VUE.l}
+                  height={PLAN_VUE.h}
+                  mask="url(#plan-percee)"
+                />
+
+                <g transform={PLAN_TRANSFORM}>
+                  {
+                    zones.map((z) => (
+                      <path class="s-plan__zone" data-zone={z.id} d={traces[z.id]} />
+                    ))
+                  }
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <p class="s-plan__glisser" hidden>
+          <span class="s-plan__fleche" aria-hidden="true"></span>
+          Faites glisser le plan pour parcourir tout le campus
+        </p>
+      </div>
+
+      <div class="bloc bloc--b bloc-nuit s-plan__legende">
+        <h3 class="s-plan__legende-titre" id="plan-legende-titre">Légende</h3>
+        <ul class="s-plan__liste" aria-labelledby="plan-legende-titre">
+          {
+            zones.map((z) => (
+              <li>
+                <button
+                  type="button"
+                  class="bloc s-plan__entree"
+                  data-zone={z.id}
+                  aria-pressed="false"
+                  style={`--zc:${z.couleur}`}
+                >
+                  <span class="s-plan__pastille" aria-hidden="true" />
+                  <span class="s-plan__nom">
+                    <span class="s-plan__lib">{z.lib}</span>
+                    {z.ou && <span class="s-plan__ou">{z.ou}</span>}
+                  </span>
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="s-plan__aide">
+          L&rsquo;Auditorium ne figure pas sur ce plan&nbsp;: il occupe un autre
+          bâtiment du campus.
+        </p>
+      </div>
+    </div>
+
+    <p class="s-plan__acces">
+      <span class="s-plan__fait"
+        ><strong>Entrée</strong> 4 place Jussieu, Paris 5<sup>e</sup></span
+      ><span class="s-plan__fait"
+        ><strong>Métro Jussieu</strong> lignes 7 et 10</span
+      ><span class="s-plan__fait"
+        ><strong>{festival.surface}</strong> sur le campus Pierre-et-Marie-Curie</span
+      >
+    </p>
+  </div>
+
+  {/* la table lieu <-> zone, lue par le script ci-dessous : des données,
+      pas du code, d'où le type application/json */}
+  <script
+    is:inline
+    type="application/json"
+    id="plan-lieux"
+    set:html={JSON.stringify({ lieuZone, nomLieu })}
+  />
+</section>
+
+<script>
+  import { bus } from "./bus";
+
+  function planDuFestival() {
+    const racine = document.getElementById("plan");
+    if (!racine) return;
+
+    const calque = racine.querySelector(".s-plan__calque");
+    const vue = racine.querySelector(".s-plan__vue");
+    const cadre = racine.querySelector<HTMLElement>(".s-plan__cadre");
+    const annonce = racine.querySelector(".s-plan__annonce");
+    const glisser = racine.querySelector<HTMLElement>(".s-plan__glisser");
+    const image = racine.querySelector<HTMLImageElement>(".s-plan__image");
+
+    /* la table lieu <-> zone est écrite par le composant, pas devinée ici */
+    let LIEU_ZONE: Record<string, string | null> = {};
+    let NOM_LIEU: Record<string, string> = {};
+    try {
+      const brut = document.getElementById("plan-lieux")?.textContent;
+      if (brut) {
+        const d = JSON.parse(brut);
+        LIEU_ZONE = d.lieuZone ?? {};
+        NOM_LIEU = d.nomLieu ?? {};
+      }
+    } catch (e) {
+      /* sans la table, le plan reste utilisable, il ne se couple plus */
+    }
+    const ZONE_LIEU: Record<string, string> = {};
+    for (const k in LIEU_ZONE) {
+      const z = LIEU_ZONE[k];
+      if (z) ZONE_LIEU[z] = k;
+    }
+
+    const REPOS = "Aucune zone éclairée pour l’instant.";
+    const reduit = !!window.matchMedia?.("(prefers-reduced-motion: reduce)")
+      .matches;
+
+    let survol: string | null = null;
+    let verrou: string | null = null;
+    let interne = false;
+    let hors = false;
+
+    type Entree = {
+      bouton: HTMLElement;
+      lib: string;
+      chemin: SVGPathElement | null;
+      trou: SVGPathElement | null;
+    };
+    const zones: Record<string, Entree> = {};
+    const boutons = Array.from(
+      racine.querySelectorAll<HTMLElement>(".s-plan__entree"),
+    );
+    boutons.forEach((b) => {
+      const z = b.getAttribute("data-zone")!;
+      zones[z] = {
+        bouton: b,
+        lib: b.querySelector(".s-plan__lib")?.textContent?.trim() ?? z,
+        chemin:
+          calque?.querySelector<SVGPathElement>(
+            `.s-plan__zone[data-zone="${z}"]`,
+          ) ?? null,
+        trou:
+          calque?.querySelector<SVGPathElement>(
+            `.s-plan__trou[data-zone="${z}"]`,
+          ) ?? null,
+      };
+    });
+
+    function marque(el: Element | null, on: boolean) {
+      if (!el) return;
+      if (on) el.setAttribute("data-etat", "on");
+      else el.removeAttribute("data-etat");
+    }
+
+    function applique() {
+      const actif = verrou ?? survol;
+      for (const z in zones) {
+        const o = zones[z];
+        const on = z === actif;
+        marque(o.chemin, on);
+        marque(o.trou, on);
+        marque(o.bouton, on);
+        o.bouton.setAttribute("aria-pressed", z === verrou ? "true" : "false");
+      }
+      racine!.classList.toggle("s-plan--allume", !!actif);
+    }
+
+    function dis(html: string, ton?: string) {
+      if (!annonce) return;
+      annonce.innerHTML = html;
+      if (ton) annonce.setAttribute("data-ton", ton);
+      else annonce.removeAttribute("data-ton");
+    }
+
+    function raconte() {
+      hors = false;
+      const actif = verrou ?? survol;
+      const o = actif ? zones[actif] : null;
+      if (!o) {
+        dis(REPOS);
+        return;
+      }
+      let texte = `<b>${o.lib}</b>`;
+      const l = ZONE_LIEU[actif!];
+      if (l) texte += `, ${NOM_LIEU[l]} au programme`;
+      if (actif === verrou)
+        texte += " · verrouillée, cliquez à nouveau pour libérer.";
+      dis(texte);
+    }
+
+    function horsPlan() {
+      survol = null;
+      applique();
+      dis(
+        "<b>Auditorium</b> : absent de ce plan, il occupe un autre bâtiment du campus.",
+        "hors-plan",
+      );
+      hors = true;
+    }
+
+    function sortir(z: string | null) {
+      if (interne) return;
+      bus.emit("plan:survol", { lieu: z ? (ZONE_LIEU[z] ?? null) : null });
+    }
+
+    function pose(z: string | null) {
+      /* `hors` force le rafraîchissement : sans lui, revenir de l'auditorium
+         vers « rien » laisserait le message hors-plan collé dans la barre */
+      if (survol === z && !hors) return;
+      survol = z;
+      applique();
+      raconte();
+      sortir(z);
+    }
+
+    function verrouille(z: string | null) {
+      verrou = verrou === z ? null : z;
+      applique();
+      raconte();
+      if (verrou && zones[verrou]) viser(zones[verrou].chemin);
+    }
+
+    /* ---- défilement horizontal du cadre ---- */
+    function position() {
+      if (!cadre || !vue) return;
+      const max = cadre.scrollWidth - cadre.clientWidth;
+      const p =
+        max <= 4
+          ? "aucun"
+          : cadre.scrollLeft <= 4
+            ? "debut"
+            : cadre.scrollLeft >= max - 4
+              ? "fin"
+              : "milieu";
+      vue.setAttribute("data-pos", p);
+    }
+
+    function mesure() {
+      if (!cadre || !vue) return;
+      const trop = cadre.scrollWidth - cadre.clientWidth > 24;
+      vue.setAttribute("data-glissable", trop ? "oui" : "non");
+      if (glisser) glisser.hidden = !trop;
+      if (trop) cadre.setAttribute("tabindex", "0");
+      else cadre.removeAttribute("tabindex");
+      position();
+    }
+
+    function viser(chemin: SVGPathElement | null) {
+      if (!chemin || !cadre) return;
+      const max = cadre.scrollWidth - cadre.clientWidth;
+      if (max <= 4) return;
+      let r: DOMRect, c: DOMRect;
+      try {
+        r = chemin.getBoundingClientRect();
+        c = cadre.getBoundingClientRect();
+      } catch (e) {
+        return;
+      }
+      if (!r.width) return;
+      let cible =
+        r.left + r.width / 2 - c.left + cadre.scrollLeft - cadre.clientWidth / 2;
+      cible = Math.max(0, Math.min(max, cible));
+      cadre.scrollTo?.({ left: cible, behavior: reduit ? "auto" : "smooth" });
+    }
+
+    /* ---- interactions ---- */
+    boutons.forEach((b) => {
+      const z = b.getAttribute("data-zone")!;
+      b.addEventListener("mouseenter", () => pose(z));
+      b.addEventListener("mouseleave", () => pose(null));
+      b.addEventListener("focus", () => pose(z));
+      b.addEventListener("blur", () => pose(null));
+      b.addEventListener("click", () => verrouille(z));
+    });
+
+    Object.keys(zones).forEach((z) => {
+      const p = zones[z].chemin;
+      if (!p) return;
+      p.addEventListener("mouseenter", () => pose(z));
+      p.addEventListener("mouseleave", () => pose(null));
+      p.addEventListener("click", () => verrouille(z));
+    });
+
+    racine.addEventListener("keydown", (e) => {
+      if ((e.key === "Escape" || e.key === "Esc") && verrou) {
+        verrou = null;
+        applique();
+        raconte();
+      }
+    });
+
+    cadre?.addEventListener("scroll", position, { passive: true });
+
+    if (window.ResizeObserver && cadre) {
+      try {
+        new ResizeObserver(mesure).observe(cadre);
+      } catch (e) {
+        window.addEventListener("resize", mesure);
+      }
+    } else {
+      window.addEventListener("resize", mesure);
+    }
+    if (image && !image.complete) image.addEventListener("load", mesure);
+
+    /* ---- ce que disent les autres sections ---- */
+    bus.on("lieu:survol", (d) => {
+      const id = d?.id ?? null;
+      interne = true;
+      if (id === "auditorium") horsPlan();
+      else pose(id ? (LIEU_ZONE[id] ?? null) : null);
+      interne = false;
+    });
+
+    bus.on("lieu:choix", (d) => {
+      const id = d?.id ?? null;
+      interne = true;
+      if (id === "auditorium") {
+        verrou = null;
+        horsPlan();
+      } else {
+        verrou = id ? (LIEU_ZONE[id] ?? null) : null;
+        survol = null;
+        applique();
+        raconte();
+        if (verrou && zones[verrou]) viser(zones[verrou].chemin);
+      }
+      interne = false;
+    });
+
+    /* une zone désignée directement, sans passer par un lieu de la frise
+       (les associations pointent « Espace Jeux vidéos + Bornes ») */
+    bus.on("plan:vise", (d) => {
+      const z = d?.zone ?? null;
+      if (!z || !zones[z]) return;
+      interne = true;
+      verrou = z;
+      survol = null;
+      applique();
+      raconte();
+      viser(zones[z].chemin);
+      interne = false;
+    });
+
+    applique();
+    dis(REPOS);
+    mesure();
+  }
+
+  document.addEventListener("astro:page-load", planDuFestival);
+</script>

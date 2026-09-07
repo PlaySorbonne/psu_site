@@ -1,0 +1,101 @@
+---
+/*
+ * Le rail de navigation : une piste de plateau à sept cases, avec le dé
+ * du festival comme pion. Masqué sous 820 px, où il n'apporte plus rien.
+ */
+
+const etapes = [
+  { id: "hero", titre: "Le festival" },
+  { id: "programme", titre: "Le programme" },
+  { id: "plan", titre: "Le plan" },
+  { id: "programmation", titre: "La programmation" },
+  { id: "jeux", titre: "Les jeux" },
+  { id: "associations", titre: "Les assos" },
+  { id: "rendez-vous", titre: "Rendez-vous" },
+];
+---
+
+<nav class="rail" id="rail" aria-label="Sections de la page">
+  <span class="rail__piste" aria-hidden="true"></span>
+  <svg class="rail__pion" id="rail-pion" aria-hidden="true"><use href="#psuf-champsu"></use></svg>
+  <ol class="rail__l">
+    {
+      etapes.map((e, i) => (
+        <li>
+          <a href={`#${e.id}`} data-cible={e.id}>
+            <span class="rail__n">{String(i + 1).padStart(2, "0")}</span>
+            <span class="rail__t">{e.titre}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<script>
+  function rail() {
+    const rail = document.getElementById("rail");
+    const pion = document.getElementById("rail-pion");
+    if (!rail || !pion) return;
+
+    const liens = Array.from(
+      rail.querySelectorAll<HTMLAnchorElement>("a[data-cible]"),
+    );
+    const cibles = liens.map((a) => document.getElementById(a.dataset.cible!));
+
+    function place(i: number) {
+      liens.forEach((a, k) =>
+        a.setAttribute("aria-current", k === i ? "true" : "false"),
+      );
+      const n = liens[i].querySelector(".rail__n");
+      if (!n) return;
+      const r = n.getBoundingClientRect();
+      const rr = rail!.getBoundingClientRect();
+      pion!.style.transform = `translateY(${r.top - rr.top + r.height / 2 - 15}px)`;
+      pion!.classList.add("vu");
+    }
+
+    let actif = -1;
+    function suit() {
+      /* la section « courante » est la dernière dont le haut est passé au
+         tiers supérieur de la fenêtre */
+      const y = window.scrollY + window.innerHeight * 0.34;
+      let i = 0;
+      cibles.forEach((s, k) => {
+        if (s && s.offsetTop <= y) i = k;
+      });
+      if (i !== actif) {
+        actif = i;
+        place(i);
+      }
+    }
+
+    let attente = false;
+    const auDefilement = () => {
+      if (attente) return;
+      attente = true;
+      requestAnimationFrame(() => {
+        attente = false;
+        suit();
+      });
+    };
+    const auRedimensionnement = () => {
+      actif = -1;
+      suit();
+    };
+
+    window.addEventListener("scroll", auDefilement, { passive: true });
+    window.addEventListener("resize", auRedimensionnement, { passive: true });
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        window.removeEventListener("scroll", auDefilement);
+        window.removeEventListener("resize", auRedimensionnement);
+      },
+      { once: true },
+    );
+    suit();
+  }
+
+  document.addEventListener("astro:page-load", rail);
+</script>
