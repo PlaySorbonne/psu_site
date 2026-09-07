@@ -1,0 +1,47 @@
+---
+/*
+ * La coquille des pages annexes du festival (/festival/devs,
+ * /festival/jeux, /festival/devs/<studio>).
+ *
+ * Même habillage que la page du festival : le sprite des décors, le
+ * grain, l'en-tête collant avec sa jauge et le pied d'affiche. Seul le
+ * rail de navigation manque : il numérote les bandes de la page du
+ * festival, il n'a rien à indexer ici (voir .psuf--liste dans
+ * src/styles/psuf2026-listes.css, qui annule le décalage qu'il réserve).
+ */
+import HeaderL from "@/layouts/partials/HeaderL.astro";
+import "@/styles/psuf2026.css";
+import "@/styles/psuf2026-listes.css";
+
+import Sprite from "./Sprite.astro";
+import Entete from "./Entete.astro";
+import Pied from "./Pied.astro";
+
+type Props = {
+  title: string;
+  description: string;
+  prefetchs?: string[];
+};
+
+const { title, description, prefetchs } = Astro.props;
+---
+
+<HeaderL
+  title={title}
+  description={description}
+  metaImg="/assets/festival/psuf2026/og.jpg"
+  prefetchs={prefetchs}
+>
+  <div class="psuf psuf--liste">
+    <Sprite />
+    <span class="grain" aria-hidden="true"></span>
+
+    <Entete />
+
+    <main>
+      <slot />
+    </main>
+
+    <Pied />
+  </div>
+</HeaderL>

@@ -1,0 +1,295 @@
+/* ============================================================
+   PLAY SORBONNE FESTIVAL 2026 : les pages de liste
+   /festival/devs, /festival/jeux et /festival/devs/<studio>
+
+   Même DA que la page du festival : aplats francs, blocs
+   polygonaux, grain, aucun néon. Le socle (tokens, .bloc, .btn,
+   .bande, .enveloppe, en-tête et pied) vient de psuf2026.css,
+   chargé juste avant celle-ci ; on n'ajoute ici que ce que les
+   listes demandent en plus.
+   ============================================================ */
+
+/* ---------- coquille ----------
+   Les pages de liste n'ont pas le rail de gauche : on annule le
+   décalage que psuf2026.css réserve pour lui. Ces sélecteurs
+   passent devant les siens (une classe de plus). */
+@media (min-width: 821px) {
+  .psuf--liste main { padding-left: 0; }
+  .psuf--liste .tete__in { padding-left: clamp(12px, 2.4vw, 26px); }
+  .psuf--liste .pied__in { padding-left: var(--gout); }
+}
+
+/* la chaîne de dégradés, comme sur la page du festival : les bandes se
+   succèdent sans aucune ligne de séparation, et la dernière rejoint le
+   #1B2950 sur lequel le pied démarre. */
+#tete   { --de:#2E4F94; --vers:#294583; }
+#liste  { --de:#294583; --mid:#263A72; --vers:#1B2950; }
+#fiches { --de:#294583; --mid:#3B2A6E; --vers:#1B2950; }
+
+/* ============================================================
+   BANDE DE TÊTE : le fil, le titre, le chapeau et les compteurs
+   ============================================================ */
+.s-tete { padding-block: clamp(38px,5.6vw,72px) clamp(30px,4.4vw,54px); }
+
+.s-tete__fil {
+  display: inline-flex; align-items: center; gap: .5em; margin: 0 0 clamp(16px,2.4vw,26px);
+  font-weight: 900; font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .14em;
+  color: var(--jaune); text-decoration: none;
+}
+.s-tete__fil:hover, .s-tete__fil:focus-visible { text-decoration: underline; text-underline-offset: 4px; }
+
+.s-tete__titrage {
+  display: grid; gap: clamp(18px,3vw,44px); align-items: end;
+  grid-template-columns: minmax(0,1.05fr) minmax(0,1fr);
+}
+.s-tete__oeil { color: var(--jaune); margin-bottom: .7rem; }
+.s-tete__titre {
+  font-family: var(--titre); font-size: var(--t-xxl); line-height: .9;
+  text-transform: uppercase; letter-spacing: .01em; margin: 0; color: var(--blanc);
+  text-wrap: balance;
+}
+.s-tete__chapeau { padding: clamp(16px,2.2vw,24px) clamp(18px,2.4vw,28px); }
+.s-tete__chapeau p { font-size: clamp(.98rem,1.3vw,1.1rem); line-height: 1.5; margin: 0; }
+.s-tete__chapeau p + p { margin-top: .7em; font-size: var(--t-s); color: var(--encre-douce); }
+.s-tete__chapeau b { font-weight: 900; }
+
+/* ---------- compteurs ---------- */
+.cpts {
+  list-style: none; margin: clamp(22px,3vw,36px) 0 0; padding: 0;
+  display: grid; gap: 12px; grid-template-columns: repeat(4, minmax(0,1fr));
+}
+.cpt {
+  position: relative; overflow: hidden; min-height: 112px;
+  padding: clamp(12px,1.6vw,18px) clamp(14px,1.8vw,20px);
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.cpt--un   { background: var(--magenta-profond); color: var(--blanc); transform: rotate(-1deg); }
+.cpt--deux { background: var(--bleu-nuit); color: var(--sur-nuit); transform: rotate(.8deg); }
+.cpt--plateau { background: var(--jaune); color: var(--bleu-nuit); transform: rotate(1.1deg); }
+.cpt--video   { background: var(--cyan);  color: var(--bleu-nuit); transform: rotate(-.7deg); }
+.cpt__n { font-family: var(--titre); line-height: .82; font-size: clamp(2.3rem,4.4vw,3.5rem); }
+.cpt__l {
+  font-weight: 900; text-transform: uppercase; letter-spacing: .13em;
+  font-size: var(--t-xs); margin-top: .65em;
+}
+.cpt--deux .cpt__l { color: var(--sur-nuit-doux); }
+.cpt__marque { position: absolute; top: 10px; right: 10px; width: 30px; height: auto; opacity: .3; }
+
+/* ---------- décors de la bande de tête ---------- */
+.s-tete__deco { height: auto; }
+.s-tete__deco--de20   { width: 112px; top: -34px; right: 5%;  color: var(--jaune); opacity: .5; transform: rotate(13deg); }
+.s-tete__deco--etoile { width: 62px;  left: 1.5%; top: 24%;   color: var(--cyan);  opacity: .8; }
+.s-tete__deco--pacman { width: 104px; right: 2%;  bottom: 6%; color: var(--rose);  opacity: .45; transform: rotate(-12deg); }
+
+/* ============================================================
+   BANDE DE LISTE : la barre de commande et la grille
+   ============================================================ */
+.s-liste { padding-block: clamp(24px,3vw,40px) clamp(56px,8vw,100px); }
+
+/* La barre reste sous l'en-tête pendant le défilement : avec cent studios
+   à parcourir, les filtres doivent rester à portée. */
+.s-liste__barre {
+  position: sticky; top: var(--entete); z-index: 30;
+  margin-bottom: clamp(18px,2.6vw,28px);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 10px 16px; padding: 12px clamp(12px,1.8vw,18px);
+  background: var(--bleu-nuit); box-shadow: 0 16px 28px -22px #000;
+}
+.s-liste__groupe { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+.filtre, .vue-lien {
+  display: inline-flex; align-items: center; gap: .5em;
+  font-family: var(--texte); font-weight: 900; font-size: var(--t-xs);
+  text-transform: uppercase; letter-spacing: .12em;
+  padding: .66em 1.05em; border: 0; cursor: pointer; text-decoration: none;
+  background: rgba(255,255,255,.11); color: var(--blanc);
+  transition: background .16s ease, color .16s ease, transform .16s ease;
+}
+.filtre:hover, .vue-lien:hover { background: rgba(255,255,255,.22); transform: translateY(-1px); }
+.filtre[aria-pressed="true"] { background: var(--jaune); color: var(--bleu-nuit); }
+.vue-lien[aria-current="page"] { background: var(--blanc); color: var(--bleu-nuit); }
+.filtre__pico { width: 14px; height: 14px; flex: 0 0 auto; }
+
+.s-liste__compte {
+  margin: 0 0 0 auto; font-weight: 900; font-size: var(--t-xs);
+  text-transform: uppercase; letter-spacing: .14em; color: var(--sur-nuit-doux);
+  white-space: nowrap;
+}
+.s-liste__compte b { font-family: var(--titre); font-weight: 400; font-size: 1.15rem; color: var(--jaune); }
+
+.s-liste__vide {
+  margin: clamp(30px,6vw,60px) auto; max-width: 46ch; text-align: center;
+  padding: clamp(20px,3vw,28px); font-size: var(--t-m); line-height: 1.5;
+}
+
+/* ---------- grille ---------- */
+.grille {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; gap: clamp(12px,1.6vw,18px);
+  grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
+}
+.grille > li { display: flex; min-width: 0; }
+.grille > li.cache { display: none; }
+
+.tuile {
+  display: flex; flex-direction: column; width: 100%;
+  background: var(--blanc); color: var(--encre); text-decoration: none;
+  transition: transform .18s ease;
+}
+.tuile:hover, .tuile:focus-visible { transform: translateY(-6px); }
+
+.tuile__ruban {
+  display: flex; align-items: center; gap: .45em; margin: 0;
+  padding: .55em .82em; font-weight: 900; font-size: .63rem;
+  text-transform: uppercase; letter-spacing: .11em;
+}
+.tuile__ruban--plateau { background: var(--jaune); color: var(--bleu-nuit); }
+.tuile__ruban--video   { background: var(--cyan);  color: var(--bleu-nuit); }
+.tuile__ruban--mixte   { background: linear-gradient(100deg, var(--jaune) 0 50%, var(--cyan) 50% 100%); color: var(--bleu-nuit); }
+.tuile__pico { width: 15px; height: 15px; flex: 0 0 auto; }
+
+.tuile__vign { display: block; background: var(--bleu-nuit); padding: 12px; }
+.tuile__img {
+  display: block; width: 100%; height: auto; aspect-ratio: 4/3;
+  object-fit: contain;
+}
+.tuile__de { display: block; width: 100%; height: auto; aspect-ratio: 4/3; opacity: .55; }
+
+.tuile__corps { display: flex; flex-direction: column; flex: 1; gap: .3em; padding: 13px 14px 15px; }
+.tuile__nom {
+  font-family: var(--titre); font-size: 1.24rem; line-height: 1.02;
+  text-transform: uppercase; color: var(--bleu-nuit);
+  overflow-wrap: anywhere;
+}
+.tuile__meta {
+  font-size: .82rem; line-height: 1.35; color: var(--encre-douce);
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.tuile__meta--studio { -webkit-line-clamp: 2; font-weight: 700; color: var(--magenta-fonce); }
+.tuile__types { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: .75em; }
+.type {
+  display: inline-flex; align-items: center; gap: .4em;
+  font-weight: 900; font-size: .6rem; text-transform: uppercase; letter-spacing: .1em;
+  padding: .42em .72em;
+}
+.type--plateau { background: var(--jaune); color: var(--bleu-nuit); }
+.type--video   { background: var(--cyan);  color: var(--bleu-nuit); }
+.type__pico { width: 13px; height: 13px; flex: 0 0 auto; }
+
+.tuile__plus {
+  display: flex; align-items: center; justify-content: space-between; gap: .5em;
+  padding: .6em .9em; background: var(--bleu-nuit); color: var(--blanc);
+  font-weight: 900; font-size: .6rem; text-transform: uppercase; letter-spacing: .12em;
+}
+.tuile__plus i { font-style: normal; transition: transform .16s ease; }
+.tuile:hover .tuile__plus { background: var(--magenta-profond); }
+.tuile:hover .tuile__plus i { transform: translateX(4px); }
+
+/* ---------- décors de la bande de liste ---------- */
+.s-liste__deco { height: auto; }
+.s-liste__deco--eclair   { width: 66px; right: 1.2%; top: 12%;    color: var(--jaune); opacity: .4; transform: rotate(-8deg); }
+.s-liste__deco--triangle { width: 68px; left: .8%;   bottom: -34px; color: var(--rose);  opacity: .4; }
+
+/* ============================================================
+   PAGE D'UN STUDIO : la tête et les fiches de jeu
+   ============================================================ */
+.s-tete--studio .s-tete__titrage { grid-template-columns: auto minmax(0,1fr); align-items: center; }
+/* un studio n'a qu'un ou deux compteurs : en grille ils s'étireraient sur
+   toute la largeur, en ligne ils gardent la taille des autres pages. */
+.s-tete--studio .cpts { display: flex; flex-wrap: wrap; }
+.s-tete--studio .cpt { flex: 0 1 clamp(180px,24vw,240px); }
+.s-tete__logo {
+  padding: clamp(12px,1.6vw,18px); display: grid; place-items: center;
+  min-width: clamp(150px,18vw,220px);
+}
+/* les logos des studios vont du bandeau très large au portrait très haut :
+   on borne les deux dimensions pour que le bloc garde la même allure. */
+.s-tete__logo img {
+  display: block; width: auto; height: auto;
+  max-width: min(100%, 210px); max-height: clamp(120px,16vw,190px);
+  object-fit: contain;
+}
+.s-tete__insta {
+  display: inline-flex; align-items: center; gap: .5em; margin-top: 1rem;
+  padding: .6em 1.05em; background: var(--magenta-profond); color: var(--blanc);
+  font-weight: 900; font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .1em;
+  text-decoration: none; transition: transform .16s ease, filter .16s ease;
+}
+.s-tete__insta:hover, .s-tete__insta:focus-visible { transform: translateY(-2px); filter: brightness(1.08); }
+
+.s-fiches { padding-block: clamp(30px,4vw,54px) clamp(56px,8vw,100px); }
+.fiches { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(22px,3.4vw,44px); }
+
+.fiche {
+  display: grid; gap: clamp(16px,2.4vw,32px); align-items: center;
+  grid-template-columns: minmax(0,1.1fr) minmax(0,1fr);
+  /* l'ancre #jeu-<id> ne doit pas se glisser sous l'en-tête collant */
+  scroll-margin-top: calc(var(--entete) + 20px);
+}
+.fiche--miroir .fiche__vis { order: 2; }
+/* jeu sans visuel : la fiche prend toute la largeur plutôt que de laisser
+   une demi-bande vide à côté d'elle. */
+.fiche--seule { grid-template-columns: minmax(0,1fr); }
+/* sur toute la largeur, on borne la mesure du texte : une ligne de 110
+   caractères ne se lit plus. */
+.fiche--seule :is(.fiche__style, .fiche__desc) { max-width: 78ch; }
+.fiche__vis { min-width: 0; background: var(--bleu-nuit); padding: 10px; }
+/* la galerie est un composant partagé : on lui retire ses arrondis et son
+   ombre pour qu'elle tienne dans la DA (coupes nettes, aplats francs). */
+.fiche__vis :is(.rail, .vue) { border-radius: 0 !important; box-shadow: none !important; background: transparent !important; }
+
+.fiche__infos { padding: clamp(18px,2.4vw,28px) clamp(20px,2.6vw,30px); min-width: 0; }
+.fiche__titre {
+  font-family: var(--titre); font-size: clamp(1.5rem,2.6vw,2.2rem); line-height: 1;
+  text-transform: uppercase; margin: 0; color: var(--bleu-nuit); overflow-wrap: anywhere;
+}
+.fiche__types { display: flex; flex-wrap: wrap; gap: 7px; margin: .9em 0 0; }
+.fiche__style { margin: .9em 0 0; font-weight: 700; color: var(--magenta-fonce); font-size: var(--t-s); }
+.fiche__desc { margin: .8em 0 0; font-size: var(--t-m); line-height: 1.55; color: var(--encre); white-space: pre-line; }
+.fiche__btn { margin-top: 1.3em; }
+.fiche__fleche { width: 19px; height: 9px; flex: 0 0 auto; }
+
+.s-fiches__deco { height: auto; }
+.s-fiches__deco--de20 { width: 100px; right: 3%; top: -30px; color: var(--jaune); opacity: .45; transform: rotate(12deg); }
+.s-fiches__deco--etoile { width: 58px; left: 1.4%; bottom: 8%; color: var(--cyan); opacity: .7; }
+
+/* ---------- retour vers la liste ---------- */
+.s-fiches__sortie { margin-top: clamp(30px,4vw,50px); padding: clamp(18px,2.2vw,26px) clamp(20px,2.6vw,30px); }
+.s-fiches__sortie-oeil { color: var(--magenta-fonce); }
+.s-fiches__sortie p { margin: .9em 0 0; font-size: var(--t-s); line-height: 1.5; color: var(--encre-douce); }
+.s-fiches__boutons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1.2em; }
+.btn--nuit { background: var(--bleu-nuit); color: var(--blanc); }
+
+/* ============================================================
+   POINTS DE RUPTURE
+   ============================================================ */
+@media (max-width: 1080px) {
+  .s-tete__titrage { grid-template-columns: 1fr; align-items: start; }
+  .s-tete--studio .s-tete__titrage { grid-template-columns: 1fr; }
+  .cpts { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .fiche, .fiche--miroir { grid-template-columns: 1fr; }
+  .fiche--miroir .fiche__vis { order: 0; }
+  .s-liste__deco--eclair, .s-tete__deco--pacman { display: none; }
+}
+@media (max-width: 720px) {
+  .s-liste__barre { position: static; }
+  .s-liste__compte { margin-left: 0; width: 100%; }
+  /* 146 px : deux colonnes tiennent encore sur un écran de 360 px */
+  .grille { grid-template-columns: repeat(auto-fill, minmax(146px, 1fr)); gap: 10px; }
+  .tuile__nom { font-size: 1.06rem; }
+  .tuile__meta { font-size: .76rem; }
+  .s-tete__deco--de20 { width: 84px; top: -22px; }
+}
+@media (max-width: 420px) {
+  /* les compteurs restent sur deux colonnes : empilés, ils repousseraient la
+     liste hors de l'écran d'ouverture. */
+  .cpt { min-height: 96px; }
+  .cpt__n { font-size: clamp(1.9rem,10vw,2.4rem); }
+  .filtre, .vue-lien { letter-spacing: .08em; padding: .6em .8em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tuile, .tuile__plus i, .filtre, .vue-lien { transition: none; }
+  .tuile:hover, .tuile:focus-visible { transform: none; }
+  .tuile:hover .tuile__plus i { transform: none; }
+}

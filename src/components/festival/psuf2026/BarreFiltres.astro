@@ -1,0 +1,84 @@
+---
+/*
+ * La barre de commande des deux listes : filtre plateau / vidéo, bascule
+ * entre la vue par studios et la vue par jeux, et compteur de résultats.
+ *
+ * Le filtre agit sur les `li` de la grille (`data-plateau` / `data-video`
+ * posés par la page) : masquer l'élément de grille lui-même évite les
+ * trous que laisserait un `display:none` sur la carte seule.
+ */
+type Props = {
+  /* la vue courante, pour marquer le bon lien */
+  vue: "devs" | "jeux";
+  /* le mot compté, au pluriel : « studios », « jeux » */
+  nom: string;
+  total: number;
+};
+
+const { vue, nom, total } = Astro.props;
+---
+
+<div class="bloc bloc--b s-liste__barre">
+  <div class="s-liste__groupe" role="group" aria-label="Filtrer par type de jeu">
+    <button class="bloc filtre" type="button" data-filtre="tous" aria-pressed="true">
+      Tous
+    </button>
+    <button class="bloc bloc--c filtre" type="button" data-filtre="plateau" aria-pressed="false">
+      <svg class="filtre__pico" viewBox="0 0 200 195" aria-hidden="true" focusable="false"
+        ><use href="#psuf-doodle-meeple"></use></svg
+      >Jeux de plateau
+    </button>
+    <button class="bloc bloc--d filtre" type="button" data-filtre="video" aria-pressed="false">
+      <svg class="filtre__pico" viewBox="0 0 200 172" aria-hidden="true" focusable="false"
+        ><use href="#psuf-doodle-manette"></use></svg
+      >Jeux vidéo
+    </button>
+  </div>
+
+  <div class="s-liste__groupe" role="group" aria-label="Changer de vue">
+    <a
+      class="bloc bloc--c vue-lien"
+      href="/festival/devs"
+      aria-current={vue === "devs" ? "page" : undefined}>Par studios</a
+    >
+    <a
+      class="bloc bloc--d vue-lien"
+      href="/festival/jeux"
+      aria-current={vue === "jeux" ? "page" : undefined}>Par jeux</a
+    >
+  </div>
+
+  <p class="s-liste__compte" aria-live="polite">
+    <b data-compte>{total}</b>{" "}{nom}
+  </p>
+</div>
+
+<script>
+  function barreFiltres() {
+    const barre = document.querySelector<HTMLElement>(".s-liste__barre");
+    const grille = document.querySelector<HTMLElement>(".grille");
+    if (!barre || !grille) return;
+
+    const boutons = Array.from(barre.querySelectorAll<HTMLButtonElement>(".filtre"));
+    const cases = Array.from(grille.querySelectorAll<HTMLElement>(":scope > li"));
+    const compte = barre.querySelector<HTMLElement>("[data-compte]");
+
+    boutons.forEach((bouton) =>
+      bouton.addEventListener("click", () => {
+        const filtre = bouton.dataset.filtre!;
+        boutons.forEach((b) =>
+          b.setAttribute("aria-pressed", String(b === bouton)),
+        );
+        let vus = 0;
+        cases.forEach((c) => {
+          const cache = filtre !== "tous" && !c.dataset[filtre];
+          c.classList.toggle("cache", cache);
+          if (!cache) vus++;
+        });
+        if (compte) compte.textContent = String(vus);
+      }),
+    );
+  }
+
+  document.addEventListener("astro:page-load", barreFiltres);
+</script>

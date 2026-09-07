@@ -1,10 +1,16 @@
 ---
-import Footer from "@/components/global/Footer.astro";
-import HeaderL from "@/layouts/partials/HeaderL.astro";
-import ColorLigne from "@/components/global/ColorLigne.astro";
-import Galerie from "@/components/festival/Galerie.astro";
+/*
+ * La page d'un studio : son enseigne, puis une fiche par jeu, chacune
+ * ancrée sur #jeu-<id> (c'est la cible des deux listes et du carrousel
+ * de la page du festival).
+ *
+ * Même DA que le reste du festival : blocs polygonaux, aplats francs,
+ * grain, aucun néon.
+ */
 import { Image } from "astro:assets";
-import { clubLogos } from "@/assets/logos/psu";
+import Coquille from "@/components/festival/psuf2026/Coquille.astro";
+import Galerie from "@/components/festival/Galerie.astro";
+import { festival } from "@/data/psuf2026";
 import {
   getDevs,
   devSlug,
@@ -12,6 +18,8 @@ import {
   lienJeu,
   imagesJeu,
   logoStudio,
+  estJeuDePlateau,
+  estJeuVideo,
   type DevT,
 } from "@/helpers/gamedevs";
 
@@ -27,316 +35,273 @@ type Props = { dev: DevT };
 const { dev } = Astro.props;
 const insta = lienInsta(dev.insta);
 const logo = logoStudio(dev);
+
+const nbPlateau = dev.jeux.filter(estJeuDePlateau).length;
+const nbVideo = dev.jeux.filter(estJeuVideo).length;
+
+/*
+ * Une fiche par jeu. Les jeux illustrés alternent gauche / droite ; ceux
+ * qui n'ont aucun visuel prennent toute la largeur, et ne comptent donc
+ * pas dans l'alternance — sinon deux galeries se suivraient du même côté.
+ */
+let illustres = 0;
+const fiches = dev.jeux.map((jeu, i) => {
+  const visuels = imagesJeu(jeu);
+  return {
+    jeu,
+    visuels,
+    lien: lienJeu(jeu, dev),
+    miroir: visuels.length > 0 && illustres++ % 2 === 1,
+    coupe: i % 2 === 1 ? "bloc--c" : "bloc--d",
+  };
+});
 ---
 
-<HeaderL
-  title={`${dev.nom_studio} — Festival Play Sorbonne`}
-  description={`${dev.nom_studio} présente ${dev.jeux.map((jeu) => jeu.nom_jeu).join(", ")} au Festival Play Sorbonne.`}
-  metaImg="/assets/festival/psuf2026/og.jpg"
+<Coquille
+  title={`${dev.nom_studio} — Festival Play Sorbonne 2026`}
+  description={`${dev.nom_studio} présente ${dev.jeux.map((jeu) => jeu.nom_jeu).join(", ")} au Festival Play Sorbonne 2026, le ${festival.dateTexte.toLowerCase()}.`}
+  prefetchs={["/festival/devs", "/festival/jeux"]}
 >
-  <header class="header">
-    <a href="/festival">
-      <Image src={clubLogos.psu} alt="" class="logo__header" height="80" />
-    </a>
-  </header>
-  <main>
-    <section class="banner">
-      {
-        logo && (
-          <Image
-            class="logo__studio"
-            src={logo}
-            alt=""
-            width={300}
-            fit="inside"
-            inferSize
-          />
-        )
-      }
-      <h1 class="title__banner redNeon">{dev.nom_studio}</h1>
-      {
-        insta && (
-          <a
-            class="insta"
-            href={insta.url}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {insta.label}
-          </a>
-        )
-      }
-    </section>
-    <section class="section">
-      <div class="content">
-        <p class="breadcrumb">
-          <a id="retour" href="/festival/devs">← Tous les studios</a>
-        </p>
+  <section class="bande s-tete s-tete--studio" id="tete">
+    <svg
+      class="deco s-tete__deco s-tete__deco--de20"
+      viewBox="0 0 178 199"
+      aria-hidden="true"
+      focusable="false"><use href="#psuf-doodle-de20"></use></svg
+    >
+    <svg
+      class="deco s-tete__deco s-tete__deco--etoile"
+      viewBox="0 0 598 567"
+      aria-hidden="true"
+      focusable="false"><use href="#psuf-etoile"></use></svg
+    >
+
+    <div class="enveloppe">
+      <a class="s-tete__fil" id="retour" href="/festival/devs"
+        ><i aria-hidden="true">←</i> Tous les studios</a
+      >
+
+      <div class="s-tete__titrage">
         {
-          dev.jeux.map((jeu) => (
-            <article class="jeu" id={`jeu-${jeu.id}`}>
-              {imagesJeu(jeu).length > 0 && (
-                <div class="image__jeu">
-                  <Galerie images={imagesJeu(jeu)} alt={jeu.nom_jeu} />
-                </div>
-              )}
-              <div class="infos__jeu">
-                <h2 class="nom__jeu">{jeu.nom_jeu}</h2>
-                <ColorLigne />
-                <p class="badges">
-                  <span class="badge">{jeu.type_de_jeu.label}</span>
-                </p>
-                {jeu.style_jeu && <p class="style__jeu">{jeu.style_jeu}</p>}
-                {jeu.description_jeu && (
-                  <p class="description">{jeu.description_jeu}</p>
-                )}
-                {lienJeu(jeu, dev) && (
-                  <a
-                    class="site"
-                    href={lienJeu(jeu, dev)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    En savoir plus
-                  </a>
-                )}
-              </div>
-            </article>
-          ))
-        }
-        {
-          dev.jeux.length === 0 && (
-            <p class="empty">
-              Les jeux de ce studio seront bientôt annoncés !
-            </p>
+          logo && (
+            <div class="bloc bloc--c bloc-blanc s-tete__logo">
+              <Image
+                src={logo}
+                alt={`Logo du studio ${dev.nom_studio}`}
+                width={420}
+                fit="inside"
+                inferSize
+              />
+            </div>
           )
         }
+        <div>
+          <p class="oeil s-tete__oeil">Studio présent au festival</p>
+          <h1 class="s-tete__titre">{dev.nom_studio}</h1>
+          {
+            insta && (
+              <a
+                class="bloc bloc--d s-tete__insta"
+                href={insta.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {insta.label}
+              </a>
+            )
+          }
+        </div>
       </div>
-    </section>
-  </main>
-</HeaderL>
-<Footer />
 
-<style>
-  :root {
-    --main-color: 232, 101, 173;
-    --secondary-color: 41, 200, 255;
-    --dark-color: 61, 61, 111;
-    --main-bg: #f6f6f6;
-  }
+      {
+        dev.jeux.length > 0 && (
+          <ul class="cpts">
+            <li class="bloc cpt cpt--un">
+              <span class="cpt__n">{dev.jeux.length}</span>
+              <span class="cpt__l">
+                {dev.jeux.length > 1 ? "jeux présentés" : "jeu présenté"}
+              </span>
+            </li>
+            {nbPlateau > 0 && (
+              <li class="bloc bloc--c cpt cpt--plateau">
+                <svg
+                  class="cpt__marque"
+                  viewBox="0 0 200 195"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <use href="#psuf-doodle-meeple" />
+                </svg>
+                <span class="cpt__n">{nbPlateau}</span>
+                <span class="cpt__l">
+                  {nbPlateau > 1 ? "jeux de plateau" : "jeu de plateau"}
+                </span>
+              </li>
+            )}
+            {nbVideo > 0 && (
+              <li class="bloc bloc--d cpt cpt--video">
+                <svg
+                  class="cpt__marque"
+                  viewBox="0 0 200 172"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <use href="#psuf-doodle-manette" />
+                </svg>
+                <span class="cpt__n">{nbVideo}</span>
+                <span class="cpt__l">
+                  {nbVideo > 1 ? "jeux vidéo" : "jeu vidéo"}
+                </span>
+              </li>
+            )}
+          </ul>
+        )
+      }
+    </div>
+  </section>
 
-  /* footer collé en bas même quand la page est plus courte que l'écran */
-  :global(body) {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
+  <section class="bande s-fiches" id="fiches">
+    <svg
+      class="deco s-fiches__deco s-fiches__deco--de20"
+      viewBox="0 0 178 199"
+      aria-hidden="true"
+      focusable="false"><use href="#psuf-doodle-de20"></use></svg
+    >
+    <svg
+      class="deco s-fiches__deco s-fiches__deco--etoile"
+      viewBox="0 0 598 567"
+      aria-hidden="true"
+      focusable="false"><use href="#psuf-etoile"></use></svg
+    >
 
-  main {
-    width: 100%;
-    overflow-x: hidden;
-    flex: 1;
-  }
+    <div class="enveloppe">
+      {
+        dev.jeux.length === 0 && (
+          <p class="bloc bloc--c bloc-blanc s-liste__vide">
+            Les jeux de ce studio seront bientôt annoncés !
+          </p>
+        )
+      }
 
-  .header {
-    z-index: 1000;
-    position: fixed;
-    top: 0;
-    height: 100px;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+      <ul class="fiches">
+        {
+          fiches.map(({ jeu, visuels, lien, miroir, coupe }) => {
+            return (
+              <li
+                class:list={[
+                  "fiche",
+                  visuels.length === 0 && "fiche--seule",
+                  miroir && "fiche--miroir",
+                ]}
+                id={`jeu-${jeu.id}`}
+              >
+                {visuels.length > 0 && (
+                  <div class="bloc bloc--b fiche__vis">
+                    <Galerie images={visuels} alt={jeu.nom_jeu} />
+                  </div>
+                )}
+                <article
+                  class:list={["bloc", coupe, "bloc-blanc", "fiche__infos"]}
+                >
+                  <h2 class="fiche__titre">{jeu.nom_jeu}</h2>
+                  <p class="fiche__types">
+                    {estJeuDePlateau(jeu) && (
+                      <span class="type type--plateau">
+                        <svg
+                          class="type__pico"
+                          viewBox="0 0 200 195"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <use href="#psuf-doodle-meeple" />
+                        </svg>
+                        Jeu de plateau
+                      </span>
+                    )}
+                    {estJeuVideo(jeu) && (
+                      <span class="type type--video">
+                        <svg
+                          class="type__pico"
+                          viewBox="0 0 200 172"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <use href="#psuf-doodle-manette" />
+                        </svg>
+                        Jeu vidéo
+                      </span>
+                    )}
+                  </p>
+                  {jeu.style_jeu && <p class="fiche__style">{jeu.style_jeu}</p>}
+                  {jeu.description_jeu && (
+                    <p class="fiche__desc">{jeu.description_jeu}</p>
+                  )}
+                  {lien && (
+                    <p class="fiche__btn">
+                      <a
+                        class="btn btn--jaune"
+                        href={lien}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        En savoir plus
+                        <svg
+                          class="fiche__fleche"
+                          viewBox="0 0 24 12"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <path
+                            d="M0 4.7h16.4V0L24 6l-7.6 6V7.3H0z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </a>
+                    </p>
+                  )}
+                </article>
+              </li>
+            );
+          })
+        }
+      </ul>
 
-    color: whitesmoke;
-    border-bottom: rgba(255, 255, 255, 0.2) 1px solid;
-    transition: top 0.3s;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .banner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.75rem;
-    min-height: 320px;
-    padding: 140px 2rem 2.5rem;
-    background: linear-gradient(
-      190deg,
-      rgba(2, 0, 36, 1) 0%,
-      rgb(41, 13, 97) 55%,
-      #29105e 80%,
-      rgb(75, 9, 44) 100%
-    );
-  }
-
-  .logo__studio {
-    max-height: 150px;
-    width: auto;
-    object-fit: contain;
-  }
-
-  .title__banner {
-    font-family: "No Continue", sans-serif;
-    font-weight: lighter;
-    text-transform: uppercase;
-    color: white;
-    font-size: clamp(2rem, 6vw, 4rem);
-    letter-spacing: 2px;
-    text-align: center;
-  }
-
-  .redNeon {
-    text-shadow: 0 0 15px rgb(var(--main-color));
-  }
-
-  .insta {
-    color: rgb(177, 225, 241);
-    text-shadow: 0 0 7px rgb(var(--secondary-color));
-    font-weight: bold;
-  }
-
-  .insta:hover {
-    text-decoration: underline;
-  }
-
-  .section {
-    padding: 2rem;
-  }
-
-  .content {
-    max-width: 1000px;
-    margin: 0 auto;
-  }
-
-  .breadcrumb {
-    font-weight: bold;
-  }
-
-  .breadcrumb a:hover {
-    text-decoration: underline;
-  }
-
-  .jeu {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-    margin: 2.5rem 0;
-    /* pour que l'ancre #jeu-<id> ne soit pas masquée par le header fixe */
-    scroll-margin-top: 120px;
-  }
-
-  .jeu:nth-child(even) {
-    flex-direction: row-reverse;
-  }
-
-  .image__jeu {
-    flex: 0 0 55%;
-    min-width: 0;
-  }
-
-  .infos__jeu {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .nom__jeu {
-    font-size: 1.8rem;
-    font-weight: 900;
-    text-transform: uppercase;
-  }
-
-  .badges {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-
-  .badge {
-    background-color: rgba(var(--main-color), 0.2);
-    border: 1px solid rgb(var(--main-color));
-    border-radius: 999px;
-    padding: 0.15rem 0.75rem;
-    font-size: 0.9rem;
-    font-weight: bold;
-  }
-
-  .style__jeu {
-    font-style: italic;
-    color: rgba(var(--black-text), 0.85);
-  }
-
-  .site {
-    align-self: flex-start;
-    padding: 0.6rem 1.5rem;
-    border-radius: 5px;
-    background-color: rgb(var(--main-color));
-    color: white;
-    font-weight: 700;
-    transition: all 0.3s ease-in-out;
-  }
-
-  .site:hover {
-    transform: scale(1.05);
-  }
-
-  .empty {
-    text-align: center;
-  }
-
-  @media screen and (max-width: 768px) {
-    .jeu,
-    .jeu:nth-child(even) {
-      flex-direction: column;
-    }
-
-    .image__jeu {
-      flex: none;
-      width: 100%;
-    }
-  }
-</style>
+      <div class="bloc bloc--c bloc-blanc s-fiches__sortie">
+        <p class="oeil s-fiches__sortie-oeil">Les listes complètes</p>
+        <p>
+          Tous les studios et tous les jeux de la 10<sup>e</sup> édition, avec leurs
+          visuels et leurs liens, sont sur les deux pages dédiées.
+        </p>
+        <p class="s-fiches__boutons">
+          <a class="btn btn--jaune" href="/festival/devs">Les studios</a>
+          <a class="btn btn--nuit" href="/festival/jeux">Les jeux</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</Coquille>
 
 <script>
   document.addEventListener("astro:page-load", () => {
+    /* Le lien de retour suit d'où l'on vient : la liste des jeux si c'est
+       par elle qu'on est arrivé, la liste des studios sinon. */
     const retour = document.querySelector<HTMLAnchorElement>("a#retour");
-    if (retour) {
-      const index = history.state?.index;
-      const precedent =
-        typeof index === "number" && index > 0
-          ? sessionStorage.getItem(`nav:${index - 1}`)?.replace(/\/+$/, "")
-          : null;
-      if (precedent === "/festival/jeux") {
-        retour.href = "/festival/jeux";
-        retour.textContent = "← Tous les jeux";
-      }
-      if (precedent === "/festival/jeux" || precedent === "/festival/devs")
-        retour.addEventListener("click", (e) => {
-          e.preventDefault();
-          history.back();
-        });
+    if (!retour) return;
+
+    const index = history.state?.index;
+    const precedent =
+      typeof index === "number" && index > 0
+        ? sessionStorage.getItem(`nav:${index - 1}`)?.replace(/\/+$/, "")
+        : null;
+
+    if (precedent === "/festival/jeux") {
+      retour.href = "/festival/jeux";
+      retour.innerHTML = '<i aria-hidden="true">←</i> Tous les jeux';
     }
-
-    let prevScrollPos = window.scrollY;
-
-    window.addEventListener("scroll", function () {
-      const currentScrollPos = window.scrollY;
-      const header = document.querySelector<HTMLElement>(".header");
-      if (!header) return;
-
-      if (prevScrollPos > currentScrollPos || currentScrollPos < 80) {
-        header.style.top = "0";
-      } else {
-        header.style.top = "-200px";
-      }
-
-      prevScrollPos = currentScrollPos;
-    });
+    if (precedent === "/festival/jeux" || precedent === "/festival/devs")
+      retour.addEventListener("click", (e) => {
+        e.preventDefault();
+        history.back();
+      });
   });
 </script>
