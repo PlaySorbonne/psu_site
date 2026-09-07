@@ -1,6 +1,6 @@
 import type { ImageMetadata } from "astro";
 import crous from "./Crous.png";
-import cvec from "./CVEC.png";
+import cvec from "./CVEC.jpg";
 import paris from "./Paris.png";
 import su from "./SU.png";
 
