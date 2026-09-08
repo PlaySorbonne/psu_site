@@ -505,7 +505,7 @@ export const volets: Volet[] = [
       {
         debut: "18:30",
         fin: "19:00",
-        titre: "Tombola & remerciements",
+        titre: "Enchères, tombola & remerciements",
         tag: "Clôture",
       },
     ],
@@ -551,12 +551,12 @@ export const invites: Invite[] = [
 export const expositions = [
   {
     nom: "Informatissage",
-    desc: "Techniques textiles et imagerie informatique.",
+    desc: "Du métier à tisser Jacquard au pixel art, une histoire commune entre techniques textiles et imagerie informatique.",
     doodle: "psuf-doodle-spaceinvader",
   },
   {
     nom: "Pourquoi les jeux vidéo nous captivent ?",
-    desc: "Mécanismes cognitifs et game design.",
+    desc: "Les mécaniques de jeu qui nourrissent la curiosité et le plaisir, et celles qui exploitent nos biais.",
     doodle: "psuf-doodle-manette",
   },
 ];
