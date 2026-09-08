@@ -332,6 +332,52 @@ export type Volet = {
 
 export const volets: Volet[] = [
   {
+    id: "auditorium",
+    label: "Auditorium",
+    lieu: "Auditorium",
+    lieuId: "auditorium",
+    plage: "10h00 → 18h00",
+    titre: "Jeu de rôle interactif",
+    chapo:
+      "Neuf invités montent sur la scène de l'auditorium pour jouer une partie devant la salle. FibreTigre anime les deux parties avec un casting qui change d'une session à l'autre. Pensez à récupérer les billets !",
+    reperes: [
+      { v: "9", l: "invités" },
+      { v: "2 × 2h30", l: "de partie" },
+      { v: "Sur billet", l: "retrait sur place" },
+    ],
+    seances: [
+      {
+        debut: "10:00",
+        fin: "11:00",
+        titre: "Retrait des billets",
+        tag: "Billets",
+        note: "500 billets gratuits pour la session du matin, 500 pour celle de l'après-midi. Premiers arrivés, premiers servis !",
+      },
+      {
+        debut: "11:00",
+        fin: "13:30",
+        titre: "Jeu de rôle interactif, session du matin",
+        par: "FibreTigre, Pressea, AngleDroit, Le SadPanda, Lâm et MisterMV",
+        session: "matin",
+      },
+      {
+        debut: "14:00",
+        fin: "15:20",
+        titre: "Retrait des billets",
+        tag: "Billets",
+        note: "Pour l'après-midi uniquement",
+      },
+      {
+        debut: "15:30",
+        fin: "18:00",
+        titre: "Jeu de rôle interactif, session de l'après-midi",
+        par: "FibreTigre, Lexi, Lydia, Daz et MisterMV",
+        session: "aprem",
+      },
+    ],
+  },
+
+  {
     id: "conferences",
     label: "Conférences",
     lieu: "Scène Conférences",
@@ -389,52 +435,6 @@ export const volets: Volet[] = [
         fin: "17:15",
         titre: "La rééducation gamifiée en réalité virtuelle",
         par: "Olivier Pons, Théo Combe, Eulalie Verhulst",
-      },
-    ],
-  },
-
-  {
-    id: "auditorium",
-    label: "Auditorium",
-    lieu: "Auditorium",
-    lieuId: "auditorium",
-    plage: "10h00 → 18h00",
-    titre: "Jeu de rôle interactif",
-    chapo:
-      "Neuf invités montent sur la scène de l'auditorium pour jouer une partie devant la salle. FibreTigre anime les deux parties avec un casting qui change d'une session à l'autre. Pensez à récupérer les billets !",
-    reperes: [
-      { v: "9", l: "invités" },
-      { v: "2 × 2h30", l: "de partie" },
-      { v: "Sur billet", l: "retrait sur place" },
-    ],
-    seances: [
-      {
-        debut: "10:00",
-        fin: "11:00",
-        titre: "Retrait des billets",
-        tag: "Billets",
-        note: "500 billets gratuits pour la session du matin, 500 pour celle de l'après-midi. Premiers arrivés, premiers servis !",
-      },
-      {
-        debut: "11:00",
-        fin: "13:30",
-        titre: "Jeu de rôle interactif, session du matin",
-        par: "FibreTigre, Pressea, AngleDroit, Le SadPanda, Lâm et MisterMV",
-        session: "matin",
-      },
-      {
-        debut: "14:00",
-        fin: "15:20",
-        titre: "Retrait des billets",
-        tag: "Billets",
-        note: "Pour l'après-midi uniquement",
-      },
-      {
-        debut: "15:30",
-        fin: "18:00",
-        titre: "Jeu de rôle interactif, session de l'après-midi",
-        par: "FibreTigre, Lexi, Lydia, Daz et MisterMV",
-        session: "aprem",
       },
     ],
   },
