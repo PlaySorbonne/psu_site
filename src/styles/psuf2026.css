@@ -193,12 +193,37 @@ body{background:#141C3B;-webkit-font-smoothing:antialiased;}
   background:rgba(255,255,255,.16);
   -webkit-mask:repeating-linear-gradient(90deg,#000 0 5px,transparent 5px 8px);
   mask:repeating-linear-gradient(90deg,#000 0 5px,transparent 5px 8px);}
-.jauge__b i{display:block;height:100%;width:0;background:var(--jaune);}
+.jauge__b i{display:block;height:100%;width:0;background:var(--jaune);
+  transition:width .7s cubic-bezier(.22,1,.36,1);}
 .jauge__v{font-family:var(--titre);font-size:1rem;color:var(--jaune);
   line-height:1;white-space:nowrap;min-width:3.4em;}
 .tete .btn{padding:.6em 1.1em;font-size:.68rem;flex:0 0 auto;}
+
+/* --- le jour J : la jauge passe « en direct » ---
+   les tirets s'allument en vague et la pastille bat, pour qu'on voie au
+   premier coup d'œil que la barre ne compte plus les jours mais les heures.
+   La remise à zéro de 10 h est donc lue comme un changement de mode. */
+.jauge[data-etat="jour"] .jauge__l{color:var(--blanc);}
+.jauge[data-etat="jour"] .jauge__b{background:rgba(255,255,255,.24);}
+.jauge[data-etat="jour"] .jauge__b i{
+  background:linear-gradient(90deg,var(--magenta) 0,var(--jaune) 42%,var(--cyan) 78%,var(--magenta) 100%);
+  background-size:220% 100%;
+  animation:jauge-vague 3.4s linear infinite;}
+.jauge[data-etat="jour"] .jauge__v{color:var(--blanc);}
+.jauge[data-etat="jour"] .jauge__v::before{content:"";display:inline-block;
+  width:.4em;height:.4em;margin-right:.42em;vertical-align:.1em;
+  border-radius:50%;background:var(--magenta);
+  animation:jauge-direct 1.5s ease-in-out infinite;}
+@keyframes jauge-vague{from{background-position:0 0;}to{background-position:-220% 0;}}
+@keyframes jauge-direct{0%,100%{opacity:1;transform:scale(1);}
+  50%{opacity:.3;transform:scale(.68);}}
+
 @media (max-width:720px){.jauge__l{display:none;}}
-@media (max-width:460px){.tete__nom b{display:none;}.jauge__b{width:64px;}}
+/* sous 560 px il ne reste plus la place des deux : on garde la valeur,
+   qui porte l'information, et on laisse tomber la barre décorative */
+@media (max-width:560px){.jauge__b{display:none;}
+  .jauge__v{font-size:.92rem;min-width:0;}}
+@media (max-width:460px){.tete__nom b{display:none;}}
 
 /* ===================== RAIL =====================
    Une piste de plateau : sept cases numérotées alignées sur un trait pointillé,

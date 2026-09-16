@@ -3,9 +3,12 @@
  * En-tête collant : le dé, le nom, la jauge « chargement du festival »
  * et le bouton d'inscription.
  *
- * La jauge fait deux choses selon la date du visiteur : avant le 19,
- * elle compte les jours ; le jour même, entre 10h et 19h, elle suit
- * l'avancement réel de la journée. Voir le script en bas de fichier.
+ * La jauge a trois états, portés par `data-etat` sur `.jauge` :
+ *   « avant » — compte les jours, remplissage sur les cent derniers ;
+ *   « jour »  — le 19 : H-N jusqu'à 10 h, puis avancement réel de la
+ *               journée, avec la mise en couleur « en direct » ;
+ *   « fini »  — après 19 h.
+ * Voir le script en bas de fichier.
  */
 import { festival } from "@/data/psuf2026";
 ---
@@ -18,15 +21,9 @@ import { festival } from "@/data/psuf2026";
         >Play Sorbonne Festival<b>10<sup>e</sup> édition · 19.09.2026</b></span
       >
     </a>
-    <div class="jauge">
-      <span class="jauge__l" id="jauge-l">Chargement du festival</span>
-      <span
-        class="jauge__b"
-        id="jauge-b"
-        role="img"
-        aria-labelledby="jauge-l"
-        aria-describedby="jauge-v"><i></i></span
-      >
+    <div class="jauge" id="jauge" data-etat="avant">
+      <span class="jauge__l" id="jauge-l" aria-hidden="true">Chargement du festival</span>
+      <span class="jauge__b" id="jauge-b" aria-hidden="true"><i></i></span>
       <span class="jauge__v" id="jauge-v">…</span>
     </div>
     <a
@@ -48,48 +45,80 @@ import { festival } from "@/data/psuf2026";
   let minuterie: number | undefined;
 
   function jauge() {
+    const j = document.getElementById("jauge");
     const b = document.getElementById("jauge-b");
     const v = document.getElementById("jauge-v");
     const l = document.getElementById("jauge-l");
     const barre = b?.querySelector("i");
-    if (!b || !v || !l || !(barre instanceof HTMLElement)) return;
+    if (!j || !b || !v || !l || !(barre instanceof HTMLElement)) return;
 
+    const JOUR = new Date(2026, 8, 19, 0, 0, 0);
     const OUVRE = new Date(2026, 8, 19, 10, 0, 0);
     const FERME = new Date(2026, 8, 19, 19, 0, 0);
-    /* le remplissage court sur les cent derniers jours avant l'ouverture */
+    /* le remplissage court sur les cent derniers jours avant le jour J :
+       il atteint donc 100 % à minuit, pas au milieu de la dernière nuit */
     const COMPTE = 100 * 864e5;
     const pad = (n: number) => (n < 10 ? "0" : "") + n;
 
     function tic() {
       const n = new Date();
-      let p: number, txt: string, lab = "Chargement du festival";
+      let p: number, txt: string, lab: string, etat: string;
       if (n >= FERME) {
+        etat = "fini";
         p = 100;
         txt = "100%";
         lab = "Édition terminée, merci";
       } else if (n >= OUVRE) {
+        etat = "jour";
         p = ((+n - +OUVRE) / (+FERME - +OUVRE)) * 100;
         txt = pad(n.getHours()) + "H" + pad(n.getMinutes());
         lab = "Le festival est en cours";
+      } else if (n >= JOUR) {
+        /* la nuit du jour J : la jauge de chargement est pleine, on bascule
+           sur les heures qui restent. Compté en H-N comme les J-N, et pas en
+           03H12 : en petit l'intitulé disparaît, et une durée au format d'une
+           heure se lisait comme l'horloge de la journée en cours.
+           Arrondi au-dessus, pour ne jamais afficher H-0. */
+        etat = "jour";
+        p = 100;
+        txt = "H-" + Math.ceil((+OUVRE - +n) / 36e5);
+        lab = "Ouverture à 10H";
       } else {
-        const reste = +OUVRE - +n;
+        etat = "avant";
+        const reste = +JOUR - +n;
         p = Math.max(0, Math.min(100, ((COMPTE - reste) / COMPTE) * 100));
         /* J-N compté en jours de calendrier, pas en tranches de 24 h :
            sinon la veille au soir afficherait J-2 */
         const aujourdhui = new Date(n.getFullYear(), n.getMonth(), n.getDate());
-        txt = "J-" + Math.round((+new Date(2026, 8, 19) - +aujourdhui) / 864e5);
+        txt = "J-" + Math.round((+JOUR - +aujourdhui) / 864e5);
+        lab = "Chargement du festival";
       }
       barre!.style.width = p.toFixed(1) + "%";
       v!.textContent = txt;
       l!.textContent = lab;
-      b!.setAttribute("aria-label", `${lab} : ${Math.round(p)} %, ${txt}`);
+      /* la barre et son intitulé sont décoratifs : c'est la valeur qui porte
+         la phrase complète, y compris quand l'intitulé est masqué en petit */
+      v!.setAttribute("aria-label", `${lab} : ${txt}`);
+      j!.dataset.etat = etat;
+    }
+
+    /* recalé sur la seconde 0 de chaque minute : l'horloge du jour J ne
+       traîne jamais derrière la vraie et ne dérive pas au fil des heures */
+    function planifie() {
+      clearTimeout(minuterie);
+      minuterie = window.setTimeout(
+        () => {
+          tic();
+          planifie();
+        },
+        6e4 - (Date.now() % 6e4) + 200,
+      );
     }
 
     tic();
-    clearInterval(minuterie);
-    minuterie = window.setInterval(tic, 30000);
+    planifie();
   }
 
   document.addEventListener("astro:page-load", jauge);
-  document.addEventListener("astro:before-swap", () => clearInterval(minuterie));
+  document.addEventListener("astro:before-swap", () => clearTimeout(minuterie));
 </script>
